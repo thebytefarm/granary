@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/documentation",
+  "version": "0.1.0",
+  "description": "Task-oriented documentation standards.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

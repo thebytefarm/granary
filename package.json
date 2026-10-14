@@ -1,0 +1,46 @@
+{
+  "name": "granary-mono",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "cli": "pnpm build && node packages/cli/dist/index.js",
+    "typecheck": "turbo run typecheck",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --check .",
+    "format:fix": "oxfmt --write .",
+    "test": "turbo run test",
+    "validate": "pnpm typecheck && pnpm docs:typecheck && pnpm lint && pnpm format && pnpm test && pnpm docs:check && pnpm docs:index:check",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm validate && pnpm build && changeset publish",
+    "docs:dev": "ciderpress dev",
+    "docs:build": "ciderpress build",
+    "docs:serve": "ciderpress serve",
+    "docs:sync": "ciderpress sync",
+    "docs:check": "ciderpress check",
+    "docs:index": "almanac index",
+    "docs:index:check": "almanac check",
+    "docs:typecheck": "tsc --noEmit --project tsconfig.docs.json"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3",
+    "@ciderpress/theme": "1.0.0-rc.8",
+    "@types/node": "^26.6.5",
+    "almanac-md": "^0.3.0",
+    "ciderpress": "1.0.0-rc.17",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "tsdown": "^0.23.0",
+    "turbo": "^2.11.7",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "packageManager": "pnpm@12.11.2"
+}

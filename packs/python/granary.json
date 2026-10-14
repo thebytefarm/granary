@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/python-functional",
+  "version": "0.1.0",
+  "description": "Functional Python standards.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

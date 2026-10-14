@@ -1,0 +1,36 @@
+{
+  "name": "granary-ai",
+  "version": "0.0.1",
+  "description": "Ship versioned docs and source as local context for coding agents.",
+  "license": "MIT",
+  "bin": {
+    "granary": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "ink": "^8.0.0",
+    "jiti": "^2.7.0",
+    "maltty": "1.0.0-rc.0",
+    "react": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@granary/core": "workspace:*",
+    "massaman": "^0.5.2"
+  },
+  "engines": {
+    "node": ">=26"
+  }
+}

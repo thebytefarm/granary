@@ -1,0 +1,23 @@
+{
+  "include": [
+    "README.md",
+    "contributing/**/*.md",
+    "docs/**/*.md",
+    "packages/*/docs/**/*.md",
+    ".context/docs/**/*.md"
+  ],
+  "links": [],
+  "targets": {
+    "path": "AGENTS.md",
+    "regions": [
+      {
+        "tags": { "start": "<standards-index>", "end": "</standards-index>" },
+        "include": ".context/docs/**/*.md"
+      },
+      {
+        "tags": { "start": "<docs-index>", "end": "</docs-index>" },
+        "exclude": ".context/**"
+      }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+# Contributing
+
+Before editing Granary, identify the behavior you intend to change and read the rules for that part of the CLI or library.
+
+## Start here
+
+1. Check root `AGENTS.md` for the repository's commands and permission boundaries.
+2. Use `.context/INDEX.md` to find the installed pages governing your change.
+3. For installation or pack metadata work, read the [product concept](../docs/concepts/context-packs.md) and relevant references.
+4. If indexed Markdown changed, regenerate the documentation regions.
+5. Run validation and build from the root before handing the change back.
+
+```sh
+pnpm docs:index
+pnpm validate
+pnpm build
+```
+
+## Standards as context
+
+Granary provides independent packs from `packs/`, each with its own `granary.json`. Root `granary.json` composes the three recommended presets and consumes only `bytefarm/recommended-typescript`. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
+
+The installed files are generated context. Edit the authored component under `packs/`, then refresh deliberately; `install` restores a lock and rejects source drift rather than silently updating it.
+
+### Refresh authored context
+
+For this self-consuming repository, review source changes, then remove the generated context and lock and resolve the declared dependencies again:
+
+```sh
+rm -rf .context
+rm granary-lock.json
+pnpm cli install
+pnpm docs:index
+pnpm validate
+pnpm build
+```
+
+This is an intentional local re-resolution procedure, not an update mode. Preserve any personal edits before removing generated context. Review the regenerated lock and installed files together with their authored sources. Keep installed docs and the lock in the repository; reference code remains Git-ignored.
+
+## Documentation routing
+
+The root `almanac.json` selects two documentation regions for `almanac-md` to maintain in `AGENTS.md`:
+
+| Region              | Material                                                                 |
+| ------------------- | ------------------------------------------------------------------------ |
+| `<standards-index>` | Installed shared/TypeScript rules in `.context/docs/`                    |
+| `<docs-index>`      | Root README, contributor guides, public docs, and package reference docs |
+
+Edit the canonical Markdown page rather than the generated region. `pnpm docs:index` updates those regions and stages a changed target; it preserves the surrounding operating instructions and Turborepo block. Use `pnpm docs:index:check` for a read-only drift check. The full validation script includes that check.
+
+This setup uses root `AGENTS.md` as the shared entrypoint, without compatibility links or installed Git hooks.
+
+## Dependency proposals
+
+Before asking to add or manually upgrade a dependency, identify the missing capability and inspect massaman and existing domain modules for overlap. For type helpers, evaluate TypeScript's built-in utilities, then type-fest; it is not currently installed.
+
+Include current GitHub stars and the latest publication date in the proposal. Prefer at least 100 stars and a release within six months, and disclose exceptions. Bytefarm-maintained tools are exempt from the star threshold. Verify licensing, typing, ESM behavior, and supported runtimes. Obtain approval, resolve `@latest` unless a version was requested, and record a semver range and lockfile. Keep bundled private implementation packages outside the published runtime dependency set.
+
+## Git workflow
+
+Start feature branches from current `main` using `type/short-description`. Use `type(scope): description` with a lowercase imperative subject, preferably within 72 characters. Scopes name a package path (`packages/cli`, `packages/core`) or a cross-cutting area (`deps`, `ci`, `repo`). Mark breaking changes with `!` and explain them in a `BREAKING CHANGE:` footer.
+
+PR titles follow the same convention; bodies include Summary, Changes, and Testing sections with related issues and exact verification results. Keep unfinished work as a draft and follow-up patches in the same PR. Use `gh` for GitHub operations. Merge only after required checks and review succeed, following the repository's merge policy.
+
+Published behavior or API changes require a Changeset. Contributor-only docs and development-only tools may omit one. Publishing requires explicit authorization, completed validation/builds, and a version bump. Fix hook failures rather than bypassing them.
+
+## Code documentation
+
+Use multiline JSDoc for exported functions; the installed `typescript-functional/0.1.0/comments.md` page covers outcomes, parameter constraints, examples, and private declarations. The verification toolchain is TypeScript 7's native `tsc`, oxlint, and oxfmt.
+
+Label compatibility workarounds `HACK:` and correctness-sensitive caveats `NOTE:`. Attach a tracked reference to each `TODO` and `FIXME`.

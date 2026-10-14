@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/typescript-functional",
+  "version": "0.1.0",
+  "description": "Functional TypeScript standards.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/engineering",
+  "version": "0.1.0",
+  "description": "Shared functional engineering standards.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

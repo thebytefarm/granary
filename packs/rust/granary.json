@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/rust-functional",
+  "version": "0.1.0",
+  "description": "Functional Rust standards.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

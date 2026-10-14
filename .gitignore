@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+*.tsbuildinfo
+*.tgz
+.env
+.env.*
+.DS_Store
+.scratchpad/
+.ciderpress/
+.serena/
+HANDOFF.md
+.context/repos/

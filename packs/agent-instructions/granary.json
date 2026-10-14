@@ -1,0 +1,7 @@
+{
+  "name": "bytefarm/agent-instructions",
+  "version": "0.1.0",
+  "description": "Agent operating contracts and context routing.",
+  "entry": "README.md",
+  "files": ["*.md"]
+}

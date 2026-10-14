@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "packs": {
+    "bytefarm/recommended-typescript": {
+      "version": "0.1.0",
+      "description": "Recommended shared and TypeScript context.",
+      "includes": [
+        {
+          "name": "bytefarm/engineering",
+          "source": "file:packs/engineering",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/git",
+          "source": "file:packs/git",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/documentation",
+          "source": "file:packs/documentation",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/agent-instructions",
+          "source": "file:packs/agent-instructions",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/typescript-functional",
+          "source": "file:packs/typescript",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        }
+      ]
+    },
+    "bytefarm/recommended-rust": {
+      "version": "0.1.0",
+      "description": "Recommended shared and Rust context.",
+      "includes": [
+        {
+          "name": "bytefarm/engineering",
+          "source": "file:packs/engineering",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/git",
+          "source": "file:packs/git",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/documentation",
+          "source": "file:packs/documentation",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/agent-instructions",
+          "source": "file:packs/agent-instructions",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/rust-functional",
+          "source": "file:packs/rust",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        }
+      ]
+    },
+    "bytefarm/recommended-python": {
+      "version": "0.1.0",
+      "description": "Recommended shared and Python context.",
+      "includes": [
+        {
+          "name": "bytefarm/engineering",
+          "source": "file:packs/engineering",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/git",
+          "source": "file:packs/git",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/documentation",
+          "source": "file:packs/documentation",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/agent-instructions",
+          "source": "file:packs/agent-instructions",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        },
+        {
+          "name": "bytefarm/python-functional",
+          "source": "file:packs/python",
+          "version": "0.1.0",
+          "manifest": "granary.json"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "bytefarm/recommended-typescript": {
+      "source": "file:.",
+      "version": "0.1.0"
+    }
+  },
+  "installDir": ".context",
+  "codeDir": ".context/repos"
+}
