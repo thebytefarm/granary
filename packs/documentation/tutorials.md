@@ -7,22 +7,73 @@ description: 'Teach through a bounded build: each step changes something the rea
 
 A tutorial teaches by building a small working example. Explain the decisions the reader is practicing, while keeping deeper contracts in reference pages.
 
+<standard id="tutorials-learning-contract">
+
 ## Learning contract
+
+<why>
 
 ### Why
 
 Creating a bundle teaches entrypoints, file selection, and content versions better than listing their names. Each step needs a visible result so the reader can tell when to proceed.
 
+</why>
+
+<rules>
+
 ### Rules
 
-- MUST include What you will learn, What you will build, and Prerequisites.
-- MUST keep the build to at most seven numbered steps.
-- MUST state the visible outcome of each step.
-- MUST explain the concept introduced by that step without turning it into a full reference.
-- MUST keep sample identities and material local to the tutorial rather than presenting them as catalog entries.
-- MUST finish with Verification, Summary, and Next steps.
-- MUST include Troubleshooting for failures likely to interrupt the build.
-- SHOULD link a quick start for readers who only need the first working result.
+<rule id="include-what-you-will-learn-what-you-will-build">
+
+- <level>MUST</level> include What you will learn, What you will build, and Prerequisites. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="keep-the-build-to-at-most-seven-numbered-steps">
+
+- <level>MUST</level> keep the build to at most seven numbered steps. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="state-the-visible-outcome-of-each-step">
+
+- <level>MUST</level> state the visible outcome of each step. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="explain-the-concept-introduced-by-that-step-without-turning">
+
+- <level>MUST</level> explain the concept introduced by that step without turning it into a full reference. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="keep-sample-identities-and-material-local-to-the-tutorial">
+
+- <level>MUST</level> keep sample identities and material local to the tutorial rather than presenting them as catalog entries. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="finish-with-verification-summary-and-next-steps">
+
+- <level>MUST</level> finish with Verification, Summary, and Next steps. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="include-troubleshooting-for-failures-likely-to-interrupt-the-build">
+
+- <level>MUST</level> include Troubleshooting for failures likely to interrupt the build. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="link-a-quick-start-for-readers-who-only-need">
+
+- <level>SHOULD</level> link a quick start for readers who only need the first working result. <enforcement>[review]</enforcement>
+
+</rule>
+
+</rules>
+
+<examples>
 
 ## Example outline
 
@@ -71,6 +122,20 @@ Extend the example into a curated definition when it needs separate upstream gro
 ```
 
 The outline describes sections, not a runnable shell transcript. A published tutorial must supply the complete files and commands for each step.
+
+</examples>
+
+<enforcement>
+
+[review]
+
+Component-content tests check standard metadata and heading structure. Review checks the tutorial's named task sections, step limit, learning sequence, and execution from its stated starting point.
+
+See [Quick starts](quickstarts.md) and [References](references.md).
+
+</enforcement>
+
+</standard>
 
 ## Enforcement
 

@@ -1,0 +1,18 @@
+{
+  "name": "bytefarm/react",
+  "description": "React 19.2 documentation and selected implementation from separate repositories.",
+  "packs": {
+    "docs": {
+      "source": "github:reactjs/react.dev",
+      "commit": "996ef72c1a9f7ecc003588a897be85fc647393c3",
+      "files": { "include": ["src/content/**/*.md"] },
+      "output": "docs"
+    },
+    "code": {
+      "source": "github:react/react",
+      "commit": "ae74234eae6ebd62f19190731278e20bc1c37d51",
+      "files": { "include": ["packages/react/src/**/*.js"] },
+      "output": "code"
+    }
+  }
+}

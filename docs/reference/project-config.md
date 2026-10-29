@@ -1,118 +1,116 @@
 # Project configuration
 
-`granary.json` records the context a project consumes under `dependencies`. The same document can declare provided `packs`; producer dependencies do not become transitive consumer dependencies.
+`granary.json` describes authored packs and adopted source material. Only `name` is required. Put source-backed selections and named inline definitions under `packs`. This contract is implemented in the workspace CLI and SDK; it has not been published yet.
 
 ```json
 {
-  "schemaVersion": 1,
-  "dependencies": {
-    "bytefarm/recommended-typescript": {
-      "source": "file:.",
-      "version": "0.1.0"
-    }
-  },
-  "installDir": ".context",
-  "codeDir": ".context/repos"
-}
-```
-
-| Field                            | Default               | Meaning                                                                      |
-| -------------------------------- | --------------------- | ---------------------------------------------------------------------------- |
-| `schemaVersion`                  | Required: `1`         | Structured manifest contract                                                 |
-| `dependencies`                   | Omitted               | Named selected leaf or composite packs                                       |
-| `dependencies.<name>.source`     | Required              | `file:<path>` or `git+<repository>[#ref]`                                    |
-| `dependencies.<name>.version`    | Omitted               | Exact semantic content version; Git ref remains separate                     |
-| `dependencies.<name>.content`    | Available leaf groups | Select `docs`, `code`, and/or `examples`; composites fix their own selection |
-| `installDir`                     | `.context`            | Project-relative documentation/examples destination                          |
-| `codeDir`                        | `.context/repos`      | Separate reference-code destination beneath a hidden project directory       |
-| `dependencies.<name>.installDir` | Project `installDir`  | Per-dependency documentation destination                                     |
-| `dependencies.<name>.codeDir`    | Project `codeDir`     | Per-dependency hidden reference-code destination                             |
-| `dependencies.<name>.selection`  | Omitted               | Explicit content for a source without a Granary manifest                     |
-
-`installDir` can be `docs/`, `reference/`, or another project directory. Documentation stays managed and versioned at `<installDir>/docs/<identity>/<version>/`; examples use the `examples` category. Code uses `<codeDir>/<identity>/<version>/` and a generated `.gitignore` containing `*`. Changing the docs destination does not move code into the visible tree.
-
-### Repositories without manifests
-
-Use a consumer-owned identity and explicit `selection` to retrieve ordinary repository material:
-
-```json
-{
-  "schemaVersion": 1,
-  "installDir": "docs/vendor",
-  "dependencies": {
-    "example/library": {
-      "source": "file:../library",
-      "selection": {
-        "docs": { "path": "docs", "entry": "README.md", "files": ["**/*.md"] },
-        "code": { "path": "src", "entry": "index.ts", "files": ["**/*.ts"] }
+  "name": "my-app",
+  "output": "reference",
+  "packs": {
+    "github:vercel/next.js": [
+      "v15.5.0",
+      {
+        "tag": "v16.0.0",
+        "files": { "include": ["docs/**", "examples/**"], "exclude": ["**/fixtures/**"] },
+        "output": "next-16"
       }
-    }
+    ]
   }
 }
 ```
 
-Selection paths resolve from the source root. Git selections are pinned to an exact commit; unversioned local selections use `0.0.0` as their destination version and file hashes detect drift. Each selected group must include its entrypoint. `install` creates the first lock for declared dependencies; subsequent invocations restore only matching locked intent and bytes.
+The upstream repository does not need a manifest. Selected code, docs, examples, and binary files are copied as consumer-owned material, not executed or installed as dependencies.
 
-### Integrity and ownership
+## Unified fields
 
-The lock records definition hash strategy, source commits, ordered composite members, effective destinations, and selected file hashes. Structured declarations use canonical, selected-definition hashes: edits to unrelated packs, producer dependencies, or producer destinations do not invalidate them. Selected declarations, member order, or payload changes do.
+| Field                               | Contract                                                                             |
+| ----------------------------------- | ------------------------------------------------------------------------------------ |
+| `name`                              | Required project/default pack name.                                                  |
+| `description`, `version`, `license` | Optional authored metadata. `version` does not resolve Git releases.                 |
+| `files.include`                     | Positive source-relative globs. An empty array selects no own files.                 |
+| `files.exclude`                     | Optional positive globs removed from the include selection.                          |
+| `documents`                         | Exact selected paths mapped to `context` or `standards`.                             |
+| `packs`                             | Named inline definitions or source-keyed installations, including recursive members. |
+| `source`                            | Optional source for a named definition; omit it when the key is a locator.           |
+| `output`                            | Consumer destination base. Defaults to `.granary/context`.                           |
+| `standards`                         | Optional consumer enforcement settings.                                              |
 
-Missing managed files can be restored. Edited or unmanaged destination files fail preflight. Installation roots are excluded from self-source selection; an authored payload beneath its destination is rejected. Absolute paths, parent traversal, and symlinks are rejected.
+Source entry values accept a revision string, a configured object, or a nonempty mixed array. Configured Git objects accept at most one of `branch`, `tag`, or `commit`. Omission resolves the remote default branch. Strings are exact Git revisions, not semver ranges. Ambiguous branch/tag names require an explicit object.
 
-## Legacy configuration
+GitHub keys use `github:<owner>/<repo>[/<pack-name>]`. Local sources use `./directory`, `../directory`, or `file:<directory>[#pack-name]`. Other Git hosts use `git+<repository-url>[#pack-name]`, with the revision in the value. A `#` suffix selects a pack, not a revision.
 
-`granary.config.json` remains readable. Its typed source objects, expanded `packs`, optional `presets`, and `output` fields retain their contract. Legacy locks without split code destinations retain their original layout. A structured `granary.json` and a `granary.config.json` cannot both supply consumer intent.
+Installing a pack includes its declared members recursively. Selecting a named child excludes siblings. Physical nested manifests are not automatic members. A pack with `packs` and no `files` is composition-only; add `files` to include its own payload. A source with neither defaults to regular files, excluding Git metadata and effective consumer destinations. Local material can include untracked files; narrow the selection before sharing it.
 
-```json
-{
-  "output": ".context",
-  "packs": [
-    {
-      "name": "example/legacy-bundle",
-      "source": { "kind": "local", "path": "../legacy-bundle" },
-      "manifest": "granary.json",
-      "content": ["docs"]
-    }
-  ]
-}
-```
+`source: "#engineering"` selects a named sibling in the same source snapshot. Same-repository relative sources stay pinned to their parent's Git commit. Granary's root manifest consumes only TypeScript; `packs/granary.json` declares the distributed language sets.
 
-| Field                | Default        | Meaning                                                      |
-| -------------------- | -------------- | ------------------------------------------------------------ |
-| `output`             | `.context`     | Relative project-owned installation root                     |
-| `packs`              | Required       | Selected packs; full identities must be unique               |
-| `packs[].name`       | Required       | Full manifest identity                                       |
-| `packs[].source`     | Required       | Local directory or Git source object                         |
-| `packs[].manifest`   | Required       | Manifest path relative to the source root                    |
-| `packs[].content`    | Required       | Unique selection of `docs`, `code`, or `examples`            |
-| `packs[].version`    | Optional       | Exact package version from the curated definition's mapping  |
-| `packs[].output`     | Project output | Per-pack destination override                                |
-| `presets`            | Omitted        | Selected flat presets; expanded components remain in `packs` |
-| `presets[].name`     | Required       | Exact preset identity                                        |
-| `presets[].source`   | Required       | Local or Git preset-definition source                        |
-| `presets[].manifest` | Required       | Relative preset path within its source                       |
-| `presets[].version`  | Optional       | Exact requested preset-definition version                    |
-| `presets[].output`   | Project output | Destination override applied to members                      |
+## Unified destinations
 
-Git sources use `kind: "git"`, `repository`, and `ref` (default `HEAD`). Local paths remain relative to the consumer project when entered that way. Upstream group paths are interpreted relative to their definition.
+Root `output` is the member destination base. The explicit Next.js destination above is `reference/next-16/`. Without a root override, explicit member output is project-relative.
 
-## Destinations
+Keep `granary.json` and `granary-lock.json` at the project root; `output` changes installed content paths, not configuration or lockfile locations.
 
-`add --output` persists the explicit override on new entries. Otherwise project `output` applies, defaulting to `.context`. Absolute destinations and parent traversal are rejected.
+Without a member override, destinations are namespaced by source/pack locator and requested revision beneath the output root. For example, Next.js tags `v15.4.0` and `v15.5.0` coexist at `.granary/context/github/vercel/next.js/v15.4.0/` and `.granary/context/github/vercel/next.js/v15.5.0/` without output overrides.
 
-Content uses `<output>/docs/<identity>/<version>/`, `<output>/repos/<identity>/<version>/`, or `<output>/examples/<identity>/<version>/`. The version is the selected package version, definition-source commit for a Git request without a package version, or bundle/definition version for a local request.
+Granary generates `.granary/.gitignore` containing `*`, keeping installed context and the shared `.granary/cache/baselines/` cache out of Git. The root `.gitignore` is not modified. A differing existing `.granary/.gitignore` fails preflight rather than being overwritten. Explicit output overrides remain supported, including `.context/` or tracked project directories; Granary does not automatically ignore those destinations.
+
+Generated segments preserve ordinary letters, digits, dots, underscores, and hyphens. Unsafe characters use `_x<UTF-8 hex>_` escapes; literal `_x` sequences are escaped too to prevent collisions. Empty segments and leading dots or hyphens are escaped. Slash-containing refs occupy one segment, so `feature/docs` becomes `feature_x2f_docs`. Advancing a branch does not change its destination. Parent destinations become bases for children; child overrides stay beneath them.
+
+Identical selections at the same destination deduplicate. Adding a set preserves existing shared payloads, including consumer edits. Changed shared upstream content requires a reviewed update. Different installations cannot claim the same directory; arrays do not provide overwrite precedence.
 
 ## Locked restoration
 
-`granary-lock.json` has `schemaVersion: 1` and a `packs` array. Each record contains:
+`granary-lock.json` records the manifest, pinned composition definitions and ordered edges, exact Git commits, expanded selections, resolved destinations, and SHA-256 file hashes. Installation restores locked content without advancing moving refs. It verifies definitions and composition membership before writes.
 
-- The original `request` and effective `output`.
-- Definition source, exact Git revision when applicable, definition hash, and definition version.
-- The selected content version and groups.
-- Each group's source, commit, root, entrypoint, and selected file paths with SHA-256 hashes.
+Missing managed files are restored. Changed intent, local upstream bytes, edited managed files, and unmanaged destination collisions fail without overwriting consumer content. Local sources must retain their locked bytes; hashes cannot retrieve historical local files. Git commits must remain available upstream.
 
-Optional `presets` records preserve definition intent, pinned source/hash, preset version, and ordered expanded member requests. Each member must match a locked leaf. Existing config/lock files without presets remain accepted. See the [preset contract](presets.md).
+Change selections in `granary.json`, then review and apply them:
 
-`install` compares config and lock semantically. Changed intent, local bytes, or managed destination files fail explicitly. Missing managed files are restored. Local hashes detect drift; they cannot retrieve historical bytes from a changed local directory.
+```sh
+granary update > review.json
+granary update --apply review.json
+```
 
-The installer accepts JSON consumer configuration. Competing `granary.config.*` files are rejected before loading or rewriting consumer intent. `validate` checks structured catalogs and local provided entrypoints without fetching dependencies; standalone pack validation checks syntax and fields.
+Preparation writes review JSON only. Resolve decisions before applying. Raw config and lock edits invalidate outstanding reviews. An empty consumer may retain `"packs": {}`.
+
+## Standards enforcement
+
+Optional `plugins.standards` settings affect interpretation, not upstream text or requirement levels. Core preserves JSON configuration under plugin namespaces; the registered plugin validates its own settings. Top-level `standards` is not accepted.
+
+```json
+{
+  "name": "app",
+  "packs": { "file:../team-standards": { "output": "reference" } },
+  "plugins": { "standards": { "default": "[review]", "rules": {} } }
+}
+```
+
+| Field                                  | Default              | Contract                                                       |
+| -------------------------------------- | -------------------- | -------------------------------------------------------------- |
+| `plugins.standards.default`            | `[review]`           | Only the review fallback is accepted.                          |
+| `plugins.standards.rules`              | `{}`                 | Mappings keyed by the extracted `pack#standard/rule` identity. |
+| `plugins.standards.rules.<id>.markers` | Required per mapping | Nonempty `[review]` or `[lint: check-id]` markers.             |
+| `plugins.standards.rules.<id>.notes`   | Omitted              | Nonempty explanation of actual coverage.                       |
+
+Use the identities returned by `granary standards`; expanded payload identities are not necessarily authored names. `granary standards --setup` atomically records defaults without erasing existing settings. Unknown mapped IDs fail extraction. A lint marker describes a real blocking check; Granary does not run, configure, or infer that check.
+
+## Accepted customizations
+
+Reviewed updates may record accepted local additions, edits, or deletions separately from upstream hashes:
+
+| Field     | Contract                                                |
+| --------- | ------------------------------------------------------- |
+| `group`   | Owning locked content group.                            |
+| `path`    | Unique exact group-relative path.                       |
+| `content` | Canonical base64 local bytes, or `null` for deletion.   |
+| `hash`    | SHA-256 of local bytes, or `null` with deleted content. |
+| `kind`    | Optional effective document kind.                       |
+
+The lock contains these bytes. Inspect them for secrets before sharing or committing. Restoration verifies upstream sources and accepted customization hashes; later unaccepted edits are not overwritten. Move retained material into a separate local pack before removing its entire upstream pack.
+
+## Errors and limitations
+
+Unknown fields, unsafe paths, symlinks, competing revision selectors, missing selected files, composition cycles, and excessive nesting fail validation or source resolution. Conflicts and drift fail before writes; transactions recheck observed destination bytes and roll back earlier writes on later failure.
+
+Only `granary.json` supplies consumer configuration. Website ingestion, submodule retrieval, and Git LFS payload retrieval are not implemented. See [CLI commands](cli.md) for observable failure behavior and [sources](sources.md) for transport details.
+
+Windows is not supported yet. Generated names use POSIX portable filename characters, but Windows reserved names and case-insensitive collisions are not normalized.

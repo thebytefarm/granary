@@ -1,6 +1,6 @@
 # Composable standards packs
 
-Split the engineering reference into independent packs, then select a recommended preset for each language. Each of the seven directories under `packs/` owns its `granary.json`. Root `granary.json` composes three recommended presets by referencing those pack manifests. Granary itself installs only the five shared/TypeScript components selected by `bytefarm/recommended-typescript`; Rust and Python remain provided distribution material.
+Split the engineering reference into independent packs, then select a recommended set for each language. Each component directory under `packs/` owns its `granary.json`. `packs/granary.json` composes the distributed sets. The root manifest installs only the five shared/TypeScript components; Rust and Python remain distribution material.
 
 ## Assessment before the split
 
@@ -22,7 +22,7 @@ The findings below motivated the split. Shared principles now have portable owne
 
 ## Components
 
-Each component owns its rules, README, and `granary.json`. Its manifest describes the pack directly through top-level `name`, `version`, `description`, `entry`, and `files`. Paths are relative to that directory; no single-item catalog wrapper is needed. The directory remains installable after copying it out of this checkout. Root presets pin member versions and sources without redeclaring their payloads.
+Each component owns its rules, README, and `granary.json`, with explicit `documents` classifications for standards. Without a file selection, regular source files are included; the recommended sets narrow components to Markdown. The directory remains installable after copying it out of this checkout. Recommended sets compose sources without duplicating their prose.
 
 | Pack                             | Owns                                                                                                                                                   |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -50,30 +50,29 @@ Avoid a language-agnostic `recommended` preset that silently imposes TypeScript 
 
 ## Installer contract
 
-The repository root exposes the three recommended presets through `granary.json`. The `packs/` collection exposes seven independent pack manifests, and each component directory is also a standalone source. Explicit `--pack` selection installs several identities in one plan; a source with one pack selects it automatically. Sources can also use curated definitions and flat presets.
+`packs/granary.json` declares the three recommended sets. Each component directory is also a standalone source. A locator such as `file:../granary/packs#recommended-typescript` selects a declared member, not a filesystem directory.
 
-`--content` chooses payload categories, not standards capabilities. Presets instead declare ordered exact-version member requests. Their components own the actual documentation and are deduplicated by complete request identity.
+Sets declare ordered recursive `packs`. Components own their content and identical selections at the same destination deduplicate.
 
-The [preset schema](../reference/presets.md) expands each selected preset into ordinary leaf requests, preserving preset intent and its pinned definition in consumer metadata. Recursive preset dependencies are deliberately unsupported.
+The [composition contract](../reference/presets.md) expands selected sets into payload requests and records their source definitions and membership separately. Cycles and conflicting destinations fail before writes.
 
 Preset resolution establishes:
 
 - Exact member identities and versions, with concrete source revisions in the lock.
 - Deduplication of identical members across selected presets.
 - Explicit rejection of incompatible requests for the same identity.
-- Preservation of preset intent and verified membership during restoration; update/removal lifecycle commands remain planned.
+- Preservation of preset intent and verified membership during restoration and reviewed updates; a standalone removal command remains planned.
 - Retrieval and preflight of the complete selected set before writing any member.
-- An index that exposes the selected presets and canonical component entrypoints.
+- An index that exposes installed component entrypoints.
 
-Install the current sets into a fresh consumer:
+Install the TypeScript set from a sibling checkout with the workspace CLI:
 
 ```sh
-CONSUMER="$(mktemp -d)"
-pnpm cli add "$PWD" --pack recommended-typescript recommended-rust recommended-python --cwd "$CONSUMER"
-pnpm cli list --cwd "$CONSUMER"
+granary add file:../granary/packs#recommended-typescript --output .granary/context/docs/bytefarm
+granary list
 ```
 
-Expect seven component packs and three preset records. Read `.context/INDEX.md` in the consumer for reading order and canonical entrypoints.
+Expect five component payloads. For all three languages, declare the three set sources at a shared output in the consumer manifest. They produce seven unique components. Read `.granary/context/INDEX.md` for their entrypoints.
 
 ## Portable links and ownership
 
@@ -136,4 +135,4 @@ Sources: [returns Result documentation](https://returns.readthedocs.io/en/latest
 
 The suite validates, installs, and restores each component from a separately copied directory without the repository root. It also verifies recommended-set installation, deduplication/conflicts, pinned Git restoration, failure-before-write behavior, and every installed local Markdown link. Component-content checks verify metadata and rationale/rules/enforcement headings. Rust examples compile and run in disposable fixtures when rustc is available. Python syntax and standard-library examples are checked with Python; returns runtime and strict plugin checks require those tools and report skipped verification when unavailable.
 
-The [catalog overview](../../packs/README.md) routes readers to the seven canonical components and their recommended sets. Repository-specific commands and authorization remain in Granary's operating instructions. Legacy-format compatibility is verified by isolated fixtures rather than a second distributed standards bundle. See [context packs](context-packs.md), [curated definitions](../reference/pack-definition.md), and [installation](installation.md).
+The [catalog overview](../packs/index.mdx) routes readers to the seven components and their recommended sets. Repository-specific commands and authorization remain in Granary's operating instructions. See [context packs](context-packs.md), [separate upstream sources](../reference/pack-definition.md), and [installation](installation.md).

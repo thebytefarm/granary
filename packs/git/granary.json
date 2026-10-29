@@ -2,6 +2,8 @@
   "name": "bytefarm/git",
   "version": "0.1.0",
   "description": "Scoped Git history and review standards.",
-  "entry": "README.md",
-  "files": ["*.md"]
+  "documents": {
+    "commits.md": "standards",
+    "pull-requests.md": "standards"
+  }
 }

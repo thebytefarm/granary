@@ -5,8 +5,8 @@ Describe an existing directory with `granary.json` and validate its metadata.
 ## Prerequisites
 
 - A built local Granary workspace
-- A directory containing useful docs, source, or examples
-- An entry file that introduces and indexes the material
+- A directory containing useful Markdown reference material
+- A root `README.md` that introduces and indexes the material
 
 ## 1. Choose the pack root
 
@@ -18,10 +18,6 @@ context/framework/
   README.md
   docs/
     api.md
-  source/
-    client.ts
-  examples/
-    request.ts
 ```
 
 One source repository can contain several directories shaped this way.
@@ -36,8 +32,6 @@ In `README.md`, describe when the material is useful and link to its topics usin
 Reference material for the framework's client API.
 
 - [API](docs/api.md)
-- [Client implementation](source/client.ts)
-- [Request example](examples/request.ts)
 ```
 
 The entry file is a reading map. Keep detailed reference material in its owning files.
@@ -48,20 +42,22 @@ The entry file is a reading map. Keep detailed reference material in its owning 
 {
   "name": "example/framework-reference",
   "version": "0.1.0",
-  "description": "Client API documentation, implementation, and examples.",
-  "entry": "README.md",
-  "files": ["README.md", "docs/**/*.md", "source/**/*.ts", "examples/**/*.ts"]
+  "description": "Client API documentation and usage guidance.",
+  "files": {
+    "include": ["README.md", "docs/**", "examples/**"],
+    "exclude": ["**/fixtures/**"]
+  }
 }
 ```
 
-The directory owns its identity, version, and selection, so it can be distributed independently. This leaf installs its selected files as one `docs` group. Use a [curated definition](../reference/pack-definition.md) for separate docs, code, and examples groups. The content version tracks the pack itself; record the upstream framework version and revision in its reference material.
+The directory owns its identity and can be distributed independently. `version` and `description` are optional. Grouped `files` selects any file type, including source and examples. Without `files` or child `packs`, the source's regular files are selected; explicit selection keeps incidental material out. Granary chooses `README.md` when selected, otherwise the first selected file, as the navigation entrypoint. Add child `packs` to compose other selections. See [project configuration](../reference/project-config.md#unified-fields).
 
 ## 4. Validate it
 
 From the Granary workspace root:
 
 ```sh
-pnpm cli validate --cwd context/framework
+granary validate --cwd context/framework
 ```
 
 Use an absolute `--cwd` path if the pack is outside the workspace.

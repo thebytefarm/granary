@@ -1,26 +1,144 @@
 {
   "schemaVersion": 1,
+  "composition": {
+    "document": {
+      "name": "granary",
+      "packs": {
+        "file:packs#recommended-typescript": {
+          "output": ".context/docs/bytefarm"
+        }
+      }
+    },
+    "definitions": [
+      {
+        "id": ".|packs@local#recommended-typescript",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs"
+          }
+        },
+        "hash": "11097fd908be3ef2f034ecedce610e394d3e153c324f1d2e0a8146c33882c51f",
+        "members": [
+          ".|packs/engineering@local#",
+          ".|packs/git@local#",
+          ".|packs/documentation@local#",
+          ".|packs/agent-instructions@local#",
+          ".|packs/typescript@local#"
+        ]
+      },
+      {
+        "id": ".|packs/engineering@local#",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs/engineering"
+          }
+        },
+        "hash": "ce5432ff322fa3e4aa8b02d6ebc94773b27ae8343670b79c61892b6842f31601",
+        "members": []
+      },
+      {
+        "id": ".|packs/git@local#",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs/git"
+          }
+        },
+        "hash": "e9ea4e6bbcd7ba287d162d7b50981fca1f11e71bbc31c3fbed941a5c4eb03a54",
+        "members": []
+      },
+      {
+        "id": ".|packs/documentation@local#",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs/documentation"
+          }
+        },
+        "hash": "470d240d76c4c29c6214e3a64d303074156e414832f66900b55964f67b53685e",
+        "members": []
+      },
+      {
+        "id": ".|packs/agent-instructions@local#",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs/agent-instructions"
+          }
+        },
+        "hash": "9d2c7392455cd02c74cd983b28c75fe24c20f90fc82df1d66f6a16ed71e72b0e",
+        "members": []
+      },
+      {
+        "id": ".|packs/typescript@local#",
+        "path": ".",
+        "origin": {
+          "source": {
+            "provider": "local",
+            "path": "packs/typescript"
+          }
+        },
+        "hash": "c937f41e599af36e704907ba6a89bfdef5d11385354251235263d647cee35602",
+        "members": []
+      }
+    ]
+  },
   "packs": [
     {
       "request": {
-        "name": "bytefarm/engineering",
+        "name": "pack-91f61bd467f46b806945934b",
+        "label": "file:./engineering",
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/engineering"
         },
         "manifest": "granary.json",
-        "version": "0.1.0",
-        "content": ["docs"]
+        "content": ["docs"],
+        "output": ".context",
+        "destination": ".context/docs/bytefarm/engineering/0.1.0",
+        "selection": {
+          "docs": {
+            "path": ".",
+            "entry": "README.md",
+            "files": [
+              "README.md",
+              "change-discipline.md",
+              "comments.md",
+              "dependencies.md",
+              "errors-as-values.md",
+              "functional-design.md",
+              "immutability.md",
+              "testing.md"
+            ],
+            "documents": {
+              "change-discipline.md": "standards",
+              "comments.md": "standards",
+              "dependencies.md": "standards",
+              "errors-as-values.md": "standards",
+              "functional-design.md": "standards",
+              "immutability.md": "standards",
+              "testing.md": "standards"
+            }
+          }
+        }
       },
       "definition": {
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/engineering"
         }
       },
-      "definitionHash": "95671d6ed1bc4395d64137586bc078cdfa4e1c2569c0c19ec827943642362f20",
-      "definitionVersion": "0.1.0",
-      "version": "0.1.0",
+      "definitionHash": "640b2287f14a0849b659e4d001777f62cfe12df6a6b3a7430553f8d1e37052cc",
+      "definitionHashKind": "selection-v1",
+      "definitionVersion": "0.0.0",
+      "version": "0.0.0",
       "output": ".context",
       "codeOutput": ".context/repos",
       "groups": [
@@ -28,12 +146,21 @@
           "name": "docs",
           "origin": {
             "source": {
-              "kind": "local",
+              "provider": "local",
               "path": "packs/engineering"
             }
           },
           "root": ".",
           "entry": "README.md",
+          "documents": {
+            "change-discipline.md": "standards",
+            "comments.md": "standards",
+            "dependencies.md": "standards",
+            "errors-as-values.md": "standards",
+            "functional-design.md": "standards",
+            "immutability.md": "standards",
+            "testing.md": "standards"
+          },
           "files": [
             {
               "path": "README.md",
@@ -41,31 +168,31 @@
             },
             {
               "path": "change-discipline.md",
-              "hash": "7d3ab619b5e7b76f625ef857a683186f5a6e72597aeb067201661f42620f257c"
+              "hash": "df3e55b9fe9aa11583945bc6612d0f223b477dd07bb1e8fd60feb5634cf347c2"
             },
             {
               "path": "comments.md",
-              "hash": "b511d68d4aec9757e607ecf666e4d51f7a5c97f3a5e5cd8bae877c4472a4b5a3"
+              "hash": "10630b981643aeb6862cbd77048f07c9c40350092bac44c1ce6148b4e39310ac"
             },
             {
               "path": "dependencies.md",
-              "hash": "3e9272c1a8f45337e69df922c6a40fcfbc3b344ea88e28d398bb22154999a6ae"
+              "hash": "f807f0794edfa14fbeaa9ed080f59a0cd7d0a3ef3f21926bd40bf1bee78e21e1"
             },
             {
               "path": "errors-as-values.md",
-              "hash": "f158771bd43855f91327f6005db90c538db4533ffe14637bc9d20ce974c48068"
+              "hash": "d2767352edb98098612761b2cb2c236848530f2d0e451bfea15ff0705be59b1f"
             },
             {
               "path": "functional-design.md",
-              "hash": "e6fff4c17220f724bbaf852091f6a6fe95e1a1606a87f7784d19c961ba90f5d5"
+              "hash": "c7661a0f65aaf65bc76179aa6736a2e2bbfa3b8e2d500bfa3f5ec635ffb80322"
             },
             {
               "path": "immutability.md",
-              "hash": "75cab0638769d3bab92739f0240138fce0b0188800b305a16dcf87c32f61dcd9"
+              "hash": "2685ca190b792283b646e791e86e0f10baa9418f79c2884d372f49cf5e09aeae"
             },
             {
               "path": "testing.md",
-              "hash": "c1fa128b1c5b17e36adb3d501c91c7f392f975762c2f8c2acf9e3cdf2f46b6ce"
+              "hash": "e732de7fe1a4442d9f076933ae62e5b86890a85df5df0c491a7764c8d5e329a5"
             }
           ]
         }
@@ -73,24 +200,38 @@
     },
     {
       "request": {
-        "name": "bytefarm/git",
+        "name": "pack-6cd5097a82fecd15de58f19d",
+        "label": "file:./git",
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/git"
         },
         "manifest": "granary.json",
-        "version": "0.1.0",
-        "content": ["docs"]
+        "content": ["docs"],
+        "output": ".context",
+        "destination": ".context/docs/bytefarm/git/0.1.0",
+        "selection": {
+          "docs": {
+            "path": ".",
+            "entry": "README.md",
+            "files": ["README.md", "commits.md", "pull-requests.md"],
+            "documents": {
+              "commits.md": "standards",
+              "pull-requests.md": "standards"
+            }
+          }
+        }
       },
       "definition": {
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/git"
         }
       },
-      "definitionHash": "1537f1d7b90a982918eb9aa8d17f358542b7fccc9c2157e7263ca7750ffd380f",
-      "definitionVersion": "0.1.0",
-      "version": "0.1.0",
+      "definitionHash": "e1f1dcbca1b60cdf90bb09685df35db4be37d820082c9c1727558235290904f4",
+      "definitionHashKind": "selection-v1",
+      "definitionVersion": "0.0.0",
+      "version": "0.0.0",
       "output": ".context",
       "codeOutput": ".context/repos",
       "groups": [
@@ -98,12 +239,16 @@
           "name": "docs",
           "origin": {
             "source": {
-              "kind": "local",
+              "provider": "local",
               "path": "packs/git"
             }
           },
           "root": ".",
           "entry": "README.md",
+          "documents": {
+            "commits.md": "standards",
+            "pull-requests.md": "standards"
+          },
           "files": [
             {
               "path": "README.md",
@@ -111,11 +256,11 @@
             },
             {
               "path": "commits.md",
-              "hash": "d3681d72a3c71861b7ca5b9f9124125c5f76550adb6fba4d2b75dafda0751b8d"
+              "hash": "0a16a021266ce7e4fb53ab0aaf6383a6621d726d4abdff1276f38b3b2fecc5b1"
             },
             {
               "path": "pull-requests.md",
-              "hash": "dded109247bf84207c248c641edcbf0aa7703d3f30226d52510853a06c18a98c"
+              "hash": "d60744288551e78d58c79ff4344b6be990d300bc7bbe7bf43d8fc0a3e1cddd13"
             }
           ]
         }
@@ -123,24 +268,58 @@
     },
     {
       "request": {
-        "name": "bytefarm/documentation",
+        "name": "pack-297625bfff396486a09f0fa2",
+        "label": "file:./documentation",
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/documentation"
         },
         "manifest": "granary.json",
-        "version": "0.1.0",
-        "content": ["docs"]
+        "content": ["docs"],
+        "output": ".context",
+        "destination": ".context/docs/bytefarm/documentation/0.1.0",
+        "selection": {
+          "docs": {
+            "path": ".",
+            "entry": "README.md",
+            "files": [
+              "README.md",
+              "diagrams.md",
+              "formatting.md",
+              "guides.md",
+              "quickstarts.md",
+              "references.md",
+              "runbooks.md",
+              "standards.md",
+              "troubleshooting.md",
+              "tutorials.md",
+              "writing.md"
+            ],
+            "documents": {
+              "diagrams.md": "standards",
+              "formatting.md": "standards",
+              "guides.md": "standards",
+              "quickstarts.md": "standards",
+              "references.md": "standards",
+              "runbooks.md": "standards",
+              "standards.md": "standards",
+              "troubleshooting.md": "standards",
+              "tutorials.md": "standards",
+              "writing.md": "standards"
+            }
+          }
+        }
       },
       "definition": {
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/documentation"
         }
       },
-      "definitionHash": "f29908469d2cf158b13a8ecbc7c74268b3caf829a1d46af42d46bf2e14fb545f",
-      "definitionVersion": "0.1.0",
-      "version": "0.1.0",
+      "definitionHash": "f34f51e6d01cff1287ff6570ce3a28e25beb708275bdb4b86e5acaa9f0e54e35",
+      "definitionHashKind": "selection-v1",
+      "definitionVersion": "0.0.0",
+      "version": "0.0.0",
       "output": ".context",
       "codeOutput": ".context/repos",
       "groups": [
@@ -148,12 +327,24 @@
           "name": "docs",
           "origin": {
             "source": {
-              "kind": "local",
+              "provider": "local",
               "path": "packs/documentation"
             }
           },
           "root": ".",
           "entry": "README.md",
+          "documents": {
+            "diagrams.md": "standards",
+            "formatting.md": "standards",
+            "guides.md": "standards",
+            "quickstarts.md": "standards",
+            "references.md": "standards",
+            "runbooks.md": "standards",
+            "standards.md": "standards",
+            "troubleshooting.md": "standards",
+            "tutorials.md": "standards",
+            "writing.md": "standards"
+          },
           "files": [
             {
               "path": "README.md",
@@ -161,43 +352,43 @@
             },
             {
               "path": "diagrams.md",
-              "hash": "65b3f4912ed73e903492315d10aeb56e351973cabbae1d5509f34bca05d4fe2f"
+              "hash": "494866eb2a6ad10e06f24c8eea5d237f4b7c6e16688d1d56009eb5d872779863"
             },
             {
               "path": "formatting.md",
-              "hash": "6cd3e24418608f8bfd02cedfe9524544ed4141e8b4d7ced3705ea0b77e9e6210"
+              "hash": "acd1de70ad9a07493ff494d5a875579194a987cf2f94ba46662723f1baa5185f"
             },
             {
               "path": "guides.md",
-              "hash": "f9e9e003589ef050c3a9aa8c77a5b1158a06413daad8a66553b243c2c3ba1b13"
+              "hash": "b86ab6daf5d5eb6ed109d6728bf8b66f62d4e6a0702c5aa04d1b559e7cca4eb4"
             },
             {
               "path": "quickstarts.md",
-              "hash": "060b42412ed394af3e563ded52fc823eb433c00b3abd75c4200e369bde3b1a7a"
+              "hash": "ee95cdfbdec32c8b8bbd7dab89c5bd9fd095fb51cbc54304471019653ee449ce"
             },
             {
               "path": "references.md",
-              "hash": "fe0073480d3d16bdac8d65793561bd7e902db7d617a810e7303646e5de40c72a"
+              "hash": "f59833c6273d9657ed3e55cf9aee5b772e03390aa3d6d612436e5f68e27cb44c"
             },
             {
               "path": "runbooks.md",
-              "hash": "c23e587a060342a46398e5cce647a29dc8f8de513e8c2a46711ed3a970d09e50"
+              "hash": "a8fe86af4eaa9730c20bbfb7658194292359b2ec2392191d805c507415decd80"
             },
             {
               "path": "standards.md",
-              "hash": "1cfbc5f9ce673645514bab3f4edfb3042019a8ad39f9a5d1318443188ae1970f"
+              "hash": "b133752cb6049aa2ebf6a9b9b945611e1ac64fa744f888048edfabb7da7f88ab"
             },
             {
               "path": "troubleshooting.md",
-              "hash": "5790981efbd399e988375ef402919063425973cf75a539c9d2ef771dd1d789d4"
+              "hash": "15ecf53d7821a4b1ac29ac87aaa9c9037b025d45c832b6be527ab42b21283bd2"
             },
             {
               "path": "tutorials.md",
-              "hash": "4f8535bdd4736c41c87585cea33c55c5603287e76cdc5d9fa907109803d822a3"
+              "hash": "148891fc7ab44e46f6117cb3362e5966e0ae6ed0e3aac1d3b8152fd0480c2cc7"
             },
             {
               "path": "writing.md",
-              "hash": "293b78d572cc2c316658ed470335762a135313527eafbddce672ca8b32c6859b"
+              "hash": "f88212609ab83d66c85bbc87786c795fc6b2a9a1b0940eae9dbf87ae6ed06c00"
             }
           ]
         }
@@ -205,24 +396,38 @@
     },
     {
       "request": {
-        "name": "bytefarm/agent-instructions",
+        "name": "pack-e0254f5f7e812ff81704056c",
+        "label": "file:./agent-instructions",
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/agent-instructions"
         },
         "manifest": "granary.json",
-        "version": "0.1.0",
-        "content": ["docs"]
+        "content": ["docs"],
+        "output": ".context",
+        "destination": ".context/docs/bytefarm/agent-instructions/0.1.0",
+        "selection": {
+          "docs": {
+            "path": ".",
+            "entry": "README.md",
+            "files": ["README.md", "context-routing.md", "instructions.md"],
+            "documents": {
+              "context-routing.md": "standards",
+              "instructions.md": "standards"
+            }
+          }
+        }
       },
       "definition": {
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/agent-instructions"
         }
       },
-      "definitionHash": "333b979802f89ce69f718009265151669e016ca772760d69f14eb1e6785102d3",
-      "definitionVersion": "0.1.0",
-      "version": "0.1.0",
+      "definitionHash": "011d53f66febc7c27be325b26ef41431df9d08311e5755f3059a744d724058a2",
+      "definitionHashKind": "selection-v1",
+      "definitionVersion": "0.0.0",
+      "version": "0.0.0",
       "output": ".context",
       "codeOutput": ".context/repos",
       "groups": [
@@ -230,12 +435,16 @@
           "name": "docs",
           "origin": {
             "source": {
-              "kind": "local",
+              "provider": "local",
               "path": "packs/agent-instructions"
             }
           },
           "root": ".",
           "entry": "README.md",
+          "documents": {
+            "context-routing.md": "standards",
+            "instructions.md": "standards"
+          },
           "files": [
             {
               "path": "README.md",
@@ -243,11 +452,11 @@
             },
             {
               "path": "context-routing.md",
-              "hash": "d2e89a591da363e7270d685797568886ab3ce7f09a1badf0303f313d622fee19"
+              "hash": "4b16edf5263884f1e97d7477e29c6622a28117e6164ded7d3f6984099d204a8f"
             },
             {
               "path": "instructions.md",
-              "hash": "4a1424745eb04d2dd1b385ef34d3dfeb107fca6e8635e5095ab0cb1e0fdfef9b"
+              "hash": "a2f0c6e917a5cda3371864e95bd96ab34f4be16c58550b0c317ad6070a7ab09a"
             }
           ]
         }
@@ -255,24 +464,60 @@
     },
     {
       "request": {
-        "name": "bytefarm/typescript-functional",
+        "name": "pack-26d2fa5518c8350a8efca4e4",
+        "label": "file:./typescript",
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/typescript"
         },
         "manifest": "granary.json",
-        "version": "0.1.0",
-        "content": ["docs"]
+        "content": ["docs"],
+        "output": ".context",
+        "destination": ".context/docs/bytefarm/typescript-functional/0.1.0",
+        "selection": {
+          "docs": {
+            "path": ".",
+            "entry": "README.md",
+            "files": [
+              "README.md",
+              "comments.md",
+              "conditionals.md",
+              "errors.md",
+              "file-structure.md",
+              "functions.md",
+              "naming.md",
+              "paradigm.md",
+              "state.md",
+              "testing.md",
+              "types.md",
+              "utilities.md"
+            ],
+            "documents": {
+              "comments.md": "standards",
+              "conditionals.md": "standards",
+              "errors.md": "standards",
+              "file-structure.md": "standards",
+              "functions.md": "standards",
+              "naming.md": "standards",
+              "paradigm.md": "standards",
+              "state.md": "standards",
+              "testing.md": "standards",
+              "types.md": "standards",
+              "utilities.md": "standards"
+            }
+          }
+        }
       },
       "definition": {
         "source": {
-          "kind": "local",
+          "provider": "local",
           "path": "packs/typescript"
         }
       },
-      "definitionHash": "df5d99d812f05f9fe2ab9037c2aa79051f13f05a6279d81376f789d99d4d372d",
-      "definitionVersion": "0.1.0",
-      "version": "0.1.0",
+      "definitionHash": "0cbe07277e89594bd6f5785dc3900f543b8dd5cdfec942541f42351659adfc3d",
+      "definitionHashKind": "selection-v1",
+      "definitionVersion": "0.0.0",
+      "version": "0.0.0",
       "output": ".context",
       "codeOutput": ".context/repos",
       "groups": [
@@ -280,12 +525,25 @@
           "name": "docs",
           "origin": {
             "source": {
-              "kind": "local",
+              "provider": "local",
               "path": "packs/typescript"
             }
           },
           "root": ".",
           "entry": "README.md",
+          "documents": {
+            "comments.md": "standards",
+            "conditionals.md": "standards",
+            "errors.md": "standards",
+            "file-structure.md": "standards",
+            "functions.md": "standards",
+            "naming.md": "standards",
+            "paradigm.md": "standards",
+            "state.md": "standards",
+            "testing.md": "standards",
+            "types.md": "standards",
+            "utilities.md": "standards"
+          },
           "files": [
             {
               "path": "README.md",
@@ -293,123 +551,49 @@
             },
             {
               "path": "comments.md",
-              "hash": "ba8f0ccb3537cf2f9ef246b7f21c15d1032c39883c31d6e3072d6cc64dccb9d4"
+              "hash": "28af1a01d04002b0aad495dbe183b251625d64874d1d3f75f0951e84407c3ba5"
             },
             {
               "path": "conditionals.md",
-              "hash": "9c4a09853fb9dd5709887ebecd24744eae21b70e4c1cae275fd7d4b0c8758556"
+              "hash": "9cdab78656ef2f4e7078bf953099c9f90406f1a683ff64c2b7997416277348e3"
             },
             {
               "path": "errors.md",
-              "hash": "c88add41a79fb0fdcd4980cd65fef65734c3ddb44ffe8bc3567573f38e2ce239"
+              "hash": "49c8b9d02a25f45d15ce4fc89a5afed0987f3e97a0086641cb4030e443461010"
             },
             {
               "path": "file-structure.md",
-              "hash": "f239cebe71d599ed2dd2f66e67064c4deaa591254c9a794471a90431a0e1fd71"
+              "hash": "1c0e1c8999b04c2e95a11124591ac988b8dafa689a817ca89ad55b4e13a22b47"
             },
             {
               "path": "functions.md",
-              "hash": "a537fcb89a2d09f481451a5c1fde4618f2437ba1f158499e5c4e99feedaaa01a"
+              "hash": "755468ff736ba34c7e2190b258d014415cb680ce8439838c236a3392ebaca47b"
             },
             {
               "path": "naming.md",
-              "hash": "59f3f5f2344d2572c26e7f4c98337bcc9f3407ce58c7ec6163571d6856b5e513"
+              "hash": "24edaebd1587df2129db6620c059bf9a9f3f0bd6ce9a31c980da138c3ac58f74"
             },
             {
               "path": "paradigm.md",
-              "hash": "7f448e8c788356cf212477103c7a0893f61aa711a1081584d4e2347fad751b9b"
+              "hash": "7d4af1ad3f834ca28522537dda3e417da7b0d19e9d21cc02e1a56c989f2cdc59"
             },
             {
               "path": "state.md",
-              "hash": "7431c9ecc5b5a0d495872d6bf55f27cfdc35376260d60eab1acec98387c0dc6f"
+              "hash": "eda095d1e398e2fafb41275c5748ec24b4236644656b65c623380e5fd22fce04"
             },
             {
               "path": "testing.md",
-              "hash": "eb574a239e882d8c82c707a0d9132f56b469a9a10cc058b8811f422f9896bf0d"
+              "hash": "e766e8f02117acadb0c66c8b1b227383ea6cfcc952edf422af2809c4d3fb7d06"
             },
             {
               "path": "types.md",
-              "hash": "69a12c198697afdd69ca9c1b805b7255a93d3381a97af162bed95bf966a54078"
+              "hash": "8e023915f840ad3ffbb34fc6929c2399f539493e88316b15f1a4a389f9559348"
             },
             {
               "path": "utilities.md",
-              "hash": "1e0ce378df5560f9a76a6452b4f7fc343fdf71ffeaecca755852f492df3b7e41"
+              "hash": "4338ab84195949bead0c6170b450bba5b0b3136b3957ca5926e76bb287da51f1"
             }
           ]
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "request": {
-        "name": "bytefarm/recommended-typescript",
-        "source": {
-          "kind": "local",
-          "path": "."
-        },
-        "manifest": "granary.json",
-        "version": "0.1.0"
-      },
-      "definition": {
-        "source": {
-          "kind": "local",
-          "path": "."
-        }
-      },
-      "definitionHash": "d9b218e380f7709ccbe7d8eec3b5b4417e60e38be8f0b80190866e024b30bd25",
-      "definitionHashKind": "catalog-v1",
-      "version": "0.1.0",
-      "members": [
-        {
-          "name": "bytefarm/engineering",
-          "source": {
-            "kind": "local",
-            "path": "packs/engineering"
-          },
-          "manifest": "granary.json",
-          "version": "0.1.0",
-          "content": ["docs"]
-        },
-        {
-          "name": "bytefarm/git",
-          "source": {
-            "kind": "local",
-            "path": "packs/git"
-          },
-          "manifest": "granary.json",
-          "version": "0.1.0",
-          "content": ["docs"]
-        },
-        {
-          "name": "bytefarm/documentation",
-          "source": {
-            "kind": "local",
-            "path": "packs/documentation"
-          },
-          "manifest": "granary.json",
-          "version": "0.1.0",
-          "content": ["docs"]
-        },
-        {
-          "name": "bytefarm/agent-instructions",
-          "source": {
-            "kind": "local",
-            "path": "packs/agent-instructions"
-          },
-          "manifest": "granary.json",
-          "version": "0.1.0",
-          "content": ["docs"]
-        },
-        {
-          "name": "bytefarm/typescript-functional",
-          "source": {
-            "kind": "local",
-            "path": "packs/typescript"
-          },
-          "manifest": "granary.json",
-          "version": "0.1.0",
-          "content": ["docs"]
         }
       ]
     }

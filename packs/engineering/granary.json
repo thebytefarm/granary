@@ -2,6 +2,13 @@
   "name": "bytefarm/engineering",
   "version": "0.1.0",
   "description": "Shared functional engineering standards.",
-  "entry": "README.md",
-  "files": ["*.md"]
+  "documents": {
+    "change-discipline.md": "standards",
+    "comments.md": "standards",
+    "dependencies.md": "standards",
+    "errors-as-values.md": "standards",
+    "functional-design.md": "standards",
+    "immutability.md": "standards",
+    "testing.md": "standards"
+  }
 }

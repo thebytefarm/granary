@@ -1,30 +1,79 @@
-# Standards packs
+# Prebuilt packs
 
-Select the shared engineering components and the language rules your project uses. Each of the seven pack directories owns its `granary.json` and material. Root `granary.json` provides three recommended presets that reference those independent packs.
+Install a recommended set for your language, or browse the individual components. Every set combines shared engineering rules with language-specific standards.
+
+## Install a recommended set
+
+Install the CLI once:
+
+```sh
+npm install --global granary-ai
+```
+
+The workspace implementation uses the current manifest contract; it has not been published yet. Check out this repository alongside your project:
+
+```sh
+gh repo clone thebytefarm/granary ../granary-packs
+```
+
+Run one of these commands from your project root using the workspace CLI.
+
+### TypeScript
+
+Factories, immutable values, typed Results, exhaustive matching, and explicit contracts.
+
+```sh
+granary add file:../granary-packs/packs#recommended-typescript
+```
+
+### Rust
+
+Ownership, native Result and Option, enums, iterator composition, and isolated effects.
+
+```sh
+granary add file:../granary-packs/packs#recommended-rust
+```
+
+### Python
+
+Typed Results, immutable domain data, pure transformations, and explicit adapter boundaries.
+
+```sh
+granary add file:../granary-packs/packs#recommended-python
+```
+
+Each set includes engineering, Git, documentation, agent instructions, and its language component, in that order. Shared components install once when you select multiple sets. Language-specific rules apply only to files in that language.
+
+Read `.context/INDEX.md` after installation. It links the installed components and records their reading order. Commit `granary.json` and `granary-lock.json`; teammates restore the same material with `granary install`.
 
 ## Components
 
-| Pack                             | Entry                                               |
-| -------------------------------- | --------------------------------------------------- |
-| `bytefarm/engineering`           | [Functional engineering](engineering/README.md)     |
-| `bytefarm/git`                   | [Scoped history and review](git/README.md)          |
-| `bytefarm/documentation`         | [Task-oriented writing](documentation/README.md)    |
-| `bytefarm/agent-instructions`    | [Operating contracts](agent-instructions/README.md) |
-| `bytefarm/typescript-functional` | [Functional TypeScript](typescript/README.md)       |
-| `bytefarm/rust-functional`       | [Functional Rust](rust/README.md)                   |
-| `bytefarm/python-functional`     | [Functional Python](python/README.md)               |
+### Languages
 
-Each component owns its identity, version, file selection, rules, and reading index. Its manifest describes the pack directly with top-level `name`, `version`, `description`, `entry`, and `files`; paths resolve from its directory. The directory can be copied or distributed as a standalone source.
+| Pack                             | Entry                                                       |
+| -------------------------------- | ----------------------------------------------------------- |
+| `bytefarm/typescript-functional` | [Functional TypeScript](/packs/languages/typescript/README) |
+| `bytefarm/rust-functional`       | [Functional Rust](/packs/languages/rust/README)             |
+| `bytefarm/python-functional`     | [Functional Python](/packs/languages/python/README)         |
 
-Install one pack directly from the checkout:
+### Shared standards
+
+| Pack                          | Entry                                                          |
+| ----------------------------- | -------------------------------------------------------------- |
+| `bytefarm/engineering`        | [Functional engineering](/packs/shared/engineering/README)     |
+| `bytefarm/git`                | [Scoped history and review](/packs/shared/git/README)          |
+| `bytefarm/documentation`      | [Task-oriented writing](/packs/shared/documentation/README)    |
+| `bytefarm/agent-instructions` | [Operating contracts](/packs/shared/agent-instructions/README) |
+
+Each component owns its identity, version, rules, and reading index. Its manifest declares `name`, `version`, `description`, and explicit standards document classifications. Markdown is included recursively with `README.md` as the entrypoint; no authored file list is needed. The directory can be copied or distributed as a standalone source.
+
+To install an individual component from a local Granary checkout, point the CLI at its directory:
 
 ```sh
-CONSUMER="$(mktemp -d)"
-pnpm cli add "$PWD/packs/rust" --cwd "$CONSUMER"
-pnpm cli validate --cwd packs/rust
+granary add ./packs/rust --cwd /path/to/your-project
 ```
 
-The single pack is selected automatically. Use `pnpm cli add ./packs --list` to discover all seven independent packs.
+The single pack is selected automatically. Use `granary add ./packs --list` from that checkout to inspect the declared recommended sets and their members.
 
 ## Recommended sets
 
@@ -34,23 +83,22 @@ The single pack is selected automatically. Use `pnpm cli add ./packs --list` to 
 | `bytefarm/recommended-rust`       | Functional Rust       |
 | `bytefarm/recommended-python`     | Functional Python     |
 
-Every set includes engineering, Git, documentation, agent instructions, and its language component, in that order. Preset members specify a source directory, identity, and exact version; the referenced pack's manifest owns its payload. Shared leaves install once when multiple sets are selected. Language-specific rules apply only to files in that language.
+For a polyglot project, declare several sets with a shared destination in `granary.json`:
 
-From a Granary checkout, install a set into a fresh consumer:
-
-```sh
-CONSUMER="$(mktemp -d)"
-pnpm cli add "$PWD" --pack recommended-typescript --cwd "$CONSUMER"
-pnpm cli list --cwd "$CONSUMER"
+```json
+{
+  "name": "polyglot-project",
+  "packs": {
+    "file:../granary-packs/packs#recommended-typescript": { "output": ".context/docs/bytefarm" },
+    "file:../granary-packs/packs#recommended-rust": { "output": ".context/docs/bytefarm" },
+    "file:../granary-packs/packs#recommended-python": { "output": ".context/docs/bytefarm" }
+  }
+}
 ```
 
-Read the consumer's `.context/INDEX.md` for canonical entrypoints and reading order. Selecting all three sets installs seven unique components. Validate the provider declarations from the repository root with `pnpm cli validate`.
+Run `granary install`. Selecting all three sets at the same destination installs seven unique components. The lockfile records their exact source revisions, membership, and file integrity.
 
-## Granary's own context
-
-Granary's root `dependencies` selects only `bytefarm/recommended-typescript`. Its installed index and agent standards region contain those five components. Repository-specific commands, authorization, and release workflow live in `AGENTS.md` and `contributing/`.
-
-Standalone packs describe themselves; the root catalog composes recommended presets and records Granary's dependencies. Consumer-only projects can declare dependencies without providing a pack. Flat preset definitions and older consumer configurations remain supported reader formats, exercised through test fixtures.
+`packs/granary.json` owns the distributed sets. The repository-root `granary.json` is this project's consumer configuration and installs only TypeScript and shared standards.
 
 ## Rule language
 

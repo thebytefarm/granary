@@ -8,11 +8,14 @@ Node.js 26+, pnpm workspaces, Turborepo, TypeScript 7 (native `tsc`), maltty, ts
 
 ## Structure
 
-- `packages/cli`: `granary-ai`, exposing the `granary` executable through maltty.
+- `packages/granary`: `granary-ai`, combining SDK exports, optional plugin subpaths, maintenance skills, and the executable.
+- `packages/cli`: private `@granary/cli`, owning maltty commands and explicit terminal startup.
+- `packages/sdk`: private `@granary/sdk`, exposing plugin-free `granary()` with current-directory defaults.
+- `packages/plugins`: private `@granary/plugins`, owning prebuilt plugins and opt-in defaults.
 - `packages/core`: private pack schema and installation logic package.
 - `docs/concepts`: product direction and unresolved design decisions.
 - `docs/examples`: checked-in curated definitions demonstrating separate sources.
-- `assets`: README artwork.
+- `.github/assets`: shared branding and README/site banner; `public` links here for the docs site.
 
 ## Commands
 
@@ -26,11 +29,22 @@ pnpm docs:build
 pnpm docs:index
 pnpm validate
 pnpm --filter granary-ai test
+pnpm --filter granary-ai test:network
 ```
 
 `pnpm validate` runs package and docs-config typechecks, lint, format, tests, docs link checks, and Almanac index checks. CLI integration tests execute the built entrypoint; Turborepo builds it before testing. Use `pnpm docs:build` for production-site validation when changing the site.
 
+Public CLI integration tests belong to `packages/granary` and execute its built distribution. The packed-package test installs a tarball in a disposable consumer using pnpm's offline dependency cache, then runs its installed `granary` bin. Private CLI adapter tests use `maltty/test`. The separate `test:network` command builds first and installs pinned Next.js documentation from GitHub; it is not part of ordinary validation.
+
 Tests always execute to inspect current root standards and available language tools. Rust examples compile when rustc is installed. Python syntax and native examples run with Python; returns execution and strict mypy-plugin checks report skips when their dependencies are unavailable.
+
+### Test layout
+
+- Put `*.test.ts` files in the owning capability's `__tests__/`; package-wide tests belong in `src/__tests__/`.
+- Keep reusable test inputs in sibling `__fixtures__/` directories so tests and evaluations can share them.
+- Keep shared test support in the narrowest owning `__tests__/` directory, outside application modules.
+- Reserve `__evals__/` for actual AI/model quality evaluations, run separately from deterministic tests.
+- Create these directories only when they contain files; do not add empty scaffolding.
 
 ## House style
 
@@ -82,7 +96,7 @@ Use [Conventional Commits](.context/docs/bytefarm/git/0.1.0/commits.md) and [sco
 
 ## Documentation
 
-Each directory under `packs/` owns an independent `granary.json`. Root `granary.json` composes recommended presets and consumes only `bytefarm/recommended-typescript` into `.context/`. Read every applicable installed standard before changing code or documentation. Exported functions require multiline JSDoc; follow the canonical JSDoc page for examples and private declarations.
+Each component directory under `packs/` owns an independent `granary.json`. `packs/granary.json` composes the distributed recommended sets. Root `granary.json` consumes only the recommended TypeScript set into `.context/`. Read every applicable installed standard before changing code or documentation. Exported functions require multiline JSDoc; follow the canonical JSDoc page for examples and private declarations.
 
 The installed recommended set contains shared components and TypeScript mechanics. Rust and Python packs are distribution material; read their authored rules only when editing their source examples. Repository-specific commands, dependency approval, and release authorization remain in these instructions.
 
@@ -137,25 +151,34 @@ Almanac generates the two regions below from `almanac.json`. Use the standards r
 <docs-index>
 
 README.md: Coding agents work better when they can read how your tools actually work. The right API reference. The...
+VISION.md: Give coding agents the right docs, source, and examples for the tools a project actually uses. Install that material...
 contributing/README.md: Before editing Granary, identify the behavior you intend to change and read the rules for that part of the CLI or...
 contributing/agent-context.md: Start a repository task at root AGENTS.md. It owns commands and permission boundaries and routes standards retrieval...
-docs/concepts/context-packs.md: Install versioned docs and source into your repo so coding agents can work from local reference material.
-docs/concepts/installation.md: Granary installs selected reference material into a project-owned .context/ directory.
+docs/concepts/client-plugins.md: Expose a small factory-based client that works without plugins. Prebuilt interpretation plugins are optional and...
+docs/concepts/context-packs.md: Your project uses a particular version of a tool. A coding agent may know a different version, and your team's...
+docs/concepts/installation.md: Granary installs selected reference material into consumer-owned paths, defaulting to .granary/context/.
+docs/concepts/manifest-api-proposal.md: Status: draft for review. This describes a proposed API, not the currently implemented schema. Approval covers the...
+docs/concepts/pack-maintenance.md: Treat installed reference material as content a project may intentionally customize, with explicit review when...
 docs/concepts/skills-compatibility.md: Granary borrows skills' source-based installation experience while defining a separate reference-material contract.
-docs/concepts/standards-packs.md: Split the engineering reference into independent packs, then select a recommended preset for each language. Each of...
+docs/concepts/standards-documents.md: Represent standards as readable Markdown with extractable structure, including their rationale, rules, examples, and...
+docs/concepts/standards-packs.md: Split the engineering reference into independent packs, then select a recommended set for each language. Each...
 docs/getting-started/introduction.md: Granary brings the docs and source a coding agent needs into the repository where it works.
-docs/getting-started/quick-start.md: Build Granary locally, validate its catalog, and restore the TypeScript context it consumes.
-docs/getting-started/status.md: Local/Git installation, content selection, and pinned restoration are implemented in the workspace CLI.
+docs/getting-started/quick-start.md: Use the workspace CLI to install TypeScript and shared standards into a disposable project. The current manifest...
 docs/guides/create-pack.md: Describe an existing directory with granary.json and validate its metadata.
-docs/guides/install-packs.md: Install selected docs and source from local directories or Git repositories with the workspace CLI.
+docs/guides/install-packs.md: Install selected reference material from local directories or Git repositories.
 docs/guides/use-agent-context.md: Point the agent at a pack's entry file and let it read relevant topics on demand.
-docs/reference/cli.md: The workspace CLI supports structured catalogs, local/Git leaf and composite installation, explicit repository...
-docs/reference/core-api.md: @granary/core exposes schemas, pack discovery, installation, and locked restoration to this workspace; it is not a...
-docs/reference/pack-definition.md: granary.pack.json describes upstream content rather than bundling the payload itself. It keeps pack identity,...
-docs/reference/pack-manifest.md: An installable pack's granary.json describes the pack itself. Its identity and version are top-level fields; file...
-docs/reference/presets.md: Structured manifests express presets as named composite packs with ordered includes, described in the manifest...
-docs/reference/project-config.md: granary.json records the context a project consumes under dependencies. The same document can declare provided...
-docs/reference/sources.md: Local directories and Git repositories supply definitions and material. A curated definition can use a different...
+docs/guides/use-granary-skills.md: Install the skill directories shipped with granary-ai so your coding agent can follow pack authoring and maintenance...
+docs/packs/index.mdx: Choose a recommended language set or install focused standards packs individually.
+docs/packs/recommended-python.mdx: Install functional Python and the four shared standards packs together.
+docs/packs/recommended-rust.mdx: Install functional Rust and the four shared standards packs together.
+docs/packs/recommended-typescript.mdx: Install functional TypeScript and the four shared standards packs together.
+docs/reference/cli.md: The granary-ai package installs granary. The workspace CLI supports local/Git sources, locked restoration, reviewed...
+docs/reference/core-api.md: granary-ai combines SDK exports, optional plugin subpaths, and the granary executable. Importing its root never...
+docs/reference/pack-definition.md: A curated granary.json composes selected material from other repositories. It uses the same manifest contract as a...
+docs/reference/pack-manifest.md: An installable pack's granary.json describes files and included packs. Only name is required; the same contract...
+docs/reference/presets.md: A recommended set is a pack containing other packs. Membership is recursive and explicit; directory discovery does...
+docs/reference/project-config.md: granary.json describes authored packs and adopted source material. Only name is required. Put source-backed...
+docs/reference/sources.md: Local directories and Git repositories supply reference material. Sources can own a granary.json, but participation...
 
 </docs-index>
 
@@ -171,7 +194,7 @@ docs/reference/sources.md: Local directories and Git repositories supply definit
 | Product behavior    | `docs/concepts/context-packs.md`                                                  |
 | Pack configuration  | `docs/reference/pack-manifest.md`                                                 |
 | Curated definitions | `docs/reference/pack-definition.md`                                               |
-| Example definition  | `docs/examples/react/granary.pack.json`                                           |
+| Example definition  | `docs/examples/react/granary.json`                                                |
 
 For installer design, read `docs/reference/cli.md`, `docs/reference/project-config.md`, and `docs/reference/sources.md`. The docs site's source configuration is `ciderpress.config.ts`.
 

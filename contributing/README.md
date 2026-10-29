@@ -16,6 +16,27 @@ pnpm validate
 pnpm build
 ```
 
+## CLI integration tests
+
+Run the public distribution's suites after building:
+
+```sh
+pnpm build
+pnpm --filter granary-ai test
+```
+
+`packages/granary/src/__tests__/` owns subprocess tests for help, version, validation, local/Git installation, reviewed updates, restoration, and standards exports. They run `granary-ai`'s built executable, not the private CLI entrypoint. The distribution test also packs `granary-ai`, installs the tarball into a disposable consumer with `pnpm install --offline`, and invokes `node_modules/.bin/granary`. Install workspace dependencies first to populate pnpm's cache; missing cached packages fail the test rather than silently reaching the registry. The packed smoke includes native standards parsing to check dependency packaging.
+
+`packages/cli/src/__tests__/` uses `maltty/test` for focused handler outcomes and argument routing against real local files. Its presentation logger is simulated; installation and filesystem behavior are not. These tests complement rather than replace the public executable suites.
+
+To test actual upstream retrieval, run the separate network suite:
+
+```sh
+pnpm --filter granary-ai test:network
+```
+
+It builds first, installs the packed CLI, and selects the installation page from `vercel/next.js` at `v16.0.0`. It checks the installed content, exact commit and content hash in the lock, listing, and byte-identical restoration after deleting the page. This installs Next.js reference material, not the Next.js runtime or an application. GitHub availability, repository size, and Git transport can fail this test; ordinary `pnpm validate` excludes it. This is representative end-to-end coverage, not exhaustive coverage of every platform or CLI combination.
+
 ## Standards as context
 
 Granary provides independent packs from `packs/`, each with its own `granary.json`. Root `granary.json` composes the three recommended presets and consumes only `bytefarm/recommended-typescript`. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
@@ -63,6 +84,23 @@ Start feature branches from current `main` using `type/short-description`. Use `
 PR titles follow the same convention; bodies include Summary, Changes, and Testing sections with related issues and exact verification results. Keep unfinished work as a draft and follow-up patches in the same PR. Use `gh` for GitHub operations. Merge only after required checks and review succeed, following the repository's merge policy.
 
 Published behavior or API changes require a Changeset. Contributor-only docs and development-only tools may omit one. Publishing requires explicit authorization, completed validation/builds, and a version bump. Fix hook failures rather than bypassing them.
+
+### Publish locally
+
+Start with a clean, committed checkout and pending changesets:
+
+```sh
+./publish.sh prepare
+```
+
+Review and commit the generated versions, changelogs, and lockfile. Then publish:
+
+```sh
+npm login
+./publish.sh
+```
+
+The script asks for confirmation, checks npm authentication, and runs `pnpm release`, which validates and builds before Changesets publishes. Publishing requires a clean checkout with no unconsumed changesets. Changesets creates local release tags; the script never commits or pushes. Run `./publish.sh --help` for usage. Do not run `pnpm release` separately unless you intend to publish immediately.
 
 ## Code documentation
 

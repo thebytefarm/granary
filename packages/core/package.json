@@ -4,9 +4,25 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./workspace": {
+      "types": "./dist/workspace.d.ts",
+      "default": "./dist/workspace.js"
+    },
+    "./packs": {
+      "types": "./dist/packs.d.ts",
+      "default": "./dist/packs.js"
+    },
+    "./updates": {
+      "types": "./dist/updates.d.ts",
+      "default": "./dist/updates.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas.d.ts",
+      "default": "./dist/schemas.js"
     }
   },
   "scripts": {
