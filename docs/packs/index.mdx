@@ -1,0 +1,79 @@
+---
+title: Prebuilt packs
+description: 'Choose a recommended language set or install focused standards packs individually.'
+---
+
+import { SectionCard, SectionGrid } from '@ciderpress/ui/theme'
+
+# Prebuilt packs
+
+Install a recommended set for your language. Each combines a functional language pack with shared engineering, Git, documentation, and agent-instruction packs.
+
+## Recommended
+
+<SectionGrid>
+  <SectionCard
+    href="/packs/recommended/typescript"
+    title="Recommended TypeScript"
+    description="Factories, immutable values, typed Results, and exhaustive matching, plus the four shared packs."
+    icon={{ id: 'simple-icons:typescript', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/recommended/rust"
+    title="Recommended Rust"
+    description="Ownership, native Results, exhaustive enums, and iterator composition, plus the four shared packs."
+    icon={{ id: 'simple-icons:rust', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/recommended/python"
+    title="Recommended Python"
+    description="Pure transformations, immutable domain data, and typed Results, plus the four shared packs."
+    icon={{ id: 'simple-icons:python', color: 'amber' }}
+  />
+</SectionGrid>
+
+## Individual packs
+
+Language packs define how to write code in that language. Shared standards cover the decisions and workflows used across languages. Each pack has its own identity and version.
+
+<SectionGrid>
+  <SectionCard
+    href="/packs/languages"
+    title="Languages"
+    description="Functional TypeScript, Rust, and Python. Browse their rules for types, functions, failures, state, and testing."
+    icon={{ id: 'pixelarticons:code', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/shared"
+    title="Shared standards"
+    description="Engineering principles, scoped Git history and review, task-oriented documentation, and agent instructions."
+    icon={{ id: 'pixelarticons:sliders', color: 'amber' }}
+  />
+</SectionGrid>
+
+## Install
+
+Use the [workspace CLI](/getting-started/quick-start); the current contract is not published yet. From a project beside a checkout named `granary-packs`:
+
+```sh
+granary add file:../granary-packs/packs#recommended-typescript --output .granary/context/docs/bytefarm
+```
+
+For a polyglot project, select several sets at one destination in `granary.json`:
+
+```json
+{
+  "name": "polyglot",
+  "packs": {
+    "file:../granary-packs/packs#recommended-typescript": {
+      "output": ".granary/context/docs/bytefarm"
+    },
+    "file:../granary-packs/packs#recommended-rust": { "output": ".granary/context/docs/bytefarm" },
+    "file:../granary-packs/packs#recommended-python": { "output": ".granary/context/docs/bytefarm" }
+  }
+}
+```
+
+Shared components install once. All three sets together install seven unique packs. Language-specific rules apply only to files in that language.
+
+Read `.granary/context/INDEX.md` after installation for the component reading order. Commit `granary.json` and `granary-lock.json`; teammates restore the same material with `granary install`.

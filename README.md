@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/banner.svg" alt="Granary — Ship context." width="90%" />
+  <img src=".github/assets/banner.svg" alt="Granary — A storehouse for agent knowledge." width="90%" />
   <p><strong>Give coding agents the docs and source they need, right inside your repo.</strong></p>
   <p>Versioned context packs. Ordinary files. Any agent.</p>
 </div>
@@ -22,17 +22,38 @@ Think local Context7, distributed like packages.
 
 The workspace CLI validates catalogs, installs local and Git-backed leaf/composite packs, selects ordinary repository content, and restores pinned content from a lockfile. The npm packages are still coming-soon placeholders.
 
+macOS and Linux are supported; Windows is not supported yet.
+
 ## How it works
 
 **Package it.** Point Granary at the docs and source worth sharing. A directory or repository can be the package source itself.
 
-**Bring it into the repo.** Select dependencies, content groups, and revisions. Granary copies docs into your chosen directory, keeps reference code hidden and Git-ignored, and records upstream commits and file hashes. `.context/` is the default docs destination.
+**Bring it into the repo.** Select packs, files, and revisions. Granary copies material into your chosen directory and records upstream commits and file hashes. `.granary/context/` is the default destination; adopted code and examples can live in your source tree. Commit the root `granary.json` and `granary-lock.json`; generated context and `.granary/cache/` are Git-ignored automatically.
 
 **Let your agent read.** A generated index points to the installed material. Your agent can inspect the source, search the docs, and use examples from the same version.
 
 One source can publish several packs. One project can install context from several sources. A shared protocol will let repositories, object storage, and APIs expose the same package model.
 
+An upstream repository does not need a Granary manifest. Define the selection in your own `granary.json`:
+
+```json
+{
+  "name": "my-app",
+  "packs": {
+    "github:vercel/next.js": {
+      "tag": "v16.0.0",
+      "files": { "include": ["docs/**", "examples/**"] },
+      "output": "reference/nextjs"
+    }
+  }
+}
+```
+
+Run `granary install` to resolve and lock the selection. Strings provide revision shorthand; arrays install multiple versions. [Unified configuration](docs/reference/project-config.md#unified-fields) covers named packs, recursive composition, and destinations.
+
 Read the [product concept](docs/concepts/context-packs.md) for the distribution model, protocol direction, and open decisions.
+
+See [VISION.md](VISION.md) for the broader direction: curated framework packs, website documentation sources, and on-demand CLI reading. Track scoped follow-ups in [TASKS.md](TASKS.md); those ideas are not all release requirements.
 
 ## Our first context pack
 
@@ -40,7 +61,7 @@ Granary provides seven focused standards components from [packs/](packs/README.m
 
 Granary itself consumes only the TypeScript recommended set. `AGENTS.md` routes agents through its [installed context index](.context/INDEX.md). Read [Contributing](contributing/README.md) to get started.
 
-[granary.json](granary.json) declares the recommended presets, ordered member references, selected `dependencies`, and `installDir`. Each pack directory owns its identity, version, and file selection in its own `granary.json`; it can be installed independently. See the [manifest reference](docs/reference/pack-manifest.md).
+[granary.json](granary.json) declares the recommended presets, ordered member references, selected `dependencies`, and `installDir`. Each pack directory owns its identity, version, and document classifications in its own `granary.json`; Markdown is included recursively by default. See the [manifest reference](docs/reference/pack-manifest.md).
 
 Recommended TypeScript, Rust, and Python presets compose those independent packs. Shared components install once; each language's functional rules remain scoped to that language.
 
@@ -100,7 +121,7 @@ Almanac maintains separate standards and contributor/public documentation region
 
 ```text
 granary/
-  assets/                # README artwork
+  .github/assets/        # Shared logo, icon, and README/site banner
   granary.json            # Recommended presets and TypeScript-only dependencies
   granary-lock.json       # Exact installed context and file integrity
   packs/                 # Independent manifests and authored material
@@ -109,7 +130,7 @@ granary/
   docs/concepts/         # Product direction and design notes
   docs/guides/           # Pack authoring and agent workflows
   docs/reference/        # CLI, manifests, project config, and sources
-  public/                # Documentation-site branding
+  public                 # Symlink to .github/assets for the docs site
   packages/
     cli/                 # granary-ai package; maltty-powered granary command
     core/                # Private package for pack schemas and source logic

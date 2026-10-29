@@ -1,0 +1,6 @@
+{
+  "name": "example/linked-docs",
+  "version": "0.1.0",
+  "description": "Linked documentation installation fixture.",
+  "files": { "include": ["README.md", "guides/*.md"] }
+}

@@ -7,21 +7,67 @@ description: 'Use native Rust iterator and Result combinators before adding an e
 
 Start with standard-library iterators, Option, and Result.
 
+<standard id="utilities-composition">
+
 ## Composition
+
+<why>
 
 ### Why
 
 Native combinators already express mapping, filtering, and short-circuiting fallible collection without a utility runtime.
 
+</why>
+
+<rules>
+
 ### Rules
 
-- MUST inspect native `map`, `filter`, `filter_map`, `fold`, `try_fold`, and `collect` before writing generic helpers.
-- MUST use `collect::<Result<_, _>>()` when a collection transform should stop on its first failure.
-- MUST avoid `filter_map(Result::ok)` when discarding errors would change the contract.
-- MUST keep iterator chains focused and name intermediate domain stages when needed.
-- MUST bound concurrent resource work in the owning async adapter.
-- MAY adopt itertools for missing iterator operations after the consumer's dependency approval.
-- MUST avoid adding another Result abstraction merely to imitate massaman.
+<rule id="inspect-native-map-filter-filter-map-fold-try-fold-and-collect">
+
+- <level>MUST</level> inspect native `map`, `filter`, `filter_map`, `fold`, `try_fold`, and `collect` before writing generic helpers. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="use-collect-result-when-a-collection-transform-should-stop">
+
+- <level>MUST</level> use `collect::<Result<_, _>>()` when a collection transform should stop on its first failure. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="avoid-filter-map-result-ok-when-discarding-errors-would-change-the-contract">
+
+- <level>MUST</level> avoid `filter_map(Result::ok)` when discarding errors would change the contract. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="keep-iterator-chains-focused-and-name-intermediate-domain-stages">
+
+- <level>MUST</level> keep iterator chains focused and name intermediate domain stages when needed. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="bound-concurrent-resource-work-in-the-owning-async-adapter">
+
+- <level>MUST</level> bound concurrent resource work in the owning async adapter. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="adopt-itertools-for-missing-iterator-operations-after-the-consumer-s">
+
+- <level>MAY</level> adopt itertools for missing iterator operations after the consumer's dependency approval. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="avoid-adding-another-result-abstraction-merely-to-imitate-massaman">
+
+- <level>MUST</level> avoid adding another Result abstraction merely to imitate massaman. <enforcement>[review]</enforcement>
+
+</rule>
+
+</rules>
+
+<examples>
 
 ## Example
 
@@ -36,6 +82,18 @@ fn preserves_collection_failures() {
     assert!(parse_counts(&["2", "bad", "3"]).is_err());
 }
 ```
+
+</examples>
+
+<enforcement>
+
+[review]
+
+The compiler and failure-path tests check Result collection. Review checks discarded errors, allocation decisions, and concurrency bounds.
+
+</enforcement>
+
+</standard>
 
 ## Enforcement
 

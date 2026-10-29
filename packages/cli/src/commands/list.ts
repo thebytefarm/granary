@@ -1,9 +1,10 @@
 import { command } from 'maltty'
 import { isErr } from 'massaman/control'
 
-import { readLockfile } from '@granary/core'
+import { granary } from '@granary/sdk'
+import type { LockedPack } from '@granary/core'
 
-import { projectDirectory } from '../project/config.js'
+import { projectDirectory } from '#/arguments.ts'
 
 /**
  * Display recorded identities, versions, selected content, and output roots.
@@ -11,24 +12,25 @@ import { projectDirectory } from '../project/config.js'
 export const list = command({
   description: 'List locked context packs',
   handler: async (ctx) => {
-    const result = await readLockfile({ project: projectDirectory(ctx), required: false })
+    const client = granary({ project: projectDirectory(ctx) })
+    const result = await client.locks.read({ required: false })
     if (isErr(result)) {
       return ctx.fail(result.error.message)
     }
-    ctx.log.info(
-      [
-        ...(result.value.presets ?? []).map(
-          (preset) =>
-            `${preset.request.name}@${preset.version}\tcomposite\t${preset.members.map((member) => member.name).join(' → ')}`
-        ),
-        ...result.value.packs.map(
-          (pack) =>
-            `${pack.request.name}@${pack.version}\t${pack.groups.map((group) => group.name).join(', ')}\t${pack.output}${codeDestinationLabel(pack.codeOutput)}`
-        ),
-      ].join('\n') || 'No context packs installed.'
-    )
+    ctx.log.info(result.value.packs.map(packLabel).join('\n') || 'No context packs installed.')
   },
 })
+
+/**
+ * @private
+ */
+function packLabel(pack: LockedPack): string {
+  const label = pack.request.label ?? pack.request.name
+  if (pack.request.destination) {
+    return `${label}@${pack.version}\tfiles\t${pack.request.destination}`
+  }
+  return `${label}@${pack.version}\t${pack.groups.map((group) => group.name).join(', ')}\t${pack.output}${codeDestinationLabel(pack.codeOutput)}`
+}
 
 /**
  * @private

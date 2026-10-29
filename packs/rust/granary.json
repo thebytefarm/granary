@@ -2,6 +2,17 @@
   "name": "bytefarm/rust-functional",
   "version": "0.1.0",
   "description": "Functional Rust standards.",
-  "entry": "README.md",
-  "files": ["*.md"]
+  "documents": {
+    "comments.md": "standards",
+    "conditionals.md": "standards",
+    "errors.md": "standards",
+    "file-structure.md": "standards",
+    "functions.md": "standards",
+    "naming.md": "standards",
+    "ownership.md": "standards",
+    "paradigm.md": "standards",
+    "testing.md": "standards",
+    "types.md": "standards",
+    "utilities.md": "standards"
+  }
 }

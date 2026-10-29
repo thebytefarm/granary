@@ -7,7 +7,11 @@ description: 'Show one relationship clearly using a small Mermaid diagram or a t
 
 Choose a visual model only when it explains a relationship more clearly than the surrounding text.
 
+<standard id="diagrams-diagram-choice-and-appearance">
+
 ## Diagram choice and appearance
+
+<why>
 
 ### Why
 
@@ -20,16 +24,63 @@ A content-source diagram and a directory tree answer different questions. Consis
 | Data relationships      | ER               | About 8–10 entities with their relevant attributes |
 | Files and directories   | Fenced text tree | The subtree needed for the explanation             |
 
+</why>
+
+<rules>
+
 ### Rules
 
-- MUST select the diagram form according to the relationship being explained.
-- MUST apply the Catppuccin Mocha palette to Mermaid output.
-- MUST style semantic classes such as `source`, `core`, and `storage`, rather than default classes or per-node overrides.
-- MUST shorten labels and split views that exceed the table's target sizes.
-- MUST explain the distinction when solid and dashed connections share a diagram.
-- MUST omit activation boxes and mirrored actors from sequence diagrams.
-- MUST use verbs to describe ER relationships.
-- MAY show a directory layout as a fenced text tree.
+<rule id="select-the-diagram-form-according-to-the-relationship-being">
+
+- <level>MUST</level> select the diagram form according to the relationship being explained. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="apply-the-catppuccin-mocha-palette-to-mermaid-output">
+
+- <level>MUST</level> apply the Catppuccin Mocha palette to Mermaid output. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="style-semantic-classes-such-as-source-core-and-storage">
+
+- <level>MUST</level> style semantic classes such as `source`, `core`, and `storage`, rather than default classes or per-node overrides. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="shorten-labels-and-split-views-that-exceed-the-table-s">
+
+- <level>MUST</level> shorten labels and split views that exceed the table's target sizes. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="explain-the-distinction-when-solid-and-dashed-connections-share">
+
+- <level>MUST</level> explain the distinction when solid and dashed connections share a diagram. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="omit-activation-boxes-and-mirrored-actors-from-sequence-diagrams">
+
+- <level>MUST</level> omit activation boxes and mirrored actors from sequence diagrams. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="use-verbs-to-describe-er-relationships">
+
+- <level>MUST</level> use verbs to describe ER relationships. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="show-a-directory-layout-as-a-fenced-text-tree">
+
+- <level>MAY</level> show a directory layout as a fenced text tree. <enforcement>[review]</enforcement>
+
+</rule>
+
+</rules>
+
+<examples>
 
 ### Example
 
@@ -45,6 +96,18 @@ flowchart LR
     class Material core
     class Navigation storage
 ```
+
+</examples>
+
+<enforcement>
+
+[review]
+
+Markdown formatting and installed-link tests cover their configured contracts. Rendered inspection and review establish diagram readability, palette, and semantic classes.
+
+</enforcement>
+
+</standard>
 
 ## Enforcement
 

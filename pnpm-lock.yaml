@@ -202,6 +202,15 @@ importers:
 
   packages/cli:
     dependencies:
+      '@granary/core':
+        specifier: workspace:*
+        version: link:../core
+      '@granary/plugins':
+        specifier: workspace:*
+        version: link:../plugins
+      '@granary/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       ink:
         specifier: ^8.0.0
         version: 8.0.0(@types/react@19.3.0)(react@19.3.0)
@@ -218,9 +227,6 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
     devDependencies:
-      '@granary/core':
-        specifier: workspace:*
-        version: link:../core
       massaman:
         specifier: ^0.5.2
         version: 0.5.2
@@ -233,6 +239,61 @@ importers:
       zod:
         specifier: ^4.6.5
         version: 4.6.5
+
+  packages/granary:
+    dependencies:
+      ink:
+        specifier: ^8.0.0
+        version: 8.0.0(@types/react@19.3.0)(react@19.3.0)
+      jiti:
+        specifier: ^2.7.0
+        version: 2.7.0
+      maltty:
+        specifier: 1.0.0-rc.0
+        version: 1.0.0-rc.0(ink@8.0.0(@types/react@19.3.0)(react@19.3.0))(jiti@2.7.0)(react@19.3.0)(vitest@5.0.3(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)))
+      marxml:
+        specifier: ^0.1.3
+        version: 0.1.3
+      react:
+        specifier: ^19.3.0
+        version: 19.3.0
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@granary/cli':
+        specifier: workspace:*
+        version: link:../cli
+      '@granary/core':
+        specifier: workspace:*
+        version: link:../core
+      '@granary/plugins':
+        specifier: workspace:*
+        version: link:../plugins
+      '@granary/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+
+  packages/plugins:
+    dependencies:
+      '@granary/core':
+        specifier: workspace:*
+        version: link:../core
+      marxml:
+        specifier: ^0.1.3
+        version: 0.1.3
+      massaman:
+        specifier: ^0.5.2
+        version: 0.5.2
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+
+  packages/sdk:
+    dependencies:
+      '@granary/core':
+        specifier: workspace:*
+        version: link:../core
 
 packages:
 
@@ -2537,6 +2598,43 @@ packages:
     resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
     engines: {node: '>= 20'}
     hasBin: true
+
+  marxml-darwin-arm64@0.1.3:
+    resolution: {integrity: sha512-l/wfiPFQHR7m8GZ4kj7qiQROL3L2ToBCIn0YyGDA3QKa9bAzGfgde9mg/bwvUlOtxJ1DHENa2y8ibOEkRTabxQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [darwin]
+
+  marxml-darwin-x64@0.1.3:
+    resolution: {integrity: sha512-e3DlWt/D96D67wq6Pi0WHjXe2ji5fWBhtUAQmLEMTq9jFT9bFoKJnONEOVcTEAm2PTHt0q11LwUNPSCRdJvkuA==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [darwin]
+
+  marxml-linux-arm64-gnu@0.1.3:
+    resolution: {integrity: sha512-X0H1uRBiFq3loSvimXvRDdGM8N0WWTyHifEUWrAhaKiR6pHamwfmEFIxH2cwGiHUMsUsJzn3p5mfFwd0HgPgBQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  marxml-linux-x64-gnu@0.1.3:
+    resolution: {integrity: sha512-JNhjpu0UKDdnnMf3OVYG+tXR10obCcqlgYSn6zey/17BcZg11K4VkU52FcIMk2Sat+zj6EawV/HOpIHp6PTd/g==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  marxml-linux-x64-musl@0.1.3:
+    resolution: {integrity: sha512-FvTcoSZM4d/Zip4A4hJujv4z2KCRjvZ1bp6UeDWuZOmmqFsL/oGF/609QkEbOeVkiYpFRpSHCIfOqv+R30IbkA==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  marxml@0.1.3:
+    resolution: {integrity: sha512-TeZw00LA8eoYll73C12KYWTBeiXjLnCsow1nzktUwXcO4bgoJU93d63Cv2rVgVWLN4e5wwYdvImofW6m0ThTTg==}
+    engines: {node: '>=18'}
 
   massaman@0.5.2:
     resolution: {integrity: sha512-aMdmsZhkQmqiIyUThWH6/+x+fhRBA2Iy+EhD9ZRnrL3esrqPlvfCtyyo+LLKC9cwkIDO5N8y7hzv8717NBCYVw==}
@@ -5757,6 +5855,29 @@ snapshots:
   markdown-table@3.0.4: {}
 
   marked@16.4.2: {}
+
+  marxml-darwin-arm64@0.1.3:
+    optional: true
+
+  marxml-darwin-x64@0.1.3:
+    optional: true
+
+  marxml-linux-arm64-gnu@0.1.3:
+    optional: true
+
+  marxml-linux-x64-gnu@0.1.3:
+    optional: true
+
+  marxml-linux-x64-musl@0.1.3:
+    optional: true
+
+  marxml@0.1.3:
+    optionalDependencies:
+      marxml-darwin-arm64: 0.1.3
+      marxml-darwin-x64: 0.1.3
+      marxml-linux-arm64-gnu: 0.1.3
+      marxml-linux-x64-gnu: 0.1.3
+      marxml-linux-x64-musl: 0.1.3
 
   massaman@0.5.2:
     dependencies:

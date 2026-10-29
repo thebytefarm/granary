@@ -7,7 +7,11 @@ description: 'Name concrete operations and domain values, with casing that stays
 
 Let the containing directory supply context, then name the operation or value precisely.
 
+<standard id="naming-conventions">
+
 ## Conventions
+
+<why>
 
 ### Why
 
@@ -23,14 +27,63 @@ Let the containing directory supply context, then name the operation or value pr
 | Schemas and clients                   | camelCase                           | `packSchema`                 |
 | Generic parameters                    | Whole words in SCREAMING_SNAKE_CASE | `CONTENT`, `SOURCE_KIND`     |
 
+</why>
+
+<rules>
+
 ### Rules
 
-- MUST apply the table's casing conventions to newly authored declarations.
-- MUST choose operation verbs for functions and domain nouns for values.
-- MUST spell out generic parameter names rather than using single letters.
-- MUST put related literals in an `as const` catalog and derive its union type.
-- SHOULD collect related fields beneath a meaningful domain object instead of repeating the same prefix.
-- MAY retain filenames imposed by tooling or established conventions, such as `README.md`, `AGENTS.md`, and `LICENSE`.
+<rule id="apply-the-table-s-casing-conventions-to-newly-authored-declarations">
+
+- <level>MUST</level> apply the table's casing conventions to newly authored declarations. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="choose-operation-verbs-for-functions-and-domain-nouns-for">
+
+- <level>MUST</level> choose operation verbs for functions and domain nouns for values. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="spell-out-generic-parameter-names-rather-than-using-single">
+
+- <level>MUST</level> spell out generic parameter names rather than using single letters. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="put-related-literals-in-an-as-const-catalog-and">
+
+- <level>MUST</level> put related literals in an `as const` catalog and derive its union type. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="collect-related-fields-beneath-a-meaningful-domain-object-instead">
+
+- <level>SHOULD</level> collect related fields beneath a meaningful domain object instead of repeating the same prefix. <enforcement>[review]</enforcement>
+
+</rule>
+
+<rule id="retain-filenames-imposed-by-tooling-or-established-conventions-such">
+
+- <level>MAY</level> retain filenames imposed by tooling or established conventions, such as `README.md`, `AGENTS.md`, and `LICENSE`. <enforcement>[review]</enforcement>
+
+</rule>
+
+</rules>
+
+<examples>
+
+</examples>
+
+<enforcement>
+
+[review]
+
+Configured lint checks cover their supported naming rules. Review checks operation verbs, domain meaning, and the remaining casing conventions.
+
+</enforcement>
+
+</standard>
 
 ## Enforcement
 

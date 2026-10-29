@@ -6,19 +6,20 @@ An API reference tells an agent what a method accepts. Source explains what it a
 
 ## A package manager for context
 
-The intended workflow is familiar: choose a source, select packs, install them into the workspace, and record the resolution. The payload is reference material rather than executable dependencies.
+Choose a source, select packs, install them into the workspace, and record the resolution. The payload is reference material rather than executable dependencies.
 
-A pack selects ordinary files through a [manifest](../reference/pack-manifest.md). It can contain Markdown, source files, examples, and project conventions. Granary's own [standards catalog](../../packs/README.md) provides seven reusable components.
+A pack selects ordinary files through a [manifest](../reference/pack-manifest.md). It can contain Markdown, source files, examples, and project conventions. Granary's own [standards catalog](../packs/index.mdx) provides seven reusable components.
 
-## Start with what works today
+## Install Granary
 
-You can author and validate bundles, install local or Git-backed packs, choose content groups, and restore pinned material with any coding agent.
+The workspace implementation supports pack authoring, local/Git installation, file selection, and pinned restoration. Its current manifest contract has not been published yet. From a Granary checkout with dependencies installed:
 
 ```sh
-pnpm cli validate
+pnpm build
+pnpm cli add ./packs --list
 ```
 
-Multi-pack installation, Git retrieval, lockfiles, and generated indexes work in the workspace CLI. See [CLI](../reference/cli.md), [project config](../reference/project-config.md), and [project status](status.md).
+The `granary-ai` package provides the `granary` command. Browse the [prebuilt packs](../packs/index.mdx), or see [CLI](../reference/cli.md) and [project config](../reference/project-config.md) for source selection and locked restoration.
 
 ## Where Granary fits
 

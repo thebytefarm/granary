@@ -1,0 +1,62 @@
+{
+  "name": "granary-ai",
+  "version": "0.0.1",
+  "description": "Ship versioned docs and source as local context for coding agents.",
+  "license": "MIT",
+  "bin": {
+    "granary": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "skills"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/run.d.ts",
+      "default": "./dist/run.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "default": "./dist/core.js"
+    },
+    "./plugins": {
+      "types": "./dist/plugins.d.ts",
+      "default": "./dist/plugins.js"
+    },
+    "./plugins/standards": {
+      "types": "./dist/standards.d.ts",
+      "default": "./dist/standards.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:network": "pnpm --workspace-root build && vitest run --config vitest.network.config.ts"
+  },
+  "dependencies": {
+    "ink": "^8.0.0",
+    "jiti": "^2.7.0",
+    "maltty": "1.0.0-rc.0",
+    "marxml": "^0.1.3",
+    "react": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@granary/cli": "workspace:*",
+    "@granary/core": "workspace:*",
+    "@granary/plugins": "workspace:*",
+    "@granary/sdk": "workspace:*"
+  },
+  "engines": {
+    "node": ">=26"
+  }
+}

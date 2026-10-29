@@ -1,74 +1,45 @@
-# Validate your first pack
+# Install your first context pack
 
-Build Granary locally, validate its catalog, and restore the TypeScript context it consumes.
+Use the workspace CLI to install TypeScript and shared standards into a disposable project. The current manifest contract is implemented locally but has not been published yet.
 
 ## Prerequisites
 
-- A local Granary checkout
-- Node.js 26 or newer
-- The pnpm version pinned in the root `package.json`
+- A Granary checkout with workspace dependencies installed.
+- Node.js 26+, pnpm, and Git.
+- Run commands from the checkout root.
 
-The published `granary-ai@0.0.1` package is a coming-soon reservation. Use this workspace for the implemented CLI.
-
-## 1. Install workspace dependencies
-
-From the repository root:
+## 1. Build the CLI
 
 ```sh
-pnpm install
-```
-
-## 2. Inspect the pack
-
-Each pack has its own manifest. For example, `packs/typescript/granary.json` declares one independent leaf:
-
-```json
-{
-  "name": "bytefarm/typescript-functional",
-  "version": "0.1.0",
-  "description": "Functional TypeScript standards.",
-  "entry": "README.md",
-  "files": ["*.md"]
-}
-```
-
-The entry file indexes the standards. Each linked page is an ordinary Markdown file inside the pack. Root `granary.json` defines the three recommended presets by referencing independent pack directories and selects `bytefarm/recommended-typescript` as Granary's own dependency.
-
-## 3. Validate the manifest
-
-```sh
-pnpm cli validate
-pnpm cli validate --cwd packs/typescript
-```
-
-Expected result:
-
-```text
-Pack manifest is valid.
-```
-
-This builds the CLI and validates the root preset declarations and standalone TypeScript manifest fields without fetching external content. Installation checks selected files and entrypoint inclusion.
-
-## 4. Read it with your agent
-
-Restore the checked-in dependency lock, then ask the agent to start at the installed index:
-
-```sh
-pnpm cli install
-```
-
-```text
-Read .context/INDEX.md. Read the shared and TypeScript standards relevant
-to this task before making changes.
-```
-
-Granary's root `AGENTS.md` already uses that retrieval pattern. See [using agent context](../guides/use-agent-context.md) for how to adopt it elsewhere.
-
-## Verification
-
-```sh
-pnpm validate
 pnpm build
 ```
 
-Next: [create a pack](../guides/create-pack.md), or [install context packs](../guides/install-packs.md).
+## 2. Install into a fresh consumer
+
+```sh
+CONSUMER="$(mktemp -d)"
+pnpm cli add "file:$PWD/packs#recommended-typescript" --output .granary/context/docs/bytefarm --cwd "$CONSUMER"
+```
+
+This writes five components and `.granary/context/INDEX.md` in the consumer, not the Granary checkout. `granary.json` and `granary-lock.json` stay at its root. Granary generates `.granary/.gitignore` to ignore installed context and cache files.
+
+## 3. Read the installed index
+
+```sh
+cat "$CONSUMER/.granary/context/INDEX.md"
+```
+
+It links engineering, Git, documentation, agent instructions, and TypeScript. Tell your coding agent to read this index and the standards relevant to its current task.
+
+## 4. Verify locked restoration
+
+```sh
+pnpm cli install --cwd "$CONSUMER"
+pnpm cli list --cwd "$CONSUMER"
+```
+
+Expect five locked payloads and no moved upstream revisions. In a real project, inspect and commit the manifest and lock so teammates can restore the same selection. Local sources must remain available at their recorded paths.
+
+## Next steps
+
+[Browse prebuilt packs](../packs/index.mdx), [create a pack](../guides/create-pack.md), or [choose other sources](../guides/install-packs.md).

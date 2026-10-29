@@ -1,26 +1,16 @@
 import { command } from 'maltty'
 import { config } from 'maltty/config'
-import { isErr } from 'massaman/control'
-import { z } from 'zod'
 
-import { catalogSchema, packManifestSchema, validateCatalog } from '@granary/core'
-import { projectDirectory } from '../project/config.js'
+import { manifestSchema } from '@granary/core/schemas'
 
 /**
- * Validate pack metadata using maltty's config discovery and schema validation.
+ * Validate the current manifest with maltty's configuration middleware.
  */
 export const validate = command({
   description: 'Validate the pack manifest in the current directory',
-  middleware: [config({ name: 'granary', schema: z.union([catalogSchema, packManifestSchema]) })],
+  middleware: [config({ name: 'granary', schema: manifestSchema })],
   handler: async (ctx) => {
-    const loaded = await ctx.config.load({ exitOnError: true })
-    const parsed = catalogSchema.safeParse(loaded.config)
-    if (parsed.success) {
-      const valid = await validateCatalog({ project: projectDirectory(ctx), document: parsed.data })
-      if (isErr(valid)) {
-        return ctx.fail(valid.error.message)
-      }
-    }
+    await ctx.config.load({ exitOnError: true })
     ctx.log.info('Pack manifest is valid.')
   },
 })

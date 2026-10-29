@@ -1,7 +1,0 @@
-{
-  "name": "example/legacy-bundle",
-  "version": "0.1.0",
-  "description": "Legacy bundle installation fixture.",
-  "entry": "README.md",
-  "files": ["README.md", "guides/*.md"]
-}

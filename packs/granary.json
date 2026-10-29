@@ -1,0 +1,99 @@
+{
+  "name": "bytefarm",
+  "description": "Recommended engineering context packs by language.",
+  "packs": {
+    "recommended-typescript": {
+      "version": "0.1.0",
+      "description": "Recommended shared and TypeScript context.",
+      "packs": {
+        "engineering": {
+          "source": "file:./engineering",
+          "files": { "include": ["**/*.md"] },
+          "output": "engineering/0.1.0"
+        },
+        "git": {
+          "source": "file:./git",
+          "files": { "include": ["**/*.md"] },
+          "output": "git/0.1.0"
+        },
+        "documentation": {
+          "source": "file:./documentation",
+          "files": { "include": ["**/*.md"] },
+          "output": "documentation/0.1.0"
+        },
+        "agent-instructions": {
+          "source": "file:./agent-instructions",
+          "files": { "include": ["**/*.md"] },
+          "output": "agent-instructions/0.1.0"
+        },
+        "typescript-functional": {
+          "source": "file:./typescript",
+          "files": { "include": ["**/*.md"] },
+          "output": "typescript-functional/0.1.0"
+        }
+      }
+    },
+    "recommended-rust": {
+      "version": "0.1.0",
+      "description": "Recommended shared and Rust context.",
+      "packs": {
+        "engineering": {
+          "source": "file:./engineering",
+          "files": { "include": ["**/*.md"] },
+          "output": "engineering/0.1.0"
+        },
+        "git": {
+          "source": "file:./git",
+          "files": { "include": ["**/*.md"] },
+          "output": "git/0.1.0"
+        },
+        "documentation": {
+          "source": "file:./documentation",
+          "files": { "include": ["**/*.md"] },
+          "output": "documentation/0.1.0"
+        },
+        "agent-instructions": {
+          "source": "file:./agent-instructions",
+          "files": { "include": ["**/*.md"] },
+          "output": "agent-instructions/0.1.0"
+        },
+        "rust-functional": {
+          "source": "file:./rust",
+          "files": { "include": ["**/*.md"] },
+          "output": "rust-functional/0.1.0"
+        }
+      }
+    },
+    "recommended-python": {
+      "version": "0.1.0",
+      "description": "Recommended shared and Python context.",
+      "packs": {
+        "engineering": {
+          "source": "file:./engineering",
+          "files": { "include": ["**/*.md"] },
+          "output": "engineering/0.1.0"
+        },
+        "git": {
+          "source": "file:./git",
+          "files": { "include": ["**/*.md"] },
+          "output": "git/0.1.0"
+        },
+        "documentation": {
+          "source": "file:./documentation",
+          "files": { "include": ["**/*.md"] },
+          "output": "documentation/0.1.0"
+        },
+        "agent-instructions": {
+          "source": "file:./agent-instructions",
+          "files": { "include": ["**/*.md"] },
+          "output": "agent-instructions/0.1.0"
+        },
+        "python-functional": {
+          "source": "file:./python",
+          "files": { "include": ["**/*.md"] },
+          "output": "python-functional/0.1.0"
+        }
+      }
+    }
+  }
+}

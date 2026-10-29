@@ -1,0 +1,63 @@
+---
+title: Recommended TypeScript
+description: 'Install functional TypeScript and the four shared standards packs together.'
+---
+
+import { SectionCard, SectionGrid } from '@ciderpress/ui/theme'
+
+# Recommended TypeScript
+
+Use this set for TypeScript projects built around pure functions, immutable values, factories, typed Results, and exhaustive matching. It combines language mechanics with shared rules for engineering, review, documentation, and agent context.
+
+**Pack:** `bytefarm/recommended-typescript` · **Version:** `0.1.0`
+
+## Install
+
+With the [workspace CLI built](/getting-started/quick-start) and on your PATH, run from a project beside a checkout named `granary-packs`:
+
+```sh
+granary add file:../granary-packs/packs#recommended-typescript --output .granary/context/docs/bytefarm
+```
+
+## Included packs
+
+This composite installs these five packs in reading order. Open a card to browse that pack's concepts and rules.
+
+<SectionGrid>
+  <SectionCard
+    href="/packs/shared/engineering"
+    title="Engineering"
+    description="bytefarm/engineering — pure domain logic, isolated effects, immutable state, explicit failures, and behavioral tests."
+    icon={{ id: 'pixelarticons:sliders', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/shared/git"
+    title="Git"
+    description="bytefarm/git — scoped commits, focused pull requests, and verification evidence reviewers can trust."
+    icon={{ id: 'pixelarticons:git-branch', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/shared/documentation"
+    title="Documentation"
+    description="bytefarm/documentation — task-oriented writing, portable Markdown, and the right shape for each page."
+    icon={{ id: 'pixelarticons:book', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/shared/agent-instructions"
+    title="Agent instructions"
+    description="bytefarm/agent-instructions — short operating contracts, canonical rules, and task-based context routing."
+    icon={{ id: 'pixelarticons:robot', color: 'amber' }}
+  />
+  <SectionCard
+    href="/packs/languages/typescript"
+    title="Functional TypeScript"
+    description="bytefarm/typescript-functional — declared functions, factories, readonly contracts, typed Results, composition, and JSDoc."
+    icon={{ id: 'simple-icons:typescript', color: 'amber' }}
+  />
+</SectionGrid>
+
+## Use the installed context
+
+Start at `.granary/context/INDEX.md`. Read the shared engineering rules first, then the topics relevant to your change. TypeScript rules apply to TypeScript source and examples; repository commands and dependency approval come from your project's instructions.
+
+Adding another recommended language set reuses the shared packs. The lockfile pins the source revision and file integrity; `granary install` restores the same context.

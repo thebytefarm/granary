@@ -1,0 +1,7 @@
+{
+  "name": "example/standards",
+  "version": "0.1.0",
+  "description": "Extractable standards with ordinary reference material.",
+  "files": { "include": ["*.md"] },
+  "documents": { "immutability.md": "standards" }
+}
