@@ -25,7 +25,7 @@ pnpm build
 pnpm --filter granary-ai test
 ```
 
-`packages/granary/src/__tests__/` owns subprocess tests for help, version, validation, local/Git installation, reviewed updates, restoration, and standards exports. They run `granary-ai`'s built executable, not the private CLI entrypoint. The distribution test also packs `granary-ai`, installs the tarball into a disposable consumer with `pnpm install --offline`, and invokes `node_modules/.bin/granary`. Install workspace dependencies first to populate pnpm's cache; missing cached packages fail the test rather than silently reaching the registry. The packed smoke includes native standards parsing to check dependency packaging.
+`packages/granary/src/__tests__/` owns subprocess tests for help, version, validation, local/Git installation, reviewed updates, restoration, and standards exports. They run `granary-ai`'s built executable, not the private CLI entrypoint. The distribution test also packs `granary-ai`, installs the tarball into a disposable consumer with `pnpm install --prefer-offline`, and invokes `node_modules/.bin/granary`. It reuses the repository's pnpm workspace policy and prefers cached dependencies; a cold cache requires registry access for missing metadata or packages. The packed smoke includes native standards parsing to check dependency packaging.
 
 `packages/cli/src/__tests__/` uses `maltty/test` for focused handler outcomes and argument routing against real local files. Its presentation logger is simulated; installation and filesystem behavior are not. These tests complement rather than replace the public executable suites.
 

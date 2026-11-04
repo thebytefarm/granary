@@ -34,7 +34,7 @@ pnpm --filter granary-ai test:network
 
 `pnpm validate` runs package and docs-config typechecks, lint, format, tests, docs link checks, and Almanac index checks. CLI integration tests execute the built entrypoint; Turborepo builds it before testing. Use `pnpm docs:build` for production-site validation when changing the site.
 
-Public CLI integration tests belong to `packages/granary` and execute its built distribution. The packed-package test installs a tarball in a disposable consumer using pnpm's offline dependency cache, then runs its installed `granary` bin. Private CLI adapter tests use `maltty/test`. The separate `test:network` command builds first and installs pinned Next.js documentation from GitHub; it is not part of ordinary validation.
+Public CLI integration tests belong to `packages/granary` and execute its built distribution. The packed-package test installs a tarball in a disposable consumer, preferring pnpm's cache and fetching missing registry metadata or dependencies, then runs its installed `granary` bin. Private CLI adapter tests use `maltty/test`. The separate `test:network` command builds first and installs pinned Next.js documentation from GitHub; it is not part of ordinary validation.
 
 Tests always execute to inspect current root standards and available language tools. Rust examples compile when rustc is installed. Python syntax and native examples run with Python; returns execution and strict mypy-plugin checks report skips when their dependencies are unavailable.
 
