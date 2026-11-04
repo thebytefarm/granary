@@ -6,6 +6,7 @@ import { createElement } from 'react'
 import { FarmHero } from './docs/components/farm-hero.tsx'
 
 const granaryTheme = createGranaryTheme()
+const base = process.env.CIDERPRESS_BASE ?? '/'
 
 export default defineConfig({
   title: 'Granary',
@@ -13,7 +14,7 @@ export default defineConfig({
   theme: { themes: [granaryTheme], defaultVariant: 'dark', variantSwitcher: false },
   brand: {
     logo: '/logo.svg',
-    banner: () => createElement(FarmHero),
+    banner: () => createElement(FarmHero, { base }),
     favicon: { src: '/icon.svg', type: 'image/svg+xml' },
     loader: { content: '/icon.svg', label: 'Granary' },
   },

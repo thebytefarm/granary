@@ -266,48 +266,48 @@ body:has(.farm-hero) .cp-split__visual img {
   height: auto;
 }
 
-body:has(.farm-hero) .cp-split__inner:has(img[src='/context-workspace.svg']) {
+body:has(.farm-hero) .cp-split__inner:has(img[src$='/context-workspace.svg']) {
   row-gap: 24px;
 }
 
-body:has(.farm-hero) .cp-split:has(img[src='/context-workspace.svg']) .cp-split__copy {
+body:has(.farm-hero) .cp-split:has(img[src$='/context-workspace.svg']) .cp-split__copy {
   display: block;
 }
 
-body:has(.farm-hero) .cp-split:has(img[src='/context-workspace.svg']) .cp-split__title {
+body:has(.farm-hero) .cp-split:has(img[src$='/context-workspace.svg']) .cp-split__title {
   font-weight: 700;
 }
 
-body:has(.farm-hero) .cp-split:has(img[src='/context-workspace.svg']) .cp-split__btn {
+body:has(.farm-hero) .cp-split:has(img[src$='/context-workspace.svg']) .cp-split__btn {
   justify-self: start;
 }
 
 @media (min-width: 881px) {
-  body:has(.farm-hero) .cp-split__inner:has(img[src='/context-workspace.svg']) {
+  body:has(.farm-hero) .cp-split__inner:has(img[src$='/context-workspace.svg']) {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
 }
 
 @media (max-width: 880px) {
-  body:has(.farm-hero) .cp-split:has(img[src='/context-workspace.svg']) {
+  body:has(.farm-hero) .cp-split:has(img[src$='/context-workspace.svg']) {
     padding-block: 40px;
   }
 
-  body:has(.farm-hero) .cp-split__inner:has(img[src='/context-workspace.svg']) {
+  body:has(.farm-hero) .cp-split__inner:has(img[src$='/context-workspace.svg']) {
     row-gap: 16px;
   }
 }
 
 @media (max-width: 600px) {
-  body:has(.farm-hero) img[src='/context-workspace.svg'] {
-    content: url('/context-workspace-mobile.svg');
+  body:has(.farm-hero) img[src$='/context-workspace.svg'] {
+    content: url('./context-workspace-mobile.svg');
     aspect-ratio: 340 / 490;
   }
 }
 
-body:has(.farm-hero) .cp-split__visual:has(img[src='/context-sources.svg']),
-body:has(.farm-hero) .cp-split__visual:has(img[src='/context-workspace.svg']),
-body:has(.farm-hero) .cp-split__visual:has(img[src='/context-review.svg']) {
+body:has(.farm-hero) .cp-split__visual:has(img[src$='/context-sources.svg']),
+body:has(.farm-hero) .cp-split__visual:has(img[src$='/context-workspace.svg']),
+body:has(.farm-hero) .cp-split__visual:has(img[src$='/context-review.svg']) {
   position: relative;
   border: 0;
   border-radius: 0;
@@ -316,14 +316,14 @@ body:has(.farm-hero) .cp-split__visual:has(img[src='/context-review.svg']) {
 }
 
 /* Image-embedded SVGs cannot load external SVGs; register the canonical icon to the diagram. */
-body:has(.farm-hero) .cp-split__visual:has(img[src='/context-sources.svg'])::after {
+body:has(.farm-hero) .cp-split__visual:has(img[src$='/context-sources.svg'])::after {
   content: '';
   position: absolute;
   left: 49.7368%;
   top: 30.9677%;
   width: 8.4211%;
   aspect-ratio: 1;
-  background: url('/icon.svg') center / contain no-repeat;
+  background: url('./icon.svg') center / contain no-repeat;
   pointer-events: none;
 }
 
@@ -345,7 +345,7 @@ body:has(.farm-hero) .cp-cta::before {
   pointer-events: none;
   background:
     linear-gradient(#0c1010bf, #0c1010db),
-    url('/cta-wheat-field.webp') center / cover no-repeat;
+    url('./cta-wheat-field.webp') center / cover no-repeat;
   image-rendering: auto;
   opacity: 1;
   mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);

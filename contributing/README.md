@@ -71,6 +71,26 @@ Edit the canonical Markdown page rather than the generated region. `pnpm docs:in
 
 This setup uses root `AGENTS.md` as the shared entrypoint, without compatibility links or installed Git hooks.
 
+## Docs deployment
+
+`.github/workflows/docs.yml` checks and builds the site on pull requests. Pushes to `main` and manual runs also deploy `.ciderpress/dist` to GitHub Pages. Package publication is separate.
+
+The current site is <https://thebytefarm.github.io/granary/>. The workflow reads the deployment base from GitHub Pages; local builds default to `/`. Preview a project-path build with:
+
+```sh
+NODE_ENV=production CIDERPRESS_BASE=/granary/ pnpm docs:build
+```
+
+When switching between root and project-path builds locally, clear `node_modules/.cache/rspack` first. Ciderpress's `--clean` does not clear this cache, which can retain navigation from the previous base. CI builds start without it.
+
+To connect a custom domain:
+
+1. In repository Settings > Pages, set the custom domain you own. For a subdomain such as `docs.example.com`, add a Cloudflare CNAME record named `docs` pointing to `thebytefarm.github.io` (not a URL or `/granary/` path). Start with DNS-only mode. An apex domain requires the records in GitHub's linked custom-domain guide instead.
+2. Rerun `CI: Docs` on `main`. Pages metadata supplies the new base automatically; no source-path edits are needed.
+3. Wait for GitHub's DNS and certificate checks, enable Enforce HTTPS, and verify the home page, a nested route, and the farm assets on the new domain.
+
+For rollback, revert the faulty docs commit through a pull request and redeploy. For a failed build or deployment, inspect the `CI: Docs` run and `github-pages` environment logs before changing settings. Do not bypass deployment protections. See [GitHub's custom-domain guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) for DNS requirements and troubleshooting.
+
 ## Dependency proposals
 
 Before asking to add or manually upgrade a dependency, identify the missing capability and inspect massaman and existing domain modules for overlap. For type helpers, evaluate TypeScript's built-in utilities, then type-fest; it is not currently installed.
