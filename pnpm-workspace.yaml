@@ -1,2 +1,5 @@
 packages:
   - packages/*
+
+minimumReleaseAgeExclude:
+  - almanac-md@0.4.0
