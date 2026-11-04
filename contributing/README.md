@@ -105,6 +105,12 @@ PR titles follow the same convention; bodies include Summary, Changes, and Testi
 
 Published behavior or API changes require a Changeset. Contributor-only docs and development-only tools may omit one. Publishing requires explicit authorization, completed validation/builds, and a version bump. Fix hook failures rather than bypassing them.
 
+### Publish through GitHub Actions
+
+`.github/workflows/publish.yml` runs Changesets on `main`: pending changesets create a version PR; prepared unpublished versions run validation, build, and publication. npm trusted publishing must authorize `thebytefarm/granary` with workflow filename `publish.yml` and no environment. Only `granary-ai` is public; the `@granary/*` workspaces remain private.
+
+`publishWaitTimeout` gives npm up to ten minutes to expose the published version and serve its tarball. npm may accept an upload before scanning finishes. If availability times out, inspect the exact version in the registry before retrying; do not blindly upload the accepted version again.
+
 ### Publish locally
 
 Start with a clean, committed checkout and pending changesets:

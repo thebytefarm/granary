@@ -3,3 +3,5 @@ packages:
 
 minimumReleaseAgeExclude:
   - almanac-md@0.4.0
+
+publishWaitTimeout: 600000
