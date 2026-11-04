@@ -191,7 +191,7 @@ describe('pack installation', { timeout: 15_000 }, () => {
 
   it('pins a Git commit after the selected branch moves', async () => {
     const { project, source, client } = await workspace()
-    await execute('git', ['init', '--quiet', source])
+    await execute('git', ['init', '--quiet', '--initial-branch=main', source])
     const first = await saveCommit(source)
     const locked = unwrap(
       await client.packs.add({
@@ -215,7 +215,7 @@ describe('pack installation', { timeout: 15_000 }, () => {
 
   it('adds another explicit tag without advancing or rewriting an existing installation', async () => {
     const { project, source, client } = await workspace()
-    await execute('git', ['init', '--quiet', source])
+    await execute('git', ['init', '--quiet', '--initial-branch=main', source])
     await saveCommit(source)
     await execute('git', ['-C', source, 'tag', 'v16.0.0'])
     const first = unwrap(
@@ -270,7 +270,7 @@ describe('pack installation', { timeout: 15_000 }, () => {
 
   it('retrieves a non-default branch and rejects unavailable revisions without writing', async () => {
     const { project, source, client } = await workspace()
-    await execute('git', ['init', '--quiet', source])
+    await execute('git', ['init', '--quiet', '--initial-branch=main', source])
     const release = await saveCommit(source)
     await execute('git', ['-C', source, 'update-ref', 'refs/heads/release/docs', release])
     await writeFile(join(source, 'README.md'), 'Main branch\n')
