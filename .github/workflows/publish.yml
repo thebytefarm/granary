@@ -37,6 +37,14 @@ jobs:
         run: npm install --global npm@latest
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify native compiler
+        timeout-minutes: 2
+        run: |
+          rustc --version --verbose
+          directory="$(mktemp -d)"
+          printf '#[test]\nfn compiler_smoke() {}\n' > "$directory/smoke.rs"
+          time rustc --edition 2024 --test "$directory/smoke.rs" -o "$directory/smoke"
+          "$directory/smoke"
       - name: Create release PR or publish
         uses: changesets/action@v2.1.2
         with:
