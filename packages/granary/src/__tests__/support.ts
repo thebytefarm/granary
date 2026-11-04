@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process'
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -11,7 +11,7 @@ const execute = promisify(execFile)
 const repository = fileURLToPath(new URL('../../../../', import.meta.url))
 
 /**
- * Install the packed distribution in an isolated consumer; pnpm uses its offline cache.
+ * Install the packed distribution in an isolated consumer, preferring cached dependencies.
  * @private
  */
 export async function installedCli({
@@ -26,6 +26,9 @@ export async function installedCli({
   const project = join(directory, 'consumer')
   const tarball = join(directory, 'granary-ai.tgz')
   await mkdir(project)
+  if (packageManager === 'pnpm') {
+    await copyFile(join(repository, 'pnpm-workspace.yaml'), join(project, 'pnpm-workspace.yaml'))
+  }
   await execute('pnpm', ['--filter', 'granary-ai', 'pack', '--out', tarball], {
     cwd: repository,
     timeout: 60_000,
@@ -69,7 +72,7 @@ export async function installedCli({
  */
 function installArguments(packageManager: 'npm' | 'pnpm'): readonly string[] {
   if (packageManager === 'npm') return ['install', '--no-audit', '--no-fund']
-  return ['install', '--offline']
+  return ['install', '--prefer-offline']
 }
 
 /**
