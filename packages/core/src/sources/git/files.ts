@@ -3,6 +3,7 @@ import { matchesGlob, posix, join } from 'node:path'
 
 import { attemptAsync, err, isErr, ok } from 'massaman/control'
 import type { Result } from 'massaman/control'
+import { chunk, uniq } from 'massaman/array'
 
 import { exec } from '#/process/exec.ts'
 import { fromIo, sourceError } from '#/sources/errors.ts'
@@ -14,7 +15,7 @@ import { collectOutcomes } from '#/results.ts'
 /**
  * @private
  */
-type TreeFile = { readonly path: string; readonly mode: string }
+type TreeFile = { readonly path: string; readonly mode: string; readonly object: string }
 
 /**
  * Inspect a fetched tree without downloading blobs, and materialize only requested files.
@@ -56,9 +57,14 @@ export async function createGitFiles({
       if (root !== '.' && scoped.length === 0) {
         return err(sourceError({ kind: 'invalid', message: `Content root is missing: ${root}.` }))
       }
-      const selected = scoped.filter((file) =>
-        patterns.some((pattern) => matchesGlob(posix.relative(root, file.path), pattern))
+      const exact = Object.fromEntries(
+        patterns.filter(isExactPattern).map((pattern) => [pattern, true])
       )
+      const globs = patterns.filter((pattern) => !isExactPattern(pattern))
+      const selected = scoped.filter((file) => {
+        const path = posix.relative(root, file.path)
+        return Object.hasOwn(exact, path) || globs.some((pattern) => matchesGlob(path, pattern))
+      })
       return ok(selected.map((file) => posix.relative(root, file.path)).toSorted())
     },
     async materialize({ paths }) {
@@ -70,24 +76,82 @@ export async function createGitFiles({
       if (unsafe) {
         return err(sourceError({ kind: 'invalid', message: `Unsafe source path: ${unsafe}.` }))
       }
-      const selected = paths.filter((path) => Object.hasOwn(byPath, path))
+      const selected = paths.flatMap((path) => {
+        if (!Object.hasOwn(byPath, path)) return []
+        const file = byPath[path]
+        if (!file) return []
+        return [file]
+      })
       if (selected.length === 0) return ok(undefined)
-      return restoreFiles({ directory, commit, paths: selected })
+      const fetched = await prefetchBlobs({
+        directory,
+        objects: selected.map((file) => file.object),
+      })
+      if (isErr(fetched)) return fetched
+      return restoreFiles({ directory, commit, paths: selected.map((file) => file.path) })
     },
   })
+}
+
+/**
+ * Keep glob syntax and noncanonical paths on Node's matcher; expanded plain paths need only lookup.
+ * @private
+ */
+function isExactPattern(pattern: string): boolean {
+  return !/[\\*?[\]{}()!+@]/.test(pattern) && posix.normalize(pattern) === pattern
 }
 
 /**
  * @private
  */
 function parseTreeFile(record: string): Result<TreeFile, SourceError> {
-  const match = /^([0-7]{6}) (?:blob|commit) [a-f0-9]{40}(?:[a-f0-9]{24})?\t([\s\S]+)$/.exec(record)
+  const match = /^([0-7]{6}) (?:blob|commit) ([a-f0-9]{40}(?:[a-f0-9]{24})?)\t([\s\S]+)$/.exec(
+    record
+  )
   const mode = match?.[1]
-  const path = match?.[2]
-  if (!mode || !path) {
+  const object = match?.[2]
+  const path = match?.[3]
+  if (!mode || !object || !path) {
     return err(sourceError({ kind: 'invalid', message: 'Git returned an invalid tree entry.' }))
   }
-  return ok({ mode, path })
+  return ok({ mode, object, path })
+}
+
+/**
+ * Avoid restore's single-blob lazy fetches without exceeding process argument limits.
+ * @private
+ */
+async function prefetchBlobs({
+  directory,
+  objects,
+}: {
+  readonly directory: string
+  readonly objects: readonly string[]
+}): Promise<Result<void, SourceError>> {
+  for (const batch of chunk(uniq(objects), 512)) {
+    const fetched = await exec({
+      executable: 'git',
+      args: [
+        '-c',
+        'fetch.negotiationAlgorithm=noop',
+        'fetch',
+        '--quiet',
+        '--no-tags',
+        '--no-write-fetch-head',
+        '--recurse-submodules=no',
+        '--filter=blob:none',
+        '--',
+        'origin',
+        ...batch,
+      ],
+      cwd: directory,
+      timeout: 120_000,
+      maxBuffer: 1024 * 1024,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
+    })
+    if (isErr(fetched)) return fetched
+  }
+  return ok(undefined)
 }
 
 /**

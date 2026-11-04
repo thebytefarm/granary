@@ -11,10 +11,12 @@ const execute = promisify(execFile)
 const repository = fileURLToPath(new URL('../../../../', import.meta.url))
 
 /**
- * Install the actual packed distribution in an isolated consumer using cached dependencies.
+ * Install the packed distribution in an isolated consumer; pnpm uses its offline cache.
  * @private
  */
-export async function installedCli(): Promise<{
+export async function installedCli({
+  packageManager = 'pnpm',
+}: { readonly packageManager?: 'npm' | 'pnpm' } = {}): Promise<{
   readonly project: string
   readonly run: (
     args: readonly string[]
@@ -37,8 +39,8 @@ export async function installedCli(): Promise<{
       dependencies: { 'granary-ai': `file:${tarball}` },
     })
   )
-  await execute('pnpm', ['--dir', project, 'install', '--offline'], {
-    cwd: repository,
+  await execute(packageManager, installArguments(packageManager), {
+    cwd: project,
     timeout: 120_000,
     maxBuffer: 4 * 1024 * 1024,
   })
@@ -60,6 +62,14 @@ export async function installedCli(): Promise<{
       })
     },
   }
+}
+
+/**
+ * @private
+ */
+function installArguments(packageManager: 'npm' | 'pnpm'): readonly string[] {
+  if (packageManager === 'npm') return ['install', '--no-audit', '--no-fund']
+  return ['install', '--offline']
 }
 
 /**

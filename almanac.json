@@ -2,6 +2,7 @@
   "include": [
     "README.md",
     "VISION.md",
+    "DESIGN.md",
     "contributing/**/*.md",
     "docs/**/*.md",
     "docs/**/*.mdx",

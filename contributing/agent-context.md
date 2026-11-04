@@ -1,6 +1,6 @@
 # Agent context
 
-Start a repository task at root `AGENTS.md`. It owns commands and permission boundaries and routes standards retrieval through `.context/INDEX.md`.
+Start a repository task at root `AGENTS.md`. It owns commands and permission boundaries and links directly to installed standards.
 
 Granary declares only `bytefarm/recommended-typescript` in its own dependencies. The installed set contains engineering, Git, documentation, agent instructions, and functional TypeScript. Read the component entrypoints in that order, then the topics needed by the change.
 

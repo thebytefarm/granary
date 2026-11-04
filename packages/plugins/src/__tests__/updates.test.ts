@@ -498,9 +498,7 @@ describe('reviewed updates', { timeout: 20_000 }, () => {
     }
     expect(applied.value.packs).toHaveLength(0)
     await expect(readFile(join(directory, 'README.md'))).rejects.toMatchObject({ code: 'ENOENT' })
-    expect(await readFile(join(project, '.granary/context/INDEX.md'), 'utf8')).not.toContain(
-      'example/standards'
-    )
+    expect(await readFile(join(project, 'AGENTS.md'), 'utf8')).not.toContain('example/standards')
     const restored = await readWorkspaceConfig({ project })
     expect(restored.error).toBeNull()
     if (!isErr(restored)) {

@@ -12,11 +12,11 @@ A pack selects ordinary files through a [manifest](../reference/pack-manifest.md
 
 ## Install Granary
 
-The workspace implementation supports pack authoring, local/Git installation, file selection, and pinned restoration. Its current manifest contract has not been published yet. From a Granary checkout with dependencies installed:
+Install the npm package with Node.js 26+ and Git available:
 
 ```sh
-pnpm build
-pnpm cli add ./packs --list
+npm install --global granary-ai
+granary add nextjs@16
 ```
 
 The `granary-ai` package provides the `granary` command. Browse the [prebuilt packs](../packs/index.mdx), or see [CLI](../reference/cli.md) and [project config](../reference/project-config.md) for source selection and locked restoration.

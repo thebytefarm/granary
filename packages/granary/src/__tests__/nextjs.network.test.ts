@@ -1,14 +1,56 @@
 import { createHash } from 'node:crypto'
 import { readFile, readdir, rm, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { installedCli } from './support.ts'
+import { installedCli, temporaryDirectory } from './support.ts'
 
 const page = 'docs/01-app/01-getting-started/01-installation.mdx'
 
 describe('live Next.js context installation', () => {
+  it('adds Next.js 16 docs through shorthand and reproduces every file in a fresh consumer', async () => {
+    const { project, run } = await installedCli({ packageManager: 'npm' })
+    const installed = await run(['add', 'nextjs@16'])
+    const tag = /github:vercel\/next\.js@(v16\.[0-9]+\.[0-9]+) /.exec(installed.stdout)?.[1] ?? ''
+    expect(tag).toMatch(/^v16\.[0-9]+\.[0-9]+$/)
+    const config = await readFile(join(project, 'granary.json'), 'utf8')
+    expect(JSON.parse(config)).toMatchObject({
+      packs: { 'github:vercel/next.js': { tag, files: { include: ['docs/**'] } } },
+    })
+    const destination = `.granary/context/github/vercel/next.js/${tag}`
+    const directory = join(project, destination)
+    expect(await readdir(directory)).toEqual(['docs'])
+    expect(await readFile(join(directory, page), 'utf8')).toContain('title: Installation')
+    expect(await readFile(join(project, 'AGENTS.md'), 'utf8')).toContain(tag)
+    const lock = await readFile(join(project, 'granary-lock.json'), 'utf8')
+    expect(JSON.parse(lock)).toMatchObject({
+      packs: [{ definition: { revision: expect.stringMatching(/^[a-f0-9]{40}$/) } }],
+    })
+    const fresh = await temporaryDirectory()
+    await writeFile(join(fresh, 'granary.json'), config)
+    await writeFile(join(fresh, 'granary-lock.json'), lock)
+    await run(['install', '--cwd', fresh])
+    const entries = await readdir(directory, { recursive: true, withFileTypes: true })
+    const files = entries.flatMap((entry) => {
+      if (!entry.isFile()) return []
+      return [relative(directory, join(entry.parentPath, entry.name))]
+    })
+    expect(files.length).toBeGreaterThan(100)
+    for (const file of files) {
+      expect(await readFile(join(fresh, destination, file))).toEqual(
+        await readFile(join(directory, file))
+      )
+    }
+    expect(await readFile(join(fresh, 'granary-lock.json'), 'utf8')).toBe(lock)
+    const localPage = join(fresh, destination, page)
+    await writeFile(localPage, '# Consumer edit\n')
+    await expect(run(['install', '--cwd', fresh])).rejects.toMatchObject({ code: 1 })
+    expect(await readFile(localPage, 'utf8')).toBe('# Consumer edit\n')
+    expect(await readFile(join(fresh, 'granary-lock.json'), 'utf8')).toBe(lock)
+    console.info(`nextjs@16 resolved ${tag}: ${files.length} docs reproduced byte-for-byte.`)
+  })
+
   it('installs two 15.x versions at readable default paths with root configuration and lockfiles', async () => {
     const { project, run } = await installedCli()
     const tags = ['v15.4.0', 'v15.5.0']
@@ -52,24 +94,11 @@ describe('live Next.js context installation', () => {
     expect(await readdir(join(project, '.granary/context/github/vercel/next.js'))).toEqual(tags)
   })
 
-  it('installs pinned upstream documentation and restores the same bytes through the installed CLI', async () => {
+  it('adopts an exact release through install shorthand with custom output and restores the same bytes', async () => {
     const { project, run } = await installedCli()
-    await writeFile(
-      join(project, 'granary.json'),
-      JSON.stringify({
-        name: 'nextjs-consumer',
-        packs: {
-          'github:vercel/next.js': {
-            tag: 'v16.0.0',
-            files: { include: [page] },
-            output: 'reference/nextjs',
-          },
-        },
-      })
-    )
+    const installed = await run(['install', 'nextjs@16.0.0', '--output', 'reference/nextjs'])
     await run(['validate'])
-    const installed = await run(['install'])
-    expect(installed.stdout + installed.stderr).toContain('Restored 1 locked pack(s).')
+    expect(installed.stdout + installed.stderr).toContain('Installed context. 1 pack(s) locked.')
     const destination = join(project, 'reference/nextjs', page)
     const content = await readFile(destination, 'utf8')
     expect(content).toContain('title: Installation')
@@ -80,7 +109,14 @@ describe('live Next.js context installation', () => {
         {
           definition: { revision: expect.stringMatching(/^[a-f0-9]{40}$/) },
           groups: [
-            { files: [{ path: page, hash: createHash('sha256').update(content).digest('hex') }] },
+            {
+              files: expect.arrayContaining([
+                expect.objectContaining({
+                  path: page,
+                  hash: createHash('sha256').update(content).digest('hex'),
+                }),
+              ]),
+            },
           ],
         },
       ],

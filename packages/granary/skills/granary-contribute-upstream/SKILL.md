@@ -1,9 +1,11 @@
 ---
 name: granary-contribute-upstream
-description: Prepare reusable Granary pack customizations for upstream contribution. Use when a consumer wants to send selected local standards, context fixes, or examples back to the pack author without including project-specific policy.
+description: Prepare customizations to an authored Granary pack for upstream contribution. Not for arbitrary installed context, framework documentation selections, or copied application code.
 ---
 
 # Contribute a customization upstream
+
+Use this procedure only after identifying the authored reusable pack definition and its owner. Local authored packs qualify; ordinary installed docs, curated framework selections, and copied application code do not. A consumer source entry or lock entry is not sufficient evidence. For other upstream contributions, follow the source repository's normal contribution process instead.
 
 1. Read the consumer's instructions and installed provenance. Identify the original repository, accepted revision, pack root, standard IDs, and the requested contribution. Do not assume a locally installed pack's source is the repository's current origin.
 2. Inspect baseline versus local content with `granary update`, saving its read-only review output in a new file. All three versions are included. Separate the local delta from incoming upstream changes; do not attribute upstream improvements to the consumer. Preparation uses declared sources; do not apply this review while preparing a contribution.

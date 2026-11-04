@@ -75,6 +75,34 @@ describe('built Granary CLI', { timeout: 15_000 }, () => {
     expect(await readdir(project)).toEqual([])
   })
 
+  it('adopts through install <source>, while bare install restores and protects local edits', async () => {
+    const project = await workspace()
+    const source = await pack()
+    await cli({ project, args: ['install', source, '--output', 'reference'] })
+    const config = await readFile(join(project, 'granary.json'), 'utf8')
+    const lock = await readFile(join(project, 'granary-lock.json'), 'utf8')
+    await cli({ project, args: ['install'] })
+    await writeFile(join(project, 'reference/README.md'), '# Local edit\n')
+    await expect(cli({ project, args: ['install'] })).rejects.toMatchObject({ code: 1 })
+    expect(await readFile(join(project, 'reference/README.md'), 'utf8')).toBe('# Local edit\n')
+    expect(await readFile(join(project, 'granary.json'), 'utf8')).toBe(config)
+    expect(await readFile(join(project, 'granary-lock.json'), 'utf8')).toBe(lock)
+    await rm(join(project, 'reference/README.md'))
+    await cli({ project, args: ['install'] })
+    expect(await readFile(join(project, 'reference/README.md'), 'utf8')).toBe('# Fixture\n')
+  })
+
+  it.each(['add', 'install'])(
+    'rejects unsupported shorthand through %s without writing consumer state',
+    async (command) => {
+      const project = await workspace()
+      await expect(cli({ project, args: [command, 'nextjs@^16'] })).rejects.toMatchObject({
+        code: 1,
+      })
+      expect(await readdir(project)).toEqual([])
+    }
+  )
+
   it('preserves malformed consumer intent during add', async () => {
     const project = await workspace()
     const source = await pack()

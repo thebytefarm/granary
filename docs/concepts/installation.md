@@ -11,12 +11,12 @@ The consumer's `granary.json` selects only material that project needs. Distribu
 ## Versioned destinations
 
 ```text
+AGENTS.md
 granary.json
 granary-lock.json
 .granary/
   .gitignore
   context/
-    INDEX.md
     github/vercel/next.js/v15.5.0/
       docs/
   cache/
@@ -33,7 +33,7 @@ Configuration and lockfiles stay at the project root regardless of output overri
 2. Resolve source revisions and selected files.
 3. Read definition commits and selected upstream bytes.
 4. Record source commits and content hashes.
-5. Build payload, index, config, and lock changes.
+5. Build payload, agent-instruction, config, and lock changes.
 6. Check all destinations before writing.
 7. Recheck observed destination bytes and apply changes with rollback on reported failure.
 
@@ -47,4 +47,4 @@ Writes use adjacent temporary files and atomic rename per file. Recovery restore
 
 Reviewed updates can record accepted local additions, edits, and deletions separately from upstream hashes. `install` validates and overlays those materialized results, restores missing accepted files, and rejects later unaccepted edits. See [pack maintenance](pack-maintenance.md) for review decisions, baseline recovery, and restoration limits.
 
-Each output root has a generated `INDEX.md` linking to selected entrypoints. Repository instructions can point at that index; Granary does not edit `AGENTS.md` automatically.
+Granary creates or refreshes a dedicated `<granary-context>` region in root `AGENTS.md` linking directly to selected reference entrypoints. There is no intermediate generated `INDEX.md`. The Almanac SDK edits a disposable staging copy; the resulting instruction change joins the same preflight/recovery transaction as installed content. Existing instructions and other managed regions stay unchanged. No compatibility aliases, hooks, staging, or consumer Almanac configuration are added.

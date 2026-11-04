@@ -28,8 +28,8 @@ describe('pack installation', { timeout: 15_000 }, () => {
     )
     expect(lock.packs[0]?.groups[0]?.files.map((file) => file.path)).toEqual(['src/main.ts'])
     expect(await readFile(join(project, 'reference/src/main.ts'), 'utf8')).toContain('answer = 42')
-    expect(await readFile(join(project, '.granary/context/INDEX.md'), 'utf8')).toContain(
-      '../reference/src/main.ts'
+    expect(await readFile(join(project, 'AGENTS.md'), 'utf8')).toContain(
+      '[reference/src/main.ts](reference/src/main.ts)'
     )
     await expect(access(join(project, 'reference/README.md'))).rejects.toMatchObject({
       code: 'ENOENT',
@@ -213,6 +213,61 @@ describe('pack installation', { timeout: 15_000 }, () => {
     )
   })
 
+  it('adds another explicit tag without advancing or rewriting an existing installation', async () => {
+    const { project, source, client } = await workspace()
+    await execute('git', ['init', '--quiet', source])
+    await saveCommit(source)
+    await execute('git', ['-C', source, 'tag', 'v16.0.0'])
+    const first = unwrap(
+      await client.packs.add({
+        source: {
+          provider: 'git',
+          repository: pathToFileURL(source).href,
+          revision: { tag: 'v16.0.0' },
+        },
+        output: 'first',
+      })
+    )
+    await writeFile(join(project, 'first/README.md'), 'Consumer edit\n')
+    await writeFile(join(source, 'README.md'), 'Next release\n')
+    await saveCommit(source)
+    await execute('git', ['-C', source, 'tag', 'v16.1.0'])
+    const second = unwrap(
+      await client.packs.add({
+        source: {
+          provider: 'git',
+          repository: pathToFileURL(source).href,
+          revision: { tag: 'v16.1.0' },
+        },
+        output: 'second',
+      })
+    )
+    expect(second.packs).toHaveLength(2)
+    expect(second.packs[0]).toEqual(first.packs[0])
+    expect(await readFile(join(project, 'first/README.md'), 'utf8')).toBe('Consumer edit\n')
+    expect(await readFile(join(project, 'second/README.md'), 'utf8')).toBe('Next release\n')
+    const config = await readFile(join(project, 'granary.json'), 'utf8')
+    const lock = await readFile(join(project, 'granary-lock.json'), 'utf8')
+    const duplicate = await client.packs.add({
+      source: {
+        provider: 'git',
+        repository: pathToFileURL(source).href,
+        revision: { tag: 'v16.1.0' },
+      },
+      output: 'duplicate',
+    })
+    expect(duplicate).toMatchObject({ ok: false, error: { kind: 'conflict' } })
+    expect(await readFile(join(project, 'granary.json'), 'utf8')).toBe(config)
+    expect(await readFile(join(project, 'granary-lock.json'), 'utf8')).toBe(lock)
+    expect(await client.packs.install()).toMatchObject({ ok: false, error: { kind: 'conflict' } })
+    expect(await readFile(join(project, 'first/README.md'), 'utf8')).toBe('Consumer edit\n')
+    await writeFile(join(project, 'first/README.md'), 'Original reference\n')
+    await rm(join(project, 'second'), { recursive: true })
+    unwrap(await client.packs.install())
+    expect(await readFile(join(project, 'second/README.md'), 'utf8')).toBe('Next release\n')
+    expect(await readFile(join(project, 'granary-lock.json'), 'utf8')).toBe(lock)
+  })
+
   it('retrieves a non-default branch and rejects unavailable revisions without writing', async () => {
     const { project, source, client } = await workspace()
     await execute('git', ['init', '--quiet', source])
@@ -262,9 +317,9 @@ describe('pack installation', { timeout: 15_000 }, () => {
     )
     expect(lock.packs).toHaveLength(2)
     expect(await readFile(join(project, 'reference/notes.md'), 'utf8')).toBe('Unrelated notes\n')
-    const index = await readFile(join(project, '.granary/context/INDEX.md'), 'utf8')
-    expect(index).toContain('../reference/README.md')
-    expect(index).toContain('../second/README.md')
+    const instructions = await readFile(join(project, 'AGENTS.md'), 'utf8')
+    expect(instructions).toContain('[reference/README.md](reference/README.md)')
+    expect(instructions).toContain('[second/README.md](second/README.md)')
   })
 
   it('compares consumer configuration independently of object property order', async () => {

@@ -1,94 +1,120 @@
 import { BUILT_IN_THEMES, defineTheme } from '@ciderpress/theme'
 import type { CiderpressTheme } from '@ciderpress/theme'
 import { defineConfig } from 'ciderpress/config'
+import { createElement } from 'react'
+
+import { FarmHero } from './docs/components/farm-hero.tsx'
 
 const granaryTheme = createGranaryTheme()
 
 export default defineConfig({
   title: 'Granary',
-  description: 'A storehouse for agent knowledge.',
+  description: 'Give your agent better context.',
   theme: { themes: [granaryTheme], defaultVariant: 'dark', variantSwitcher: false },
   brand: {
     logo: '/logo.svg',
+    banner: () => createElement(FarmHero),
     favicon: { src: '/icon.svg', type: 'image/svg+xml' },
     loader: { content: '/icon.svg', label: 'Granary' },
   },
   home: {
     hero: {
-      label: 'Versioned docs & source',
+      label: 'Alpha',
       tagline:
-        'The right docs. The actual source. Right in your repo. Give your coding agent versioned reference material it can read on disk.',
+        'Install versioned docs and source in your repository for your coding agent to read.',
       actions: [
         {
-          text: 'Get started',
+          text: 'Try the quick start',
           href: '/getting-started/quick-start',
           variant: 'primary',
         },
         { text: 'Browse the packs', href: '/packs', variant: 'secondary' },
       ],
-      demo: {
-        type: 'code',
-        language: 'sh',
-        code: 'npm install --global granary-ai\ngranary add thebytefarm/granary --pack recommended-typescript',
-      },
+      demo: false,
     },
     blocks: [
       {
-        type: 'features',
-        columns: 3,
-        label: 'Stock the workspace',
-        title: 'Good context. Close at hand.',
-        body: 'From a local directory or a Git repo to reference material your agent can use.',
-        items: [
-          {
-            title: 'Pack what matters',
-            description:
-              'Turn docs, source, and examples into a versioned pack. Keep the directory structure you already use.',
-            icon: { id: 'pixelarticons:archive', color: 'amber' },
-            link: '/reference/pack-manifest',
-          },
-          {
-            title: 'Keep it local',
-            description:
-              'Install reference material into your repo. Your agent reads ordinary files with the tools it already has.',
-            icon: { id: 'pixelarticons:folder', color: 'amber' },
-            link: '/reference/project-config',
-          },
-          {
-            title: 'Lock the harvest',
-            description:
-              'Pin versions, Git commits, and file integrity. Restore the same reference material across your team.',
-            icon: { id: 'pixelarticons:git-branch', color: 'amber' },
-            link: '/concepts/installation',
-          },
-        ],
+        type: 'split',
+        label: 'Reference material for coding agents',
+        title: 'Give your agent the version you use.',
+        body: 'Choose the revision and files your project needs. A lockfile lets your team restore the same selection.',
+        visual: {
+          type: 'image',
+          src: '/context-workspace.svg',
+          alt: 'An illustrative Next.js v16.0.0 selection in granary.json produces local docs, a lockfile, and direct reference links in AGENTS.md. This installs reference files, not the Next.js dependency.',
+        },
+        cta: {
+          text: 'Try the quick start',
+          href: '/getting-started/quick-start',
+          variant: 'primary',
+        },
       },
       {
         type: 'split',
-        label: 'One manifest. A stocked repo.',
-        title: 'Choose your context. Make it repeatable.',
-        body: 'Declare the packs your project needs in granary.json. Install from local directories or Git, then keep exact revisions in the lockfile.',
-        bullets: [
-          'Compose focused packs into a recommended set.',
-          'Keep readable docs in .context/.',
-          'Store reference source separately and Git-ignored.',
-        ],
+        reverse: true,
+        label: 'How the agent uses it',
+        title: 'Your agent knows where to look.',
+        body: 'Granary links installed docs and source directly in AGENTS.md. Your agent reads them with its existing tools, even offline.',
         visual: {
-          type: 'code',
-          language: 'json',
-          code: '{\n  "schemaVersion": 1,\n  "dependencies": {\n    "bytefarm/recommended-typescript": {\n      "source": "file:.",\n      "version": "0.1.0"\n    }\n  },\n  "installDir": ".context"\n}',
+          type: 'image',
+          src: '/context-sources.svg',
+          alt: 'Git docs, source examples, and local standards become local context with direct reference links in AGENTS.md for your coding agent.',
         },
         cta: {
-          text: 'See how installation works',
-          href: '/guides/install-packs',
+          text: 'See how agents use it',
+          href: '/guides/use-agent-context',
           variant: 'secondary',
         },
       },
       {
+        type: 'split',
+        label: 'Tend your context',
+        title: 'Update without losing your edits.',
+        body: 'Adapt installed files to your project, then review upstream changes before applying them. Keep your edits, accept incoming files, or supply a merged version.',
+        visual: {
+          type: 'image',
+          src: '/context-review.svg',
+          alt: 'A three-way review compares baseline, local edits, and incoming changes, with explicit keep, accept, or merge decisions.',
+        },
+        cta: {
+          text: 'Read the update workflow',
+          href: '/concepts/pack-maintenance',
+          variant: 'secondary',
+        },
+      },
+      {
+        type: 'features',
+        columns: 3,
+        label: 'Grown at the Bytefarm',
+        title: 'Start with our engineering standards.',
+        body: 'Functional coding standards, bundled with shared engineering, Git, documentation, and agent guidance.',
+        items: [
+          {
+            title: 'TypeScript',
+            description: 'Factories, immutable values, typed Results, and exhaustive matching.',
+            icon: { id: 'simple-icons:typescript', color: 'amber' },
+            link: '/packs/recommended/typescript',
+          },
+          {
+            title: 'Rust',
+            description:
+              'Ownership, Result and Option, exhaustive enums, and iterator composition.',
+            icon: { id: 'simple-icons:rust', color: 'amber' },
+            link: '/packs/recommended/rust',
+          },
+          {
+            title: 'Python',
+            description: 'Pure functions, immutable data, and typed Results with returns.',
+            icon: { id: 'simple-icons:python', color: 'green' },
+            link: '/packs/recommended/python',
+          },
+        ],
+      },
+      {
         type: 'cta',
-        label: 'From the Bytefarm',
-        title: 'Your first packs are already here.',
-        body: 'Start with a recommended TypeScript, Rust, or Python set. Each includes shared engineering, Git, documentation, and agent-instruction packs.',
+        label: 'Try the alpha',
+        title: 'Give your next session the docs it needs.',
+        body: 'Install Granary from npm and try Next.js 16 docs in a disposable project. No hosted account required.',
         actions: [
           { text: 'Try the quick start', href: '/getting-started/quick-start', variant: 'primary' },
           {
@@ -338,11 +364,11 @@ function createGranaryTheme(): CiderpressTheme {
     variants: {
       dark: {
         ...base,
-        radii: { ...base.radii, md: '6px', lg: '8px', mdLg: '10px' },
+        radii: { ...base.radii, md: '4px', lg: '6px', mdLg: '8px', pill: '4px' },
         shadows: {
           ...base.shadows,
-          cardHover: '0 4px 16px rgba(0, 0, 0, 0.14)',
-          heroDemo: '0 16px 40px -16px rgba(0, 0, 0, 0.35)',
+          cardHover: '0 4px 0 rgba(214, 162, 82, 0.12)',
+          heroDemo: '0 16px 40px -16px rgba(0, 0, 0, 0.55)',
         },
         gradients: {
           ...base.gradients,
@@ -363,41 +389,42 @@ function createGranaryTheme(): CiderpressTheme {
           },
           surface: {
             ...base.colors.surface,
-            bg: '#211d17',
-            bgAlt: '#282219',
-            bgElv: '#30291f',
-            bgSoft: '#1b1813',
-            bgIcon: '#382e20',
-            homeBg: '#211d17',
+            bg: '#0c1010',
+            bgAlt: '#101615',
+            bgElv: '#161d1a',
+            bgSoft: '#080c0c',
+            bgIcon: '#1d261e',
+            homeBg: '#0c1010',
             overlayFaint: 'rgba(247, 229, 197, 0.04)',
-            gutter: '#1b1813',
-            codeBlockBg: '#1b1813',
+            gutter: '#080c0c',
+            codeBlockBg: '#080c0c',
           },
-          text: { ...base.colors.text, text1: '#f7e5c5', text2: '#bfb5a3', text3: '#918675' },
+          text: { ...base.colors.text, text1: '#f7eedc', text2: '#b9c2b7', text3: '#8e9b8d' },
           border: {
             ...base.colors.border,
-            border: 'rgba(214, 162, 82, 0.16)',
-            divider: 'rgba(214, 162, 82, 0.09)',
-            sidebarAltBorderDark: '#5a4830',
+            border: 'rgba(185, 194, 183, 0.16)',
+            divider: 'rgba(185, 194, 183, 0.09)',
+            sidebarAltBorderDark: '#2d3c31',
           },
           tint: {
             ...base.colors.tint,
             amber: { bg: 'rgba(214, 162, 82, 0.12)', fg: '#d6a252' },
-            purpleGlow: 'rgba(214, 162, 82, 0.06)',
+            green: { bg: 'rgba(147, 181, 122, 0.12)', fg: '#a6c58b' },
+            purpleGlow: 'rgba(147, 181, 122, 0.04)',
           },
           gradient: { heroCyan: '#f7e5c5', heroPurple: '#d6a252' },
           terminal: {
             ...base.colors.terminal,
-            bg: '#1b1813',
-            titlebarBg: '#282219',
-            border: '#493c29',
-            title: '#bfb5a3',
+            bg: '#080c0c',
+            titlebarBg: '#101615',
+            border: '#2d3c31',
+            title: '#b9c2b7',
             text: '#f7e5c5',
-            output: '#bfb5a3',
+            output: '#b9c2b7',
             promptPrefix: '#d6a252',
           },
-          syntax: { kw: '#d6a252', str: '#e8c993', fn: '#f7e5c5' },
-          scrollbar: { thumb: '#5a4830', thumbHover: '#87571f' },
+          syntax: { kw: '#d6a252', str: '#a6c58b', fn: '#f7eedc' },
+          scrollbar: { thumb: '#354539', thumbHover: '#607254' },
           button: {
             ...base.colors.button,
             brand: { bg: '#d6a252', hoverBg: '#f7e5c5', activeBg: '#b77a2b', text: '#181610' },

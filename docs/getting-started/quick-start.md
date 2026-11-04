@@ -1,45 +1,56 @@
-# Install your first context pack
+# Install your first framework context
 
-Use the workspace CLI to install TypeScript and shared standards into a disposable project. The current manifest contract is implemented locally but has not been published yet.
+Install Next.js 16 documentation into a disposable project without choosing upstream files or cloning Granary.
+
+## What you will build
+
+A local documentation directory, direct reference links in `AGENTS.md`, and root manifest/lock files that reproduce the exact selection. This installs reference material, not the Next.js dependency.
 
 ## Prerequisites
 
-- A Granary checkout with workspace dependencies installed.
-- Node.js 26+, pnpm, and Git.
-- Run commands from the checkout root.
+- Node.js 26+, npm, and Git.
+- Network access to GitHub. macOS and Linux are supported; Windows is not.
+- Run from any writable directory. The example creates a disposable consumer and uses `--cwd` to target it.
 
-## 1. Build the CLI
+## 1. Install the CLI
 
 ```sh
-pnpm build
+npm install --global granary-ai
+granary --version
 ```
 
 ## 2. Install into a fresh consumer
 
 ```sh
 CONSUMER="$(mktemp -d)"
-pnpm cli add "file:$PWD/packs#recommended-typescript" --output .granary/context/docs/bytefarm --cwd "$CONSUMER"
+granary add nextjs@16 --cwd "$CONSUMER"
 ```
 
-This writes five components and `.granary/context/INDEX.md` in the consumer, not the Granary checkout. `granary.json` and `granary-lock.json` stay at its root. Granary generates `.granary/.gitignore` to ignore installed context and cache files.
+The CLI prints the resolved stable tag and installs only `docs/**` beneath `.granary/context/github/vercel/next.js/<tag>/` in the consumer. `granary.json` records the exact tag and selection; `granary-lock.json` pins the commit and hashes. Granary generates `.granary/.gitignore` to ignore installed context and cache files. `install nextjs@16` is an equivalent alias; `add` is the canonical spelling.
 
-## 3. Read the installed index
+## 3. Inspect the agent reference links
+
+Granary creates or refreshes a `<granary-context>` region in root `AGENTS.md` linking directly to the installed Next.js material. Inspect it:
 
 ```sh
-cat "$CONSUMER/.granary/context/INDEX.md"
+cat "$CONSUMER/AGENTS.md"
 ```
 
-It links engineering, Git, documentation, agent instructions, and TypeScript. Tell your coding agent to read this index and the standards relevant to its current task.
+Your existing instructions and other managed regions stay unchanged. Granary does not create agent compatibility aliases or register maintenance skills automatically.
 
 ## 4. Verify locked restoration
 
 ```sh
-pnpm cli install --cwd "$CONSUMER"
-pnpm cli list --cwd "$CONSUMER"
+granary install --cwd "$CONSUMER"
+granary list --cwd "$CONSUMER"
 ```
 
-Expect five locked payloads and no moved upstream revisions. In a real project, inspect and commit the manifest and lock so teammates can restore the same selection. Local sources must remain available at their recorded paths.
+Expect one locked selection and no moved upstream revisions. In a real project, inspect and commit the manifest, lock, and `AGENTS.md` so teammates can restore and discover the same selection. Git-backed restoration requires access to the locked commit; reading installed files works offline.
+
+## Result
+
+The consumer contains readable Next.js docs linked from `AGENTS.md`. Reinstall restores the locked version, not the latest release. Unaccepted edits fail rather than being overwritten; missing managed files are recreated. Explicit output overrides work but are not automatically Git-ignored.
 
 ## Next steps
 
-[Browse prebuilt packs](../packs/index.mdx), [create a pack](../guides/create-pack.md), or [choose other sources](../guides/install-packs.md).
+[Browse prebuilt standards packs](../packs/index.mdx), [create a pack](../guides/create-pack.md), or [choose other sources and destinations](../guides/install-packs.md). Website ingestion and `granary query` are not implemented.

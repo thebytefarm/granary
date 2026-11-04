@@ -10,13 +10,13 @@ Install the CLI once:
 npm install --global granary-ai
 ```
 
-The workspace implementation uses the current manifest contract; it has not been published yet. Check out this repository alongside your project:
+Check out the pack sources alongside your project; the CLI itself is installed from npm and needs no build:
 
 ```sh
 gh repo clone thebytefarm/granary ../granary-packs
 ```
 
-Run one of these commands from your project root using the workspace CLI.
+Run one of these commands from your project root.
 
 ### TypeScript
 
@@ -44,7 +44,7 @@ granary add file:../granary-packs/packs#recommended-python
 
 Each set includes engineering, Git, documentation, agent instructions, and its language component, in that order. Shared components install once when you select multiple sets. Language-specific rules apply only to files in that language.
 
-Read `.context/INDEX.md` after installation. It links the installed components and records their reading order. Commit `granary.json` and `granary-lock.json`; teammates restore the same material with `granary install`.
+Follow the installed component links in root `AGENTS.md` after installation. Commit `AGENTS.md`, `granary.json`, and `granary-lock.json`; teammates restore the same material with `granary install`.
 
 ## Components
 

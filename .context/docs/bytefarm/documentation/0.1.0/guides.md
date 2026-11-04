@@ -109,7 +109,7 @@ pnpm cli add "$PWD" --pack recommended-typescript --cwd "$CONSUMER"
 pnpm cli list --cwd "$CONSUMER"
 ```
 
-Expect the standards identity and a `docs` group. Read `.context/INDEX.md` for its entrypoint.
+Expect the standards identity and a `docs` group. Follow its reference link in root `AGENTS.md`.
 
 ## Troubleshooting
 

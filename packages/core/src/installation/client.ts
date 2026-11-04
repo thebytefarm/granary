@@ -2,6 +2,7 @@ import { isErr, ok } from 'massaman/control'
 import type { Result } from 'massaman/control'
 
 import type { InstallationError } from '#/installation/errors.ts'
+import { planAgentContext } from '#/installation/agent-context.ts'
 import { collectOutcomes } from '#/results.ts'
 import { buildAddPlan, buildRestorePlan, buildReviewedPlan } from '#/installation/plan.ts'
 import type { InstallationPlan, ReviewedInstallationOptions } from '#/installation/plan.ts'
@@ -123,7 +124,14 @@ export function createInstallationClient({
       if (isErr(plan)) {
         return plan
       }
-      const transaction = await transactions.prepare(plan.value)
+      const context = await planAgentContext({ project, plan: plan.value })
+      if (isErr(context)) {
+        return context
+      }
+      const transaction = await transactions.prepare({
+        ...plan.value,
+        changes: [...plan.value.changes, ...context.value],
+      })
       if (isErr(transaction)) {
         return transaction
       }
