@@ -28,6 +28,7 @@ const returnsAvailable = !isErr(
 )
 const mypyAvailable = !isErr(await attemptAsync(() => execute('python3', ['-c', 'import mypy'])))
 const rustAvailable = !isErr(await attemptAsync(() => execute('rustc', ['--version'])))
+const rustExamples = await readExamples({ component: 'rust', language: 'rust' })
 
 describe('standards content contracts', { timeout: 15_000 }, () => {
   it('extracts every authored standard with review-only controls and preserves all code examples', async () => {
@@ -98,23 +99,24 @@ describe('standards content contracts', { timeout: 15_000 }, () => {
     })
   })
 
-  it.skipIf(!rustAvailable)('compiles and runs every standalone Rust example', async () => {
-    const examples = await readExamples({ component: 'rust', language: 'rust' })
-    expect(examples).toHaveLength(3)
-    const directory = await createDirectory()
-    await mapLimited({
-      items: examples,
-      concurrency: 2,
-      transform: async (example) => {
-        const source = join(directory, `${example.name}.rs`)
-        const binary = join(directory, example.name)
-        await writeFile(source, example.code)
-        await execute('rustc', ['--edition', '2024', '--test', source, '-o', binary])
-        const result = await execute(binary, [])
-        expect(result.stdout).toContain('1 passed')
-      },
-    })
+  it('discovers every standalone Rust example', () => {
+    expect(rustExamples).toHaveLength(3)
   })
+
+  it.skipIf(!rustAvailable).each(rustExamples)(
+    'compiles and runs Rust example $name',
+    async (example) => {
+      const directory = await createDirectory()
+      const source = join(directory, `${example.name}.rs`)
+      const binary = join(directory, example.name)
+      await writeFile(source, example.code)
+      await execute('rustc', ['--edition', '2024', '--test', source, '-o', binary], {
+        timeout: 10_000,
+      })
+      const result = await execute(binary, [], { timeout: 2_000 })
+      expect(result.stdout).toContain('1 passed')
+    }
+  )
 
   it.skipIf(!pythonAvailable)(
     'parses every Python example and rejects authored exception-control-flow syntax',
