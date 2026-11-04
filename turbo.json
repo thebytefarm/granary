@@ -4,6 +4,7 @@
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
     "dev": { "cache": false, "persistent": true },
     "typecheck": { "dependsOn": ["^build"], "outputs": [] },
+    "granary-ai#typecheck": { "dependsOn": ["build"], "outputs": [] },
     "test": { "dependsOn": ["build"], "cache": false, "outputs": [] }
   }
 }
