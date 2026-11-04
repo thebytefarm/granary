@@ -53,7 +53,7 @@ Language packs define how to write code in that language. Shared standards cover
 
 ## Install
 
-Use the [workspace CLI](/getting-started/quick-start); the current contract is not published yet. From a project beside a checkout named `granary-packs`:
+Install the [npm CLI](/getting-started/quick-start). Clone `thebytefarm/granary` into a sibling directory named `granary-packs` for the pack sources; no CLI build is needed. From your project:
 
 ```sh
 granary add file:../granary-packs/packs#recommended-typescript --output .granary/context/docs/bytefarm
@@ -76,4 +76,4 @@ For a polyglot project, select several sets at one destination in `granary.json`
 
 Shared components install once. All three sets together install seven unique packs. Language-specific rules apply only to files in that language.
 
-Read `.granary/context/INDEX.md` after installation for the component reading order. Commit `granary.json` and `granary-lock.json`; teammates restore the same material with `granary install`.
+Follow the component links in root `AGENTS.md` after installation. Commit `AGENTS.md`, `granary.json`, and `granary-lock.json`; teammates restore the same material with `granary install`.

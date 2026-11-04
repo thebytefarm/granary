@@ -1,6 +1,6 @@
 # Pack manifest
 
-An installable pack's `granary.json` describes files and included packs. Only `name` is required; the same contract configures consumer projects. This is the workspace implementation, not the published CLI contract.
+An installable pack's `granary.json` describes files and included packs. Only `name` is required; the same contract configures consumer projects through the `granary-ai` CLI and SDK.
 
 ```json
 {

@@ -55,6 +55,8 @@ Each updated locked pack may contain `customizations`: group-relative paths, bas
 
 The CLI package ships skill documents under `skills/`. Reference packs explain the concepts; skills guide an agent through supported procedures.
 
+Maintenance skills apply only to authored reusable packs, whether local or upstream. Ordinary installed context, framework docs recipes, and copied application code do not trigger them. A consumer source/lock entry is not evidence of an authored pack; inspect the source definition. This skill boundary does not disable ordinary context's existing restoration, edit protection, or reviewed-update capabilities.
+
 | Skill               | Agent task                                                                                                     |
 | ------------------- | -------------------------------------------------------------------------------------------------------------- |
 | Author a pack       | Create or edit context and standards documents, maintain metadata, and validate the resulting pack.            |

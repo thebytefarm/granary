@@ -56,6 +56,46 @@ describe('maltty command adapters', () => {
     expect(result.exitCode ?? 0).toBe(0)
     expect(await readFile(join(project, 'routed/README.md'), 'utf8')).toBe('# Routed\n')
   })
+
+  it('uses install with a source as the same adoption pipeline, including output and discovery', async () => {
+    const project = await workspace()
+    const source = await workspace()
+    await writeFile(join(source, 'README.md'), '# Alias\n')
+    const discovered = await runCommand({
+      name: 'granary',
+      commands: { install },
+      args: ['install', source, '--list', '--cwd', project],
+    })
+    expect(discovered.error).toBeUndefined()
+    expect(await readdir(project)).toEqual([])
+    const installed = await runCommand({
+      name: 'granary',
+      commands: { install },
+      args: ['install', source, '--output', 'alias', '--cwd', project],
+    })
+    expect(installed.error).toBeUndefined()
+    expect(await readFile(join(project, 'alias/README.md'), 'utf8')).toBe('# Alias\n')
+  })
+
+  it.each([
+    ['--tag', ['unused']],
+    ['--branch', ['unused']],
+    ['--commit', ['unused']],
+    ['--output', ['unused']],
+    ['--list', []],
+  ] as const)(
+    'rejects adoption option %s without a source rather than silently restoring',
+    async (flag, values) => {
+      const project = await workspace()
+      const result = await runCommand({
+        name: 'granary',
+        commands: { install },
+        args: ['install', flag, ...values, '--cwd', project],
+      })
+      expect(result.error !== undefined || result.exitCode === 1).toBe(true)
+      expect(await readdir(project)).toEqual([])
+    }
+  )
 })
 
 async function workspace(): Promise<string> {

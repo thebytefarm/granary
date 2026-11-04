@@ -5,7 +5,7 @@ Before editing Granary, identify the behavior you intend to change and read the 
 ## Start here
 
 1. Check root `AGENTS.md` for the repository's commands and permission boundaries.
-2. Use `.context/INDEX.md` to find the installed pages governing your change.
+2. Follow the standards links in `AGENTS.md` to the installed pages governing your change.
 3. For installation or pack metadata work, read the [product concept](../docs/concepts/context-packs.md) and relevant references.
 4. If indexed Markdown changed, regenerate the documentation regions.
 5. Run validation and build from the root before handing the change back.
@@ -35,11 +35,11 @@ To test actual upstream retrieval, run the separate network suite:
 pnpm --filter granary-ai test:network
 ```
 
-It builds first, installs the packed CLI, and selects the installation page from `vercel/next.js` at `v16.0.0`. It checks the installed content, exact commit and content hash in the lock, listing, and byte-identical restoration after deleting the page. This installs Next.js reference material, not the Next.js runtime or an application. GitHub availability, repository size, and Git transport can fail this test; ordinary `pnpm validate` excludes it. This is representative end-to-end coverage, not exhaustive coverage of every platform or CLI combination.
+It builds first and installs the packed CLI through npm or pnpm. The suite covers `nextjs@16` shorthand, multiple pinned 15.x releases, and an exact release with custom output. It checks locked commits and hashes, byte-identical restoration in a fresh consumer, and protection for local edits. This installs Next.js reference material, not the Next.js runtime or an application. GitHub availability and Git transport can fail this test; ordinary `pnpm validate` excludes it.
 
 ## Standards as context
 
-Granary provides independent packs from `packs/`, each with its own `granary.json`. Root `granary.json` composes the three recommended presets and consumes only `bytefarm/recommended-typescript`. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
+Granary provides independent packs from `packs/`, each with its own `granary.json`. `packs/granary.json` composes the three recommended sets; root `granary.json` consumes only the TypeScript set. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
 
 The installed files are generated context. Edit the authored component under `packs/`, then refresh deliberately; `install` restores a lock and rejects source drift rather than silently updating it.
 

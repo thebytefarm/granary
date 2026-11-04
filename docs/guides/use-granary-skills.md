@@ -2,20 +2,22 @@
 
 Install the skill directories shipped with `granary-ai` so your coding agent can follow pack authoring and maintenance procedures.
 
+These skills are for authored reusable packs, including local packs and curated pack definitions. They are not general workflows for arbitrary installed context, a framework docs recipe, or copied application code. A consumer `packs` entry, lock entry, or `.granary/context/` directory alone does not establish an authored pack. Confirm its source definition before using maintenance skills. Ordinary context keeps the CLI's restoration, review, and edit-protection behavior without requiring these skills.
+
 ## Prerequisites
 
-Build the workspace CLI with Node.js 26+ and `pnpm build` from the Granary checkout root; the current contract is not published yet. Your agent harness must support directory-based skills with a `SKILL.md` entrypoint. Choose its documented project-local skill directory before copying files.
+Use Node.js 26+ and Git. Install the package in your project with `npm install --save-dev granary-ai` so its skill files are available locally. Your agent harness must support directory-based skills with a `SKILL.md` entrypoint. Choose its documented project-local skill directory before copying files.
 
 ## Install the skills
 
-1. Verify the built commands from the checkout root:
+1. Verify the installed commands from your project root:
 
    ```sh
-   pnpm cli standards --help
-   pnpm cli update --help
+   npm exec -- granary standards --help
+   npm exec -- granary update --help
    ```
 
-2. Inspect `packages/granary/skills/` in the checkout. The packed convenience package includes the same directories beneath `granary-ai/skills/`:
+2. Inspect `node_modules/granary-ai/skills/`. The npm package includes these directories:
 
    | Directory                     | Procedure                                                         |
    | ----------------------------- | ----------------------------------------------------------------- |

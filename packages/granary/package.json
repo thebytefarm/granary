@@ -1,14 +1,30 @@
 {
   "name": "granary-ai",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Ship versioned docs and source as local context for coding agents.",
+  "keywords": [
+    "agents",
+    "ai",
+    "cli",
+    "context",
+    "documentation"
+  ],
+  "homepage": "https://github.com/thebytefarm/granary",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thebytefarm/granary.git",
+    "directory": "packages/granary"
+  },
   "bin": {
     "granary": "./dist/cli.js"
   },
   "files": [
     "dist",
-    "skills"
+    "skills",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "type": "module",
   "exports": {
@@ -43,6 +59,7 @@
     "test:network": "pnpm --workspace-root build && vitest run --config vitest.network.config.ts"
   },
   "dependencies": {
+    "almanac-md": "0.4.0",
     "ink": "^8.0.0",
     "jiti": "^2.7.0",
     "maltty": "1.0.0-rc.0",

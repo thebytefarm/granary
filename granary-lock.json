@@ -101,7 +101,7 @@
         },
         "manifest": "granary.json",
         "content": ["docs"],
-        "output": ".context",
+        "output": ".granary/context",
         "destination": ".context/docs/bytefarm/engineering/0.1.0",
         "selection": {
           "docs": {
@@ -139,8 +139,8 @@
       "definitionHashKind": "selection-v1",
       "definitionVersion": "0.0.0",
       "version": "0.0.0",
-      "output": ".context",
-      "codeOutput": ".context/repos",
+      "output": ".granary/context",
+      "codeOutput": ".granary/context/repos",
       "groups": [
         {
           "name": "docs",
@@ -208,7 +208,7 @@
         },
         "manifest": "granary.json",
         "content": ["docs"],
-        "output": ".context",
+        "output": ".granary/context",
         "destination": ".context/docs/bytefarm/git/0.1.0",
         "selection": {
           "docs": {
@@ -232,8 +232,8 @@
       "definitionHashKind": "selection-v1",
       "definitionVersion": "0.0.0",
       "version": "0.0.0",
-      "output": ".context",
-      "codeOutput": ".context/repos",
+      "output": ".granary/context",
+      "codeOutput": ".granary/context/repos",
       "groups": [
         {
           "name": "docs",
@@ -276,7 +276,7 @@
         },
         "manifest": "granary.json",
         "content": ["docs"],
-        "output": ".context",
+        "output": ".granary/context",
         "destination": ".context/docs/bytefarm/documentation/0.1.0",
         "selection": {
           "docs": {
@@ -320,8 +320,8 @@
       "definitionHashKind": "selection-v1",
       "definitionVersion": "0.0.0",
       "version": "0.0.0",
-      "output": ".context",
-      "codeOutput": ".context/repos",
+      "output": ".granary/context",
+      "codeOutput": ".granary/context/repos",
       "groups": [
         {
           "name": "docs",
@@ -360,7 +360,7 @@
             },
             {
               "path": "guides.md",
-              "hash": "b86ab6daf5d5eb6ed109d6728bf8b66f62d4e6a0702c5aa04d1b559e7cca4eb4"
+              "hash": "c6e569ab1288e942c9b532d9c9337dc4ede2e1939291cfdde361b1962c5c1196"
             },
             {
               "path": "quickstarts.md",
@@ -404,7 +404,7 @@
         },
         "manifest": "granary.json",
         "content": ["docs"],
-        "output": ".context",
+        "output": ".granary/context",
         "destination": ".context/docs/bytefarm/agent-instructions/0.1.0",
         "selection": {
           "docs": {
@@ -428,8 +428,8 @@
       "definitionHashKind": "selection-v1",
       "definitionVersion": "0.0.0",
       "version": "0.0.0",
-      "output": ".context",
-      "codeOutput": ".context/repos",
+      "output": ".granary/context",
+      "codeOutput": ".granary/context/repos",
       "groups": [
         {
           "name": "docs",
@@ -472,7 +472,7 @@
         },
         "manifest": "granary.json",
         "content": ["docs"],
-        "output": ".context",
+        "output": ".granary/context",
         "destination": ".context/docs/bytefarm/typescript-functional/0.1.0",
         "selection": {
           "docs": {
@@ -518,8 +518,8 @@
       "definitionHashKind": "selection-v1",
       "definitionVersion": "0.0.0",
       "version": "0.0.0",
-      "output": ".context",
-      "codeOutput": ".context/repos",
+      "output": ".granary/context",
+      "codeOutput": ".granary/context/repos",
       "groups": [
         {
           "name": "docs",

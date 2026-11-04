@@ -25,6 +25,48 @@ const identity = {
 }
 
 describe('targeted Git retrieval', { timeout: 20_000 }, () => {
+  it('selects thousands of expanded paths without a tree-by-pattern glob scan', async () => {
+    const { source, current } = await repository()
+    const paths = Array.from({ length: 2000 }, (_, index) => `docs/page-${index}.md`)
+    for (const path of paths) {
+      await writeFile(join(source, path), `# Selection fixture: ${path}\n`)
+    }
+    await commit({ source, parent: current })
+    expectSuccess(
+      await createGitClient().withCheckout({
+        source: { provider: 'git', repository: pathToFileURL(source).href },
+        async use(opened) {
+          assert.ok(opened.checkout)
+          const started = performance.now()
+          const selected = expectSuccess(opened.checkout.find({ root: '.', patterns: paths }))
+          expect(selected).toEqual(paths.toSorted())
+          expect(performance.now() - started).toBeLessThan(2000)
+          expectSuccess(await opened.checkout.materialize({ paths: paths.slice(0, 600) }))
+          expect(await readFile(join(opened.directory, paths[599] ?? ''), 'utf8')).toBe(
+            '# Selection fixture: docs/page-599.md\n'
+          )
+          const packs = await readdir(join(opened.directory, '.git/objects/pack'))
+          expect(packs.filter((path) => path.endsWith('.pack')).length).toBeLessThanOrEqual(3)
+          expect(
+            expectSuccess(
+              opened.checkout.find({
+                root: 'docs',
+                patterns: ['page-1.md', 'page-?.md', './page-10.md', 'page-{11,12}.md'],
+              })
+            )
+          ).toEqual(
+            [
+              ...Array.from({ length: 10 }, (_, index) => `page-${index}.md`),
+              'page-11.md',
+              'page-12.md',
+            ].toSorted()
+          )
+          return ok(undefined)
+        },
+      })
+    )
+  })
+
   it('fetches one commit and materializes selected blobs without downloading unrelated content', async () => {
     const { source, current } = await repository()
     const unrelated = (

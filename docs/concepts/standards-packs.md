@@ -63,22 +63,22 @@ Preset resolution establishes:
 - Explicit rejection of incompatible requests for the same identity.
 - Preservation of preset intent and verified membership during restoration and reviewed updates; a standalone removal command remains planned.
 - Retrieval and preflight of the complete selected set before writing any member.
-- An index that exposes installed component entrypoints.
+- Direct links in `AGENTS.md` that expose installed component entrypoints.
 
-Install the TypeScript set from a sibling checkout with the workspace CLI:
+Install the TypeScript set from a sibling checkout using the npm-installed CLI:
 
 ```sh
 granary add file:../granary/packs#recommended-typescript --output .granary/context/docs/bytefarm
 granary list
 ```
 
-Expect five component payloads. For all three languages, declare the three set sources at a shared output in the consumer manifest. They produce seven unique components. Read `.granary/context/INDEX.md` for their entrypoints.
+Expect five component payloads. For all three languages, declare the three set sources at a shared output in the consumer manifest. They produce seven unique components. Read root `AGENTS.md` for their entrypoints.
 
 ## Portable links and ownership
 
 Separate installed identities live under separate versioned directories. Moving `typescript/` into its own pack breaks existing `../dependencies.md` links; installing both packs does not recreate their original relative layout.
 
-Keep ordinary Markdown links inside a component. A shared principle has one owner; language pages explain its mechanics and identify the required shared component through their entrypoint. Route agents through the installation index instead of hard-coding another component's content version in links.
+Keep ordinary Markdown links inside a component. A shared principle has one owner; language pages explain its mechanics and identify the required shared component through their entrypoint. Route agents through the installed reference links in `AGENTS.md` instead of hard-coding another component's content version in links.
 
 Presets need a reading order and explicit applicability. Two language packs can coexist, but Python guidance applies to Python and Rust guidance applies to Rust. Normative conflicts should be rejected or resolved explicitly, never by installation order.
 

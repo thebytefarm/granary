@@ -2,7 +2,7 @@
 
 Expose a small factory-based client that works without plugins. Prebuilt interpretation plugins are optional and compose through the same contracts as third-party plugins.
 
-**Status:** implemented in the workspace, not yet published. Factories return clients directly; operations return Granary-owned plain typed outcomes. See the [API reference](../reference/core-api.md) for complete contracts.
+The `granary-ai` package exposes factories that return clients directly; operations return Granary-owned plain typed outcomes. See the [API reference](../reference/core-api.md) for complete contracts.
 
 ## Base and composed clients
 

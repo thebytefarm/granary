@@ -2,7 +2,7 @@
 
 Your project uses a particular version of a tool. A coding agent may know a different version, and your team's conventions may not exist in its training data at all. Links and pasted excerpts help for one conversation; the next agent starts without them.
 
-Granary copies the docs, source, and examples you choose into your repository. Install a selection from a local directory or Git repository, then point the agent at the generated index. It reads the files with its existing search tools. The lock records which upstream commits and bytes you installed, so teammates can restore the same material.
+Granary copies the docs, source, and examples you choose into your repository and links their entrypoints directly in `AGENTS.md`. Install a selection from a local directory or Git repository; the agent reads it with its existing search tools. The lock records which upstream commits and bytes you installed, so teammates can restore the same material.
 
 ## What is a context pack?
 
@@ -10,7 +10,7 @@ A context pack is a selection of reference files an agent can read locally. It m
 
 Upstream authors do not need to adopt Granary. Your project's manifest can select ordinary files from an existing repository. You own the installed copies and can customize them; later upstream changes go through review rather than overwriting those edits.
 
-The workspace CLI implements local/Git installation and locked restoration. Website retrieval and on-demand CLI reading are separate future work, not prerequisites for using installed packs. No central registry is required.
+The `granary-ai` npm package provides local/Git installation and locked restoration through its CLI and SDK. Website retrieval and on-demand CLI reading are separate future work, not prerequisites for using installed packs. No central registry is required.
 
 ## What ships in a pack
 
@@ -48,7 +48,7 @@ Directories and repositories should be usable package sources themselves. Author
 2. Discover its available packs and select what the project needs.
 3. Resolve the requested version to a concrete revision or immutable artifact.
 4. Download the docs and source into the project's context directory.
-5. Write a local index so agents can find the installed material.
+5. Link installed entrypoints in root `AGENTS.md` so agents can find the material.
 6. Record the resolution so another machine can reproduce the install.
 
 The default is `.granary/context/`, with project-level and per-pack destination overrides. Generated context and cache files are Git-ignored; the manifest and lockfile stay at the project root. The [installation model](installation.md) explains versioned content directories and destination ownership.
@@ -57,12 +57,12 @@ Consumer layout:
 
 ```text
 project/
+  AGENTS.md
   granary.json
   granary-lock.json
   .granary/
     .gitignore
     context/
-      INDEX.md
       github/vercel/next.js/v15.5.0/
         docs/
     cache/
@@ -96,7 +96,7 @@ Exact schemas, endpoints, archive formats, and authentication behavior remain de
 
 ## Initial product slice
 
-The initial slice includes filesystem and Git sources, portable bundles, curated definitions, selectable content, consumer configuration, a lockfile, and generated indexes.
+The initial slice includes filesystem and Git sources, portable bundles, curated definitions, selectable content, consumer configuration, a lockfile, and managed agent reference links.
 
 The [standards-pack assessment](standards-packs.md) describes focused engineering and language packs with implemented recommended sets. [Presets](../reference/presets.md) compose declared members recursively without duplicating their material.
 

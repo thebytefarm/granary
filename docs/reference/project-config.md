@@ -1,6 +1,6 @@
 # Project configuration
 
-`granary.json` describes authored packs and adopted source material. Only `name` is required. Put source-backed selections and named inline definitions under `packs`. This contract is implemented in the workspace CLI and SDK; it has not been published yet.
+`granary.json` describes authored packs and adopted source material. Only `name` is required. Put source-backed selections and named inline definitions under `packs`. The `granary-ai` CLI and SDK use the same contract.
 
 ```json
 {
@@ -36,6 +36,8 @@ The upstream repository does not need a manifest. Selected code, docs, examples,
 | `standards`                         | Optional consumer enforcement settings.                                              |
 
 Source entry values accept a revision string, a configured object, or a nonempty mixed array. Configured Git objects accept at most one of `branch`, `tag`, or `commit`. Omission resolves the remote default branch. Strings are exact Git revisions, not semver ranges. Ambiguous branch/tag names require an explicit object.
+
+`granary add nextjs@16` is CLI shorthand for a docs-only source selection. It resolves once and writes an exact `tag` plus `files.include: ["docs/**"]`; it does not add a version-range field or change the manifest schema. `install <source>` is an equivalent spelling of `add`; bare `install` restores existing intent. Another explicit tag can be added under the same source, forming an array without replacing earlier selections.
 
 GitHub keys use `github:<owner>/<repo>[/<pack-name>]`. Local sources use `./directory`, `../directory`, or `file:<directory>[#pack-name]`. Other Git hosts use `git+<repository-url>[#pack-name]`, with the revision in the value. A `#` suffix selects a pack, not a revision.
 

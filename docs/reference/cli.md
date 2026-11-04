@@ -1,27 +1,34 @@
 # CLI
 
-The `granary-ai` package installs `granary`. The workspace CLI supports local/Git sources, locked restoration, reviewed updates, and standards conversion.
+The `granary-ai` npm package installs `granary`. It supports local/Git sources, locked restoration, reviewed updates, and standards conversion. Requires Node.js 26+ and Git; macOS and Linux are supported.
+
+```sh
+npm install --global granary-ai
+```
 
 ```sh
 granary --help
 granary --version
 granary validate
-granary add github:vercel/next.js --tag v16.0.0
+granary add nextjs@16
+granary install nextjs@16.0.0 --output reference/nextjs
 granary install
 granary list
 ```
 
-| Command        | Behavior                                                                         |
-| -------------- | -------------------------------------------------------------------------------- |
-| `about`        | Describe implemented capabilities                                                |
-| `validate`     | Validate current `granary.json` fields through maltty                            |
-| `add <source>` | Adopt source material, write intent, and install transactionally                 |
-| `install`      | Resolve initial selections or restore locked content without advancing revisions |
-| `list`         | Display locked identities and destinations                                       |
-| `standards`    | Convert classified standards or configure review defaults                        |
-| `update`       | Prepare review JSON, or apply explicit decisions with `--apply`                  |
+| Command            | Behavior                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `about`            | Describe implemented capabilities                                                           |
+| `validate`         | Validate current `granary.json` fields through maltty                                       |
+| `add <source>`     | Adopt source material, write intent, and install transactionally; canonical spelling        |
+| `install [source]` | With a source, equivalent to `add`; without one, resolve initial intent or restore the lock |
+| `list`             | Display locked identities and destinations                                                  |
+| `standards`        | Convert classified standards or configure review defaults                                   |
+| `update`           | Prepare review JSON, or apply explicit decisions with `--apply`                             |
 
 ## Add options
+
+`install <source>` accepts the same options and uses the same adoption pipeline. Bare `install` rejects source-specific options; it never resolves framework shorthand or advances a locked revision.
 
 | Option                 | Behavior                                                           |
 | ---------------------- | ------------------------------------------------------------------ |
@@ -34,13 +41,37 @@ granary list
 
 Choose at most one revision flag. Omission uses the remote default branch. Revision flags are invalid for local material. Sources accept local paths, `file:<path>`, `github:<owner>/<repo>[/<pack-name>]`, `git+<repository>[#pack-name]`, or Git URLs. A pack name selects declared membership, not a filesystem directory.
 
-These commands write source-keyed `packs` entries in `granary.json`. For include/exclude selection, multiple installations, or nested composition, edit that manifest directly. Upstream repositories need no Granary manifest. See the [manifest contract](pack-manifest.md).
+These commands write source-keyed `packs` entries in `granary.json`. Add another explicit tag from the same source to append a version; existing locked payloads are not advanced or rewritten. Re-adding the same tag fails rather than replacing its selection. For include/exclude selection, other multiple installations, or nested composition, edit the manifest directly. Upstream repositories need no Granary manifest. See the [manifest contract](pack-manifest.md).
 
-Root `output` is the destination base. Member overrides resolve beneath an explicit root base; without one they are workspace-relative. Omitted destinations use namespaced paths beneath `.granary/context`. Granary ignores generated `.granary/` contents automatically while keeping `granary.json` and `granary-lock.json` at the project root. Explicit output overrides are not automatically ignored. Adding an already recorded source fails; edit its selection and prepare an update instead.
+Root `output` is the destination base. Member overrides resolve beneath an explicit root base; without one they are workspace-relative. Omitted destinations use namespaced paths beneath `.granary/context`. Granary ignores generated `.granary/` contents automatically while keeping `granary.json` and `granary-lock.json` at the project root. Explicit output overrides are not automatically ignored. To change an existing selection, edit it and prepare an update instead of adding it again.
 
 The CLI does not accept `--pack`, `--content`, `--ref`, `--package-version`, `--install-dir`, or `--code-dir`. Put selection and destinations in the manifest. `--version` reports the CLI version.
 
-Git must be installed for repository sources. Existing credentials are used; Granary does not configure authentication. Submodules and Git LFS retrieval are not implemented.
+Git must be installed for both source retrieval and agent-context generation. The consumer directory does not need a Git repository. Existing credentials are used for repository sources; Granary does not configure authentication. Submodules and Git LFS retrieval are not implemented.
+
+## Agent instruction index
+
+`add`, `install`, and reviewed update application create or refresh a `<granary-context>` region in root `AGENTS.md`. It links directly to each installed pack group's entrypoint with its identity, version, and group, without embedding the reference material or generating a separate `INDEX.md`. Links resolve from the project root, including explicit destinations and separate code outputs. If all packs are removed through review, the region reports that no packs are installed. Update previews and `--list` do not write instructions.
+
+The region is generated with the Almanac SDK and written through Granary's installation transaction. Bytes outside it, including other Almanac regions, are preserved. Duplicate or incomplete Granary markers, unsafe instruction paths, and edits made after installation preflight fail without overwriting them. Root `AGENTS.md` must be a regular file or absent; symlinks are rejected. A payload destination overlapping `AGENTS.md` fails preflight.
+
+Granary does not create compatibility aliases, change separate agent instruction files, install hooks, stage Git changes, or read or write consumer Almanac configuration. Existing compatibility aliases to `AGENTS.md` continue to resolve to it. See [agent context](../guides/use-agent-context.md).
+
+## Curated Next.js documentation
+
+```sh
+granary add nextjs@16
+granary add nextjs@15.5.0
+granary install
+```
+
+The built-in recipe supports stable Next.js 15 and 16 documentation from `vercel/next.js`. Numeric major, minor, and exact versions are supported: `nextjs@16`, `nextjs@16.0`, and `nextjs@16.0.0`. Major/minor selections choose the highest matching stable Git tag at adoption time. Prereleases, ranges, `latest`, and omitted versions are rejected. Use an explicit source and manifest selection for other releases or content.
+
+The recipe selects `docs/**`, not implementation or examples. It does not install Next.js as a dependency, execute MDX, or guarantee every linked external asset is available offline. The CLI prints the resolved tag; the manifest stores that exact tag and selection, and the lock pins the resolved commit and file hashes. Recipe changes cannot silently change locked restoration. The shorthand is CLI convenience; the SDK continues accepting explicit structured sources and file selections.
+
+Two versions use separate namespaced destinations by default. A second addition resolving to a tag already declared fails with instructions to restore or review changes. There is no persisted semver range or automatic upgrade: use `add` for another version or edit the exact tag and review an update. `add nextjs@16 --list` resolves and prints the recipe without installing or writing consumer files; it still requires Git/network access.
+
+Arbitrary local/Git sources retain their ordinary defaults. They are not automatically restricted to documentation. A local directory literally named `nextjs` or `nextjs@16` can be addressed with an explicit path such as `./nextjs@16`.
 
 ## Standards extraction
 

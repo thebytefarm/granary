@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 55 760 360" fill="none">
+  <title>A manifest becomes local, versioned reference files</title>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+    <rect x="26" y="69" width="324" height="283" rx="6" fill="#0b1211" stroke="#40503a"/>
+    <path d="M26 109h324" stroke="#2e3c30"/>
+    <rect x="42" y="83" width="8" height="8" fill="#d6a252"/>
+    <text x="62" y="94" fill="#d1d6c9" font-size="16">granary.json</text>
+    <text x="45" y="139" fill="#9eac94" font-size="14">Next.js selection</text>
+    <g font-size="16" fill="#b6c1af">
+      <text x="45" y="169">{</text>
+      <text x="65" y="197"><tspan fill="#d6a252">"tag"</tspan>: "v16.0.0",</text>
+      <text x="65" y="225"><tspan fill="#d6a252">"files"</tspan>: {</text>
+      <text x="85" y="253"><tspan fill="#d6a252">"include"</tspan>: ["docs/**"]</text>
+      <text x="65" y="281">}</text>
+      <text x="45" y="309">}</text>
+    </g>
+    <path d="M350 204h46m-7-6 7 6-7 6" stroke="#d6a252" stroke-width="2"/>
+    <rect x="410" y="94" width="324" height="306" rx="6" fill="#141e18" stroke="#526044"/>
+    <path d="M410 134h324" stroke="#344431"/>
+    <text x="428" y="120" fill="#d1d6c9" font-size="16">my-project /</text>
+    <g font-size="16">
+      <text x="429" y="164" fill="#9eac94">├─ granary.json</text>
+      <text x="429" y="192" fill="#d6a252">├─ granary-lock.json</text>
+      <rect x="424" y="200" width="296" height="31" rx="3" fill="#a6c58b14" stroke="#a6c58b35"/>
+      <text x="429" y="220" fill="#c6dcab">├─ AGENTS.md</text>
+      <text x="429" y="255" fill="#9eac94">└─ .granary/context/</text>
+      <text x="449" y="286" fill="#9eac94">└─ github/vercel/next.js/</text>
+      <text x="469" y="314" fill="#d6a252">└─ v16.0.0/docs/</text>
+      <text x="489" y="342" fill="#9eac94">├─ app/</text>
+      <text x="489" y="370" fill="#9eac94">└─ pages/</text>
+    </g>
+  </g>
+</svg>

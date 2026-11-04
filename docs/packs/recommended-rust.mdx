@@ -13,7 +13,7 @@ Use this set for Rust projects built around pure functions, borrowed inputs, nat
 
 ## Install
 
-With the [workspace CLI built](/getting-started/quick-start) and on your PATH, run from a project beside a checkout named `granary-packs`:
+With the [npm CLI installed](/getting-started/quick-start), run from a project beside a checkout of `thebytefarm/granary` named `granary-packs`. The checkout supplies the pack sources; no build is needed:
 
 ```sh
 granary add file:../granary-packs/packs#recommended-rust --output .granary/context/docs/bytefarm
@@ -58,6 +58,6 @@ This composite installs these five packs in reading order. Open a card to browse
 
 ## Use the installed context
 
-Start at `.granary/context/INDEX.md`. Read the shared engineering rules first, then the topics relevant to your change. Rust rules apply to Rust source and examples; the supported compiler, repository commands, and dependency approval come from your project's instructions.
+Follow the reference links in root `AGENTS.md`. Read the shared engineering rules first, then the topics relevant to your change. Rust rules apply to Rust source and examples; the supported compiler, repository commands, and dependency approval come from your project's instructions.
 
 Adding another recommended language set reuses the shared packs. The lockfile pins the source revision and file integrity; `granary install` restores the same context.

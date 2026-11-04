@@ -28,13 +28,13 @@ Each member owns its source, exact revision, selection, and destination. Selecti
 
 ## Install and inspect
 
-From a Granary source checkout with the workspace CLI built:
+With the npm-installed CLI, inspect the example in a Granary source checkout:
 
 ```sh
-pnpm cli add ./docs/examples/react --list
+granary add ./docs/examples/react --list
 ```
 
-To adopt it into a separate project, run the workspace executable from that project with a local source locator pointing to this directory. Select `#docs` or `#code` to adopt only that declared member; omit the suffix to include both.
+To adopt it into a separate project, run `granary` from that project with a local source locator pointing to this directory. Select `#docs` or `#code` to adopt only that declared member; omit the suffix to include both.
 
 The example pins existing upstream commits but does not claim to reproduce an npm release byte-for-byte. Review attribution and license obligations before redistributing upstream files.
 

@@ -62,8 +62,8 @@ describe('installed engineering standards', { timeout: 15_000 }, () => {
         })
       },
     })
-    expect(await readFile(join(project, '.granary/context/INDEX.md'), 'utf8')).toContain(
-      '../../reference/README.md'
+    expect(await readFile(join(project, 'AGENTS.md'), 'utf8')).toContain(
+      '[reference/README.md](reference/README.md)'
     )
   })
 

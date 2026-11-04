@@ -37,10 +37,10 @@ describe('declared composition', { timeout: 20_000 }, () => {
         (definition) => definition.id.endsWith('#first') || definition.id.endsWith('#second')
       )
     ).toHaveLength(2)
-    const index = await readFile(join(project, '.granary/context/INDEX.md'))
+    const instructions = await readFile(join(project, 'AGENTS.md'))
     await rm(join(project, 'reference'), { recursive: true })
     unwrap(await client.packs.install())
-    expect(await readFile(join(project, '.granary/context/INDEX.md'))).toEqual(index)
+    expect(await readFile(join(project, 'AGENTS.md'))).toEqual(instructions)
   })
 
   it('adds a set without rewriting a shared component or losing unrelated notes', async () => {

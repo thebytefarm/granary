@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="310" viewBox="0 60 760 310" fill="none">
+  <title>Git repositories and local folders become local context linked from AGENTS.md</title>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+    <g fill="#141e18" stroke="#40503a"><rect x="28" y="80" width="196" height="68" rx="5"/><rect x="28" y="181" width="196" height="68" rx="5"/><rect x="28" y="282" width="196" height="68" rx="5"/></g>
+    <g font-size="13" fill="#d1d6c9"><text x="48" y="109">Framework docs</text><text x="48" y="210">Working examples</text><text x="48" y="311">Team standards</text></g>
+    <g font-size="11" fill="#91a28f"><text x="48" y="131">Git · exact revision</text><text x="48" y="232">Source · include globs</text><text x="48" y="333">Local · your conventions</text></g>
+    <path d="M224 114h40v101h44M224 215h84M224 316h40V215" stroke="#71825b" stroke-width="2"/>
+    <path d="m300 209 8 6-8 6" stroke="#d6a252" stroke-width="2"/>
+    <rect x="312" y="133" width="196" height="164" rx="6" fill="#d6a2520d" stroke="#a08046"/>
+    <text x="410" y="242" text-anchor="middle" fill="#e4bd70" font-size="15">.granary/context/</text>
+    <text x="410" y="270" text-anchor="middle" fill="#b4c59e" font-size="12">Linked in AGENTS.md</text>
+    <path d="M508 215h40m-8-6 8 6-8 6" stroke="#d6a252" stroke-width="2"/>
+    <rect x="554" y="162" width="178" height="106" rx="5" fill="#141e18" stroke="#526044"/>
+    <text x="643" y="197" text-anchor="middle" fill="#d1d6c9" font-size="13">Your coding agent</text>
+    <text x="643" y="223" text-anchor="middle" fill="#a6c58b" font-size="11">Read · search · inspect</text>
+    <text x="643" y="246" text-anchor="middle" fill="#829078" font-size="10">Existing file tools</text>
+  </g>
+</svg>

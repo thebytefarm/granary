@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="322" viewBox="0 130 760 322" fill="none">
+  <title>Review baseline, local edits, and incoming changes before applying</title>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+    <g stroke="#344431" fill="#131e18"><rect x="26" y="145" width="224" height="173" rx="5"/><rect x="268" y="145" width="224" height="173" rx="5"/><rect x="510" y="145" width="224" height="173" rx="5"/></g>
+    <g font-size="15" letter-spacing="1"><text x="42" y="172" fill="#a6b39e">BASELINE</text><text x="284" y="172" fill="#d6a252">LOCAL EDITS</text><text x="526" y="172" fill="#a6c58b">INCOMING</text></g>
+    <g fill="#40503a"><rect x="42" y="195" width="158" height="5"/><rect x="42" y="211" width="185" height="5"/><rect x="42" y="227" width="131" height="5"/><rect x="42" y="259" width="177" height="5"/><rect x="42" y="275" width="145" height="5"/>
+    <rect x="284" y="195" width="158" height="5"/><rect x="284" y="211" width="185" height="5"/><rect x="284" y="259" width="177" height="5"/><rect x="284" y="275" width="145" height="5"/>
+    <rect x="526" y="195" width="158" height="5"/><rect x="526" y="211" width="185" height="5"/><rect x="526" y="227" width="131" height="5"/><rect x="526" y="275" width="145" height="5"/></g>
+    <rect x="278" y="221" width="204" height="25" rx="3" fill="#d6a25220"/>
+    <text x="287" y="239" font-size="16" fill="#e4bd70">+ Team conventions</text>
+    <rect x="520" y="242" width="204" height="25" rx="3" fill="#a6c58b20"/>
+    <text x="529" y="260" font-size="16" fill="#b7d49a">+ API reference</text>
+    <path d="M138 318v29h484v-29M380 318v29M138 376v-29h484v29M380 347v29" stroke="#667452" stroke-dasharray="3 5"/>
+    <g stroke="#526044" fill="#0b1211"><rect x="26" y="376" width="224" height="60" rx="5"/><rect x="268" y="376" width="224" height="60" rx="5"/><rect x="510" y="376" width="224" height="60" rx="5"/></g>
+    <g font-size="16" text-anchor="middle"><text x="138" y="412" fill="#d6a252">KEEP LOCAL</text><text x="380" y="412" fill="#a6c58b">ACCEPT INCOMING</text><text x="622" y="412" fill="#d1d6c9">SUPPLY A MERGE</text></g>
+  </g>
+</svg>
