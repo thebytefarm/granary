@@ -2,6 +2,8 @@
 
 A curated `granary.json` composes selected material from other repositories. It uses the same manifest contract as a portable pack or consumer project; there is no separate definition format.
 
+The curated pack catalog in the repository's `packs/README.md` lists independently installable definitions for Next.js, React, TanStack Query, Router, Start, Hono, Zod, and Vercel AI SDK. Each is an ordinary `packs/<tool>/granary.json` selecting official documentation and attribution at an exact upstream commit. These snapshots do not automatically match installed dependency versions and are separate from the language standards sets.
+
 The checked-in `docs/examples/react/granary.json` selects React documentation and implementation from independent sources:
 
 ```json

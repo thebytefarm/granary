@@ -2,12 +2,12 @@
 
 **Ship context. Give coding agents the docs and source they need, right inside your repo.**
 
-Granary is a package manager for local agent context. The planned pack format brings versioned docs, source, and examples into a workspace as ordinary files, readable by any coding agent.
+Granary brings versioned docs, source, and examples into a workspace as ordinary files, readable by any coding agent. This private package owns the maltty terminal adapter; `granary-ai` ships the public executable.
 
 ## Status
 
-Coming soon. The CLI uses maltty and supports `--help`, `--version`, `about`, and `validate`. Pack content discovery and installation are under development.
+Use `granary init` to configure a consuming project and `granary create <directory>` to author a reusable pack around existing material. Both provide guided setup and non-interactive `--yes` scaffolding.
 
 Run `granary validate --cwd path/to/pack` to validate a pack's `granary.json` through maltty's config loader.
 
-The published `0.0.1` version is a name reservation. This workspace prepares the first implementation release.
+See the [CLI reference](../../docs/reference/cli.md) for installation, restoration, update review, and standards commands. Run the local public executable from the repository root with `pnpm cli <command>`.

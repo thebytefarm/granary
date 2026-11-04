@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url'
+
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
@@ -13,5 +15,9 @@ export default defineConfig({
   fixedExtension: false,
   dts: true,
   clean: true,
+  copy: {
+    from: fileURLToPath(new URL('../core/builtins', import.meta.url)),
+    to: fileURLToPath(new URL('./', import.meta.url)),
+  },
   deps: { alwaysBundle: [/^@granary\//], neverBundle: ['marxml'] },
 })

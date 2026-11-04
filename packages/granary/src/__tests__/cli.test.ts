@@ -13,11 +13,13 @@ const execute = promisify(execFile)
 const entry = fileURLToPath(new URL('../../dist/cli.js', import.meta.url))
 
 describe('built Granary CLI', { timeout: 15_000 }, () => {
-  it('exposes current commands without the removed diff command', async () => {
+  it('exposes init and create without legacy command scaffolding', async () => {
     const { stdout } = await execute(process.execPath, [entry, '--help'])
     expect(stdout).toContain('granary')
-    expect(stdout).toContain('about')
     expect(stdout).toContain('update')
+    expect(stdout).toContain('init')
+    expect(stdout).toContain('granary create <directory>')
+    expect(stdout).not.toMatch(/granary (?:about|pack)\b/)
     expect(stdout).not.toMatch(/\bdiff\b/)
   })
 
@@ -26,10 +28,82 @@ describe('built Granary CLI', { timeout: 15_000 }, () => {
     expect(stdout.trim()).toBe(packageJson.version)
   })
 
-  it('runs the bundled about command', async () => {
-    const { stdout, stderr } = await execute(process.execPath, [entry, 'about'])
-    expect(stdout + stderr).toContain('Install local and Git packs')
+  it('initializes and validates a scaffold through the built executable', async () => {
+    const project = await workspace()
+    const result = await cli({ project, args: ['init', '--yes', '--name', 'consumer'] })
+    expect(result.stdout + result.stderr).toContain('Created granary.json.')
+    expect(JSON.parse(await readFile(join(project, 'granary.json'), 'utf8'))).toEqual({
+      name: 'consumer',
+      packs: {},
+    })
+    expect(await readdir(project)).toEqual(['granary.json'])
+    const validated = await cli({ project, args: ['validate'] })
+    expect(validated.stdout + validated.stderr).toContain('Pack manifest is valid.')
+    await expect(cli({ project, args: ['init', '--yes'] })).rejects.toMatchObject({ code: 1 })
+    expect(JSON.parse(await readFile(join(project, 'granary.json'), 'utf8'))).toEqual({
+      name: 'consumer',
+      packs: {},
+    })
   })
+
+  it('requires an explicit scaffold flag when init has no terminal', async () => {
+    const project = await workspace()
+    await expect(cli({ project, args: ['init'] })).rejects.toMatchObject({ code: 1 })
+    expect(await readdir(project)).toEqual([])
+  })
+
+  it('detects the consumer name from package.json through the executable', async () => {
+    const project = await workspace()
+    await writeFile(join(project, 'package.json'), JSON.stringify({ name: '@team/web-app' }))
+    await cli({ project, args: ['init', '--yes'] })
+    expect(JSON.parse(await readFile(join(project, 'granary.json'), 'utf8'))).toEqual({
+      name: 'team/web-app',
+      packs: {},
+    })
+  })
+
+  it('authors and installs a reusable pack separately from consumer setup', async () => {
+    const source = await workspace()
+    const project = await workspace()
+    await writeFile(join(source, 'README.md'), '# Authored reference\n')
+    await writeFile(join(source, 'unselected.txt'), 'Not reference material')
+    const authored = await cli({
+      project,
+      args: ['create', source, '--yes', '--name', 'team/reference', '--pack-version', '1.2.0'],
+    })
+    expect(authored.stdout + authored.stderr).toContain('Created pack definition')
+    expect(await readdir(project)).toEqual([])
+    expect(JSON.parse(await readFile(join(source, 'granary.json'), 'utf8'))).toEqual({
+      name: 'team/reference',
+      version: '1.2.0',
+      files: { include: ['**/*.md'] },
+    })
+    const validated = await cli({ project: source, args: ['validate'] })
+    expect(validated.stdout + validated.stderr).toContain('Pack manifest is valid.')
+    await cli({ project, args: ['init', '--yes', '--name', 'consumer'] })
+    await cli({ project, args: ['add', source, '--output', 'reference'] })
+    expect(await readFile(join(project, 'reference/README.md'), 'utf8')).toBe(
+      '# Authored reference\n'
+    )
+    expect(await readdir(join(project, 'reference'))).toEqual(['README.md'])
+  })
+
+  it('requires an explicit pack target rather than repurposing the consumer root', async () => {
+    const project = await workspace()
+    await expect(cli({ project, args: ['create', '--yes'] })).rejects.toMatchObject({
+      code: 1,
+    })
+    expect(await readdir(project)).toEqual([])
+  })
+
+  it.each(['about', 'pack'])(
+    'rejects the removed %s command without writing project state',
+    async (command) => {
+      const project = await workspace()
+      await expect(cli({ project, args: [command] })).rejects.toMatchObject({ code: 1 })
+      expect(await readdir(project)).toEqual([])
+    }
+  )
 
   it('validates an independent checked-in manifest through maltty', async () => {
     const source = fileURLToPath(new URL('../../../../packs/rust/', import.meta.url))

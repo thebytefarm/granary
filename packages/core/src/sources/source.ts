@@ -37,6 +37,11 @@ export const localSourceSchema = z.strictObject({
     .min(1)
     .refine((path) => !hasUnprintableCharacters(path), 'Paths must not contain control characters'),
 })
+export const builtinSourceSchema = z.strictObject({
+  provider: z.literal('builtin'),
+  name: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  version: z.string().regex(/^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)$/),
+})
 export const gitSourceSchema = z.strictObject({
   provider: z.literal('git'),
   repository: z
@@ -53,6 +58,7 @@ export const gitSourceSchema = z.strictObject({
  * Retain structured source intent, including shorthand revisions authored in manifests.
  */
 export const sourceSchema = z.discriminatedUnion('provider', [
+  builtinSourceSchema.readonly(),
   localSourceSchema.readonly(),
   gitSourceSchema
     .extend({ revision: z.union([revisionSelectorSchema, refSchema]).optional() })
@@ -81,7 +87,7 @@ export const sourceRevisionSchema = z
     source: sourceSchema,
     revision: commitHashSchema.optional(),
   })
-  .refine(hasSourceRevision, 'Git sources require a commit; local sources must not declare one')
+  .refine(hasSourceRevision, 'Git sources require a commit; other sources must not declare one')
   .readonly()
 export type SourceRevision = z.infer<typeof sourceRevisionSchema>
 export type OpenedSource = SourceRevision & {
@@ -104,7 +110,7 @@ function hasSourceRevision(value: {
   readonly source: Source
   readonly revision?: string | undefined
 }): boolean {
-  if (value.source.provider === 'local') {
+  if (value.source.provider !== 'git') {
     return value.revision === undefined
   }
   return value.revision !== undefined

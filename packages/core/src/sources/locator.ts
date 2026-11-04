@@ -19,7 +19,7 @@ export type ParsePackLocatorParams = {
  * Distinguish source keys from named inline pack definitions.
  */
 export function isPackLocator(key: string): boolean {
-  return /^(?:github:|git\+|file:|\.\.?\/)/.test(key)
+  return /^(?:builtin:|github:|git\+|file:|\.\.?\/)/.test(key)
 }
 
 /**
@@ -34,6 +34,24 @@ export function parsePackLocator({
   const valid = packOptionsSchema.safeParse(options)
   if (!valid.success) {
     return invalid(valid.error.message)
+  }
+  if (locator.startsWith('builtin:')) {
+    if (options.branch || options.tag || options.commit) {
+      return invalid('Built-in sources use exact snapshot versions, not Git revision selectors.')
+    }
+    const matched =
+      /^builtin:([a-z0-9]+(?:-[a-z0-9]+)*)@([^#]+)(?:#([a-z0-9]+(?:[/-][a-z0-9]+)*))?$/.exec(
+        locator
+      )
+    const source = sourceSchema.safeParse({
+      provider: 'builtin',
+      name: matched?.[1],
+      version: matched?.[2],
+    })
+    if (!source.success) {
+      return invalid(`Expected builtin:<collection>@<exact-version>[#pack-name]: ${locator}.`)
+    }
+    return ok({ source: source.data, pack: matched?.[3] })
   }
   if (locator.startsWith('github:')) {
     const [owner, repository, ...pack] = locator.slice(7).split('/')
@@ -96,7 +114,7 @@ export function parsePackLocator({
  */
 export function packDirectory(locator: string): string {
   return flow(
-    (value: string) => value.replace(/^(github|file):/, '$1/').replace(/^git\+/, 'git/'),
+    (value: string) => value.replace(/^(builtin|github|file):/, '$1/').replace(/^git\+/, 'git/'),
     (value) => value.split('/'),
     (parts) => parts.map(packDirectorySegment),
     (parts) => parts.join('/')

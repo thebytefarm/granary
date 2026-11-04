@@ -10,6 +10,8 @@ A context pack is a selection of reference files an agent can read locally. It m
 
 Upstream authors do not need to adopt Granary. Your project's manifest can select ordinary files from an existing repository. You own the installed copies and can customize them; later upstream changes go through review rather than overwriting those edits.
 
+Project setup and pack authoring are different tasks. `granary init` creates consuming configuration at a project's root and can install initial context. `granary create <directory>` describes reusable reference material in an explicit existing directory without installing or registering it. Both use `granary.json`, but a consumer's editable project name is not a request to publish or author a pack.
+
 The `granary-ai` npm package provides local/Git installation and locked restoration through its CLI and SDK. Website retrieval and on-demand CLI reading are separate future work, not prerequisites for using installed packs. No central registry is required.
 
 ## What ships in a pack

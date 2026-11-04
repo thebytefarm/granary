@@ -39,24 +39,33 @@ It builds first and installs the packed CLI through npm or pnpm. The suite cover
 
 ## Standards as context
 
-Granary provides independent packs from `packs/`, each with its own `granary.json`. `packs/granary.json` composes the three recommended sets; root `granary.json` consumes only the TypeScript set. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
+Granary provides independent packs from `packs/`, each with its own `granary.json`. `packs/granary.json` composes the three recommended sets; root `granary.json` consumes bundled TypeScript standards plus React documentation. The five installed shared/TypeScript components govern this repository. Rust and Python remain distribution material.
 
 The installed files are generated context. Edit the authored component under `packs/`, then refresh deliberately; `install` restores a lock and rejects source drift rather than silently updating it.
 
-### Refresh authored context
+### Dogfood the workspace CLI
 
-For this self-consuming repository, review source changes, then remove the generated context and lock and resolve the declared dependencies again:
+Use `pnpm cli` in this repository rather than installing `granary-ai@latest` as a dependency on itself. The root script builds and runs the local public executable, so pack installation and review exercise unreleased changes. Root `granary.json` already adopts React docs and bundled TypeScript standards; do not run `init` over it. Avoid `pnpm --filter granary-ai exec granary`: it resolves the private CLI dependency's binary and reports its internal version rather than the public distribution version.
 
 ```sh
-rm -rf .context
-rm granary-lock.json
-pnpm cli install
+pnpm cli list
+pnpm cli update
+```
+
+`update` prints a review without changing installed material. For a fresh-project setup smoke test, use `pnpm cli init --cwd <disposable-directory>`. Packed-consumer tests separately cover the installed distribution.
+
+### Refresh authored context
+
+Bundled standards are immutable snapshots, so editing an authored component does not change the root's installed snapshot. Test authored changes in a separate, existing disposable consumer:
+
+```sh
+pnpm cli add "$(pwd)/packs/typescript" --cwd /path/to/disposable-consumer
 pnpm docs:index
 pnpm validate
 pnpm build
 ```
 
-This is an intentional local re-resolution procedure, not an update mode. Preserve any personal edits before removing generated context. Review the regenerated lock and installed files together with their authored sources. Keep installed docs and the lock in the repository; reference code remains Git-ignored.
+Do not rewrite an existing bundled snapshot to refresh it. Root installation restores the bundled version and pinned React source recorded in its lock; changing those selections requires an explicit reviewed update. Commit consumer configuration, locks, and agent links. Generated `.granary/` context and caches remain ignored.
 
 ## Documentation routing
 

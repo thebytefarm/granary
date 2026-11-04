@@ -30,6 +30,7 @@ export function resolveSourceInput(input: SourceInput): Result<ResolvedSourceInp
   const value = parsed.data
   const suffix = packSuffix(value.pack)
   const locator = match(value)
+    .with({ provider: 'builtin' }, (source) => `builtin:${source.name}@${source.version}${suffix}`)
     .with({ provider: 'local' }, (source) => `file:${source.path}${suffix}`)
     .with({ provider: 'github' }, (source) => {
       if (source.pack) {
@@ -41,6 +42,9 @@ export function resolveSourceInput(input: SourceInput): Result<ResolvedSourceInp
     .exhaustive()
   const options = revisionOptions(value)
   const source: Source = match(value)
+    .with({ provider: 'builtin' }, ({ provider, name, version }) =>
+      Object.freeze({ provider, name, version })
+    )
     .with({ provider: 'local' }, ({ provider, path }) => Object.freeze({ provider, path }))
     .with({ provider: 'git' }, ({ provider, repository, revision }) =>
       Object.freeze({ provider, repository, revision })
@@ -60,7 +64,7 @@ export function resolveSourceInput(input: SourceInput): Result<ResolvedSourceInp
  * @private
  */
 function revisionOptions(source: z.infer<typeof inputSchema>): PackOptions {
-  if (source.provider === 'local') {
+  if (source.provider === 'local' || source.provider === 'builtin') {
     return {}
   }
   return source.revision ?? {}

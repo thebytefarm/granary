@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/zod",
+  "description": "Official Zod documentation, excluding the blog archive.",
+  "packs": {
+    "docs": {
+      "source": "github:colinhacks/zod",
+      "commit": "93b7a62a64bc62561590e81f4fed4cbdca507692",
+      "files": {
+        "include": ["packages/docs/content/**/*.mdx", "LICENSE"],
+        "exclude": ["packages/docs/content/blog/**", "**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}

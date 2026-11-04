@@ -37,6 +37,12 @@ export function parseSource(
   if (locator.split('#').length > 2) {
     return sourceInputSchema.safeParse(undefined)
   }
+  if (
+    locator.startsWith('builtin:') &&
+    !/^builtin:[a-z0-9]+(?:-[a-z0-9]+)*@[^@#]+(?:#[a-z0-9]+(?:[/-][a-z0-9]+)*)?$/.test(locator)
+  ) {
+    return sourceInputSchema.safeParse(undefined)
+  }
   const revision = { branch, tag, commit }
   const selector = Object.fromEntries(
     Object.entries(revision).filter(([, value]) => value !== undefined)
@@ -58,6 +64,11 @@ export function parseSource(
  * @private
  */
 function sourceFromLocator(locator: string): SourceInput {
+  if (locator.startsWith('builtin:')) {
+    const [collection = '', pack] = locator.slice(8).split('#')
+    const [name = '', version = ''] = collection.split('@')
+    return { provider: 'builtin', name, version, pack }
+  }
   if (locator.startsWith('github:')) {
     const [owner = '', repo = '', ...name] = locator.slice(7).split('/')
     return { provider: 'github', owner, repo, pack: name.join('/') || undefined }

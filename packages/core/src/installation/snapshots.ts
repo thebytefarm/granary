@@ -514,7 +514,7 @@ function buildRepositoryContent({
  * @private
  */
 function pinSource(source: Source, commit: string | undefined): Source {
-  if (source.provider === 'local' || !commit) return source
+  if (source.provider !== 'git' || !commit) return source
   return { ...source, revision: { commit } }
 }
 

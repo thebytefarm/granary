@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/nextjs",
+  "description": "Official Next.js documentation, including App Router guides and API reference.",
+  "packs": {
+    "docs": {
+      "source": "github:vercel/next.js",
+      "commit": "4200ce72e37ae3cc00101f3b59491464176812ce",
+      "files": {
+        "include": ["docs/**/*.md", "docs/**/*.mdx", "license.md"],
+        "exclude": ["**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}

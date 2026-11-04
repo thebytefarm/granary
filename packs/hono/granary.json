@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/hono",
+  "description": "Official Hono documentation from its website repository.",
+  "packs": {
+    "docs": {
+      "source": "github:honojs/website",
+      "commit": "6d4ba9115255b16a3a7388670787731ec49461ea",
+      "files": {
+        "include": ["docs/**/*.md", "LICENSE"],
+        "exclude": ["**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}

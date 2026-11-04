@@ -1,10 +1,11 @@
 # Create a context pack
 
-Describe an existing directory with `granary.json` and validate its metadata.
+Author a reusable pack around existing reference material, then validate and adopt it. Use `granary init` instead to set up a consuming project at its root.
 
 ## Prerequisites
 
-- A built local Granary workspace
+- An installed Granary CLI or a built local Granary workspace
+- Node.js 26+ on macOS or Linux; run the commands from your project root
 - A directory containing useful Markdown reference material
 - A root `README.md` that introduces and indexes the material
 
@@ -36,7 +37,23 @@ Reference material for the framework's client API.
 
 The entry file is a reading map. Keep detailed reference material in its owning files.
 
-## 3. Add the manifest
+## 3. Create the pack definition
+
+From your project root, run:
+
+```sh
+granary create context/framework
+```
+
+The maltty-guided workflow asks for the pack identity, description, version label, and file selection. The identity is prefilled from the target directory and can be edited. It is independent of the consuming project's name or npm package metadata. Confirm to create `context/framework/granary.json`; existing manifests are never overwritten.
+
+For a scripted definition with several include globs:
+
+```sh
+granary create context/framework --yes --name example/framework-reference --description 'Client API documentation and usage guidance.' --include 'README.md' 'docs/**' 'examples/**' --exclude '**/fixtures/**'
+```
+
+This writes:
 
 ```json
 {
@@ -50,7 +67,9 @@ The entry file is a reading map. Keep detailed reference material in its owning 
 }
 ```
 
-The directory owns its identity and can be distributed independently. `version` and `description` are optional. Grouped `files` selects any file type, including source and examples. Without `files` or child `packs`, the source's regular files are selected; explicit selection keeps incidental material out. Granary chooses `README.md` when selected, otherwise the first selected file, as the navigation entrypoint. Add child `packs` to compose other selections. See [project configuration](../reference/project-config.md#unified-fields).
+The directory owns its identity and can be distributed independently. `version` and `description` are optional; the wizard allows them to be cleared. Grouped `files` selects any file type, including source and examples. The authoring command defaults to `**/*.md`; explicit globs keep incidental material out. Granary chooses `README.md` when selected, otherwise the first selected file, as the navigation entrypoint. Edit child `packs` to compose other selections. See [project configuration](../reference/project-config.md#unified-fields).
+
+Pack creation writes only that definition. It does not generate content, install anything, change the consuming project's root configuration, or register nested membership automatically. Both workflows use `granary.json`, but project setup and reusable pack authoring are separate tasks.
 
 ## 4. Validate it
 
@@ -67,3 +86,11 @@ Use an absolute `--cwd` path if the pack is outside the workspace.
 Expect `Pack manifest is valid.` Standalone validation checks syntax and fields; installation checks local file selection and entrypoint inclusion. Check that the entry's links resolve and the selection contains the intended material. Presets can reference this directory's manifest without redeclaring its payload; see [presets](../reference/presets.md).
 
 The [manifest reference](../reference/pack-manifest.md) defines every field. The [installation guide](install-packs.md) describes the consumer workflow.
+
+## Troubleshooting
+
+If the target already contains `granary.json` or a lock, inspect and edit its existing definition instead of rerunning creation. If the directory is missing, create the content directory first; `create` does not create directories or reference material. Without an interactive terminal, supply `--yes` and the desired metadata and selection flags.
+
+## Next steps
+
+To use the authored pack, run `granary add <pack-directory>` from a consuming project. Keep any parent composition explicit; see [presets](../reference/presets.md).

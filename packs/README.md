@@ -98,8 +98,45 @@ For a polyglot project, declare several sets with a shared destination in `grana
 
 Run `granary install`. Selecting all three sets at the same destination installs seven unique components. The lockfile records their exact source revisions, membership, and file integrity.
 
-`packs/granary.json` owns the distributed sets. The repository-root `granary.json` is this project's consumer configuration and installs only TypeScript and shared standards.
+`packs/granary.json` owns the distributed sets. The repository-root `granary.json` is this project's consumer configuration and adopts React documentation plus bundled TypeScript and shared standards.
 
 ## Rule language
 
 The uppercase terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** use RFC 2119/8174 meanings. Authored-code requirements do not apply to generated or vendored output.
+
+## Curated tool packs
+
+Install official tool documentation through ordinary pack definitions. Each directory owns a `granary.json`; no separate recipe format or package is required. Definitions select upstream files rather than copying documentation into this repository.
+
+| Directory         | Selected material                                         |
+| ----------------- | --------------------------------------------------------- |
+| `nextjs`          | Next.js guides and API reference                          |
+| `react`           | React learning material, reference, and warnings          |
+| `tanstack-query`  | TanStack Query for React                                  |
+| `tanstack-router` | TanStack Router guides and reference                      |
+| `tanstack-start`  | TanStack Start framework docs and shared Router reference |
+| `hono`            | Hono website documentation                                |
+| `zod`             | Zod documentation without the blog archive                |
+| `ai-sdk`          | Vercel AI SDK guides, reference, and providers            |
+
+From a Granary checkout, install into a separate consumer:
+
+```sh
+pnpm cli add "$(pwd)/packs/hono" --cwd /path/to/consumer
+```
+
+The relative source resolves from the consumer directory. Use an absolute path to the checkout's `packs/hono` directory when the consumer is elsewhere:
+
+```sh
+granary add /path/to/granary/packs/hono
+```
+
+Omit a member suffix to install the complete definition, or append `#docs` to select its documentation member. Selection preserves upstream-relative paths beneath the member's `docs` destination. See [pack definitions](../docs/reference/pack-definition.md) for source composition and [CLI initialization](../docs/reference/cli.md#initialize-a-project) for the existing setup picker.
+
+### Snapshot contract
+
+These definitions pin reviewed file selections to exact upstream commits. They do not infer installed dependency versions, track `latest`, or claim that a website snapshot matches an npm release. Installation requires network access and Git; subsequent restoration retrieves the locked commits and verifies file hashes. Upstream examples, site assets, and all cross-page links are not guaranteed to be included or runnable offline. Selected Markdown and MDX are context, not executed application code.
+
+Each selection retains the upstream license file. Upstream authors own their material; follow its license and attribution terms when sharing installed content. These tool packs are independent of the existing engineering standards and are not added to the language recommended sets or the immutable `builtin:bytefarm@0.1.0` snapshot.
+
+`granary init` detects supported tools from the selected root's package dependencies and preselects their documentation packs. The picker also offers optional Bytefarm standards. Definitions are embedded in the CLI; consumers do not need this checkout. Confirmed tool selections write ordinary inline pack definitions with pinned upstream sources into `granary.json`, not paths into the npm installation. To select packs without prompts, use `granary init --yes --preset hono zod`. Bare `--yes` still creates an empty scaffold.

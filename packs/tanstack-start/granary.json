@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/tanstack-start",
+  "description": "Official TanStack Start framework documentation, including its shared Router reference.",
+  "packs": {
+    "docs": {
+      "source": "github:TanStack/router",
+      "commit": "c5320d7ca23eca82d720ac5629d2bad5cf7d9b02",
+      "files": {
+        "include": ["docs/start/framework/**/*.md", "docs/router/**/*.md", "LICENSE"],
+        "exclude": ["**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}
