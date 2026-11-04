@@ -3,9 +3,10 @@ import type { ReactElement } from 'react'
 
 /**
  * Render the working farm artwork with registered machinery and motion controls.
+ * @param props - Deployment base, including its leading and trailing slashes.
  * @returns The Ciderpress banner, with decorative artwork separated from accessible controls.
  */
-export function FarmHero(): ReactElement {
+export function FarmHero({ base }: { readonly base: string }): ReactElement {
   const root = useRef<HTMLDivElement>(null)
   const [isPaused, setIsPaused] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -55,9 +56,9 @@ export function FarmHero(): ReactElement {
       data-running={isRunning}
       data-reduced-motion={reducedMotion}
     >
-      <link rel="stylesheet" href="/farm-hero.css" precedence="default" />
+      <link rel="stylesheet" href={`${base}farm-hero.css`} precedence="default" />
       <div className="farm-world">
-        <FarmLandscape />
+        <FarmLandscape base={base} />
       </div>
       <button
         className="farm-pause"
@@ -117,8 +118,9 @@ function serverReducedMotion(): boolean {
 /**
  * @private
  */
-function FarmLandscape(): ReactElement {
+function FarmLandscape({ base }: { readonly base: string }): ReactElement {
   const id = useId()
+  const artwork = `${base}farm-simulation.webp`
   return (
     <svg
       className="farm-landscape"
@@ -139,11 +141,11 @@ function FarmLandscape(): ReactElement {
           y="714"
         >
           <svg width="100" height="54" viewBox="610 714 100 54">
-            <image href="/farm-simulation.webp" width="1774" height="887" />
+            <image href={artwork} width="1774" height="887" />
           </svg>
         </pattern>
       </defs>
-      <image href="/farm-simulation.webp" width="1774" height="887" />
+      <image href={artwork} width="1774" height="887" />
       {/* All overlays share the raster's coordinates, including cover cropping. */}
       <g className="farm-grain" fill="none" strokeLinecap="butt">
         <path className="farm-grain__belt" d="M887 442H1145V381" />
@@ -158,7 +160,7 @@ function FarmLandscape(): ReactElement {
       </g>
       <g>
         <svg x="730" y="707" width="114" height="9" viewBox="610 707 114 9">
-          <image href="/farm-simulation.webp" width="1774" height="887" />
+          <image href={artwork} width="1774" height="887" />
         </svg>
         <svg
           x="604"
@@ -168,7 +170,7 @@ function FarmLandscape(): ReactElement {
           viewBox="1140 736 470 94"
           preserveAspectRatio="none"
         >
-          <image href="/farm-simulation.webp" width="1774" height="887" />
+          <image href={artwork} width="1774" height="887" />
         </svg>
         <rect
           className="farm-cut-swath"
@@ -179,12 +181,7 @@ function FarmLandscape(): ReactElement {
           fill={`url(#${id}-stubble)`}
         />
         <g className="farm-combine">
-          <image
-            href="/farm-simulation.webp"
-            width="1774"
-            height="887"
-            clipPath={`url(#${id}-combine)`}
-          />
+          <image href={artwork} width="1774" height="887" clipPath={`url(#${id}-combine)`} />
           <g className="farm-chaff" fill="#c4a15f">
             <rect x="816" y="746" width="3" height="2" />
             <rect x="823" y="755" width="2" height="2" />

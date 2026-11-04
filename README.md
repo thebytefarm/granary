@@ -3,7 +3,7 @@
   <p><strong>A storehouse for agent knowledge.</strong></p>
   <p>Install versioned docs, source, and examples where your coding agent can read them.</p>
 
-<a href="docs/getting-started/quick-start.md">Quick start</a> &nbsp;·&nbsp; <a href="docs/reference/cli.md">CLI reference</a> &nbsp;·&nbsp; <a href="contributing/README.md">Contributing</a>
+<a href="https://thebytefarm.github.io/granary/">Documentation</a> &nbsp;·&nbsp; <a href="docs/getting-started/quick-start.md">Quick start</a> &nbsp;·&nbsp; <a href="contributing/README.md">Contributing</a>
 </div>
 
 ## Features
