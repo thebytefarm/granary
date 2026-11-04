@@ -140,6 +140,21 @@ Apply uses captured incoming bytes, so an upstream ref moving after preparation 
 
 ## Errors and limits
 
+### pnpm installs the old placeholder
+
+If `pnpm add -Dw granary-ai` installs `0.0.1` or `pnpm exec granary` reports a missing command, check the selected dependency version. `0.0.1` reserved the package name and has no executable. pnpm 11+ defaults to a 1,440-minute minimum release age, so an unversioned request can choose that older release while `0.1.0` is still inside the age window—even though npm's `latest` points to `0.1.0`.
+
+Request the exact working release and verify the installed executable:
+
+```sh
+pnpm add -Dw granary-ai@0.1.0
+pnpm exec granary --version
+```
+
+Expect `0.1.0`. With pnpm's default non-strict age policy, an explicit version can produce narrow `minimumReleaseAgeExclude` entries in `pnpm-workspace.yaml`, including exceptions for recently released dependencies. Review those entries. Explicit strict policies may require approval from the workspace owner. Do not disable release-age checks globally. Waiting until the release meets the workspace's configured minimum age is the alternative without an exception. The only public package is `granary-ai`; private `@granary/*` package versions are not CLI release versions.
+
+### Other failures
+
 Invalid arguments, malformed configuration, unsafe paths, source failures, changed provenance, stale reviews, and unresolved decisions exit nonzero. Validation checks manifest fields; installation verifies selected material. Content is not executed.
 
 Website ingestion, a standalone `remove` command, automatic conflict merging, and an interactive review UI are not implemented.

@@ -23,6 +23,15 @@ npm install --global granary-ai
 granary --version
 ```
 
+For a pnpm workspace-local installation:
+
+```sh
+pnpm add -Dw granary-ai@0.1.0
+pnpm exec granary --version
+```
+
+pnpm 11+ defaults to a 24-hour minimum release age. While `0.1.0` is newer than that, an unversioned `pnpm add -Dw granary-ai` can select the old `0.0.1` name-reservation package, which has no CLI binary. Requesting the exact release installs `0.1.0`; pnpm may record version-specific release-age exceptions in `pnpm-workspace.yaml`. Review those exceptions rather than disabling the policy globally. Explicit strict policies may require approval. Only `granary-ai` is the public package; do not install the private `@granary/*` workspaces. See [installation troubleshooting](docs/reference/cli.md#pnpm-installs-the-old-placeholder).
+
 ## Usage
 
 ### Add framework docs
