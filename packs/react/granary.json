@@ -1,0 +1,20 @@
+{
+  "name": "bytefarm/react",
+  "description": "Official React learning material, API reference, and warnings, without the news archive.",
+  "packs": {
+    "docs": {
+      "source": "github:reactjs/react.dev",
+      "commit": "2177e28d3c3c16a8183346b9140f11ce0ee6af25",
+      "files": {
+        "include": [
+          "src/content/learn/**/*.md",
+          "src/content/reference/**/*.md",
+          "src/content/warnings/**/*.md",
+          "src/content/index.md",
+          "LICENSE-DOCS.md"
+        ]
+      },
+      "output": "docs"
+    }
+  }
+}

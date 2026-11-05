@@ -265,8 +265,8 @@ async function expandMember({
   if (isErr(parsed)) {
     return parsed
   }
-  if (typeof value === 'string' && parsed.value.source.provider === 'local') {
-    return invalid(`Local source ${key} does not accept a Git revision.`)
+  if (typeof value === 'string' && parsed.value.source.provider !== 'git') {
+    return invalid(`Non-Git source ${key} does not accept a Git revision.`)
   }
   const source = revisionSource({ source: parsed.value.source, value })
   const target = sourceContext({ context, source })
@@ -536,13 +536,13 @@ function sourceContext({
   { readonly source: Source; readonly prefix: string; readonly revision?: string | undefined },
   InstallationError
 > {
-  if (source.provider === 'git') {
+  if (source.provider !== 'local') {
     return ok({ source, prefix: '.' })
   }
-  if (context.opened.source.provider === 'git') {
+  if (context.opened.source.provider !== 'local') {
     const prefix = posix.normalize(posix.join(context.prefix, source.path))
     if (prefix === '..' || prefix.startsWith('../') || posix.isAbsolute(source.path)) {
-      return invalid('A Git-backed local source must stay inside its repository.')
+      return invalid('A Git-backed or built-in local member must stay inside its source snapshot.')
     }
     return ok({ source: context.opened.source, prefix, revision: context.opened.revision })
   }
@@ -602,6 +602,9 @@ function revisionSource({ source, value }: RevisionSourceParams): Source {
  * @private
  */
 function sourceLabel(source: Source): string {
+  if (source.provider === 'builtin') {
+    return source.version
+  }
   if (source.provider === 'git') {
     return sourceReference(source).replace(/^refs\/(?:heads|tags)\//, '')
   }
@@ -612,6 +615,9 @@ function sourceLabel(source: Source): string {
  * @private
  */
 function sourceIdentity(source: Source): string {
+  if (source.provider === 'builtin') {
+    return `builtin:${source.name}@${source.version}`
+  }
   if (source.provider === 'git') {
     return source.repository
   }

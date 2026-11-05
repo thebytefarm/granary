@@ -1,0 +1,17 @@
+{
+  "name": "bytefarm/documentation",
+  "version": "0.1.0",
+  "description": "Task-oriented documentation standards.",
+  "documents": {
+    "diagrams.md": "standards",
+    "formatting.md": "standards",
+    "guides.md": "standards",
+    "quickstarts.md": "standards",
+    "references.md": "standards",
+    "runbooks.md": "standards",
+    "standards.md": "standards",
+    "troubleshooting.md": "standards",
+    "tutorials.md": "standards",
+    "writing.md": "standards"
+  }
+}

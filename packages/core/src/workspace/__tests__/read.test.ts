@@ -270,19 +270,34 @@ describe('workspace pack manifests', { timeout: 20_000 }, () => {
     ).toContain('standards')
   })
 
-  it('uses only TypeScript and shared standards in Granary itself', async () => {
+  it('adopts React docs and bundled TypeScript standards in Granary itself', async () => {
     const project = fileURLToPath(new URL('../../../../../', import.meta.url))
     const document = manifestSchema.parse(
       JSON.parse(await readFile(join(project, 'granary.json'), 'utf8'))
     )
-    expect(Object.keys(document.packs ?? {})).toEqual(['file:packs#recommended-typescript'])
-    const config = unwrap(await resolveWorkspaceConfig({ project, document }))
+    expect(Object.keys(document.packs ?? {})).toEqual([
+      'react',
+      'builtin:bytefarm@0.1.0#recommended-typescript',
+    ])
+    const react = manifestSchema.parse(
+      JSON.parse(await readFile(join(project, 'packs/react/granary.json'), 'utf8'))
+    )
+    expect(document.packs?.react).toMatchObject({ packs: react.packs })
+    const standards = manifestSchema.parse({
+      ...document,
+      packs: Object.fromEntries(
+        Object.entries(document.packs ?? {}).filter(([key]) => key.startsWith('builtin:'))
+      ),
+    })
+    const config = unwrap(
+      await resolveWorkspaceConfig({ project, document: standards, allowChanges: true })
+    )
     expect(config.packs.map((pack) => pack.destination)).toEqual([
-      '.context/docs/bytefarm/engineering/0.1.0',
-      '.context/docs/bytefarm/git/0.1.0',
-      '.context/docs/bytefarm/documentation/0.1.0',
-      '.context/docs/bytefarm/agent-instructions/0.1.0',
-      '.context/docs/bytefarm/typescript-functional/0.1.0',
+      '.granary/context/docs/bytefarm/engineering/0.1.0',
+      '.granary/context/docs/bytefarm/git/0.1.0',
+      '.granary/context/docs/bytefarm/documentation/0.1.0',
+      '.granary/context/docs/bytefarm/agent-instructions/0.1.0',
+      '.granary/context/docs/bytefarm/typescript-functional/0.1.0',
     ])
   })
 })

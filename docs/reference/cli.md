@@ -9,6 +9,7 @@ npm install --global granary-ai
 ```sh
 granary --help
 granary --version
+granary init
 granary validate
 granary add nextjs@16
 granary install nextjs@16.0.0 --output reference/nextjs
@@ -16,15 +17,68 @@ granary install
 granary list
 ```
 
-| Command            | Behavior                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------- |
-| `about`            | Describe implemented capabilities                                                           |
-| `validate`         | Validate current `granary.json` fields through maltty                                       |
-| `add <source>`     | Adopt source material, write intent, and install transactionally; canonical spelling        |
-| `install [source]` | With a source, equivalent to `add`; without one, resolve initial intent or restore the lock |
-| `list`             | Display locked identities and destinations                                                  |
-| `standards`        | Convert classified standards or configure review defaults                                   |
-| `update`           | Prepare review JSON, or apply explicit decisions with `--apply`                             |
+| Command              | Behavior                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `init`               | Scaffold project configuration with optional guided first-source installation               |
+| `create <directory>` | Author a reusable pack definition around existing material, without installing it           |
+| `validate`           | Validate current `granary.json` fields through maltty                                       |
+| `add <source>`       | Adopt source material, write intent, and install transactionally; canonical spelling        |
+| `install [source]`   | With a source, equivalent to `add`; without one, resolve initial intent or restore the lock |
+| `list`               | Display locked identities and destinations                                                  |
+| `standards`          | Convert classified standards or configure review defaults                                   |
+| `update`             | Prepare review JSON, or apply explicit decisions with `--apply`                             |
+
+## Initialize a project
+
+```sh
+granary init
+granary init --yes --name my-app
+granary init --yes --preset recommended-typescript recommended-rust
+```
+
+`init` sets up Granary at a consuming project's root; it does not author a reusable pack. The root is the current directory or explicit `--cwd`, not an automatically discovered Git root. In a monorepo, explicitly choose the repository or workspace that should own its context.
+
+In an interactive terminal, `init` uses maltty's built-in text, selection, multiselection, and confirmation prompts. The project name is prefilled from that root's `package.json` and remains editable; Enter accepts it. Choose detected context packs, configuration only, or a custom source to install. Sources accept the same locators and Next.js shorthand as `add`. Confirm the configuration before any consumer files are written; declining or cancelling a prompt leaves the project unchanged.
+
+| Option               | Behavior                                                                 |
+| -------------------- | ------------------------------------------------------------------------ |
+| `--yes`              | Skip prompts; write an empty scaffold unless `--preset` selects sets     |
+| `--preset <sets...>` | Select tool documentation packs or recommended language standards sets   |
+| `--name <name>`      | Initial project name; overrides package metadata and directory detection |
+| `--cwd <directory>`  | Initialize an existing workspace directory                               |
+
+Project names use lowercase letters and numbers separated by hyphens or slashes. Package names are normalized to this format: `@team/web.app` becomes `team/web-app`. Missing, unreadable, malformed, or unusable package metadata falls back to the normalized directory name, then `project`. This name labels the consumer configuration, not a published pack. Non-interactive invocations require `--yes` rather than waiting for input.
+
+The scaffold contains `name` and an empty `packs` object. Scaffolding does not create a lock, installed content, or `AGENTS.md`. Existing `granary.json` or `granary-lock.json` entries, including symlinks, are rejected without changes. Configuration creation is exclusive and never overwrites a file created during setup.
+
+Choosing a source uses the existing adoption pipeline and default destinations; successful installation also writes the lock and agent reference links. Source-resolution failures leave no configuration. If installation fails after scaffolding, `granary.json` remains available; correct the source and retry with `granary add <source>`. `init` is optional: `add` can still create configuration directly.
+
+The context picker offers Next.js, React, TanStack Query, Router, Start, Hono, Zod, and Vercel AI SDK documentation, followed by optional Bytefarm TypeScript, Rust, and Python standards. Tool recommendations use the root `package.json` dependencies, devDependencies, peerDependencies, and optionalDependencies. Next.js config files (`next.config.js`, `.mjs`, `.ts`, or `.cjs`) also recommend Next.js. Only supported, explicitly declared tools are inferred; transitive dependencies are not scanned.
+
+Root `tsconfig.json` or a `typescript`/`@typescript/native-preview` dependency recommends TypeScript standards; `Cargo.toml` recommends Rust; `pyproject.toml`, `requirements.txt`, or `setup.py` recommends Python. Nested directories are not scanned. Detected packs are preselected, not automatically installed: change or clear the selection before confirmation.
+
+Tool packs embed the checked-in curated definitions and retain ordinary pinned upstream sources in consumer configuration; installation requires Git/network access. These are labeled documentation snapshots, not automatic matches to installed dependency versions. Language standards use exact [bundled sources](sources.md#bundled-sources), require no network retrieval, and share common components. With `--yes`, only explicit `--preset` selections install context; for example, `granary init --yes --preset hono zod`. Failed selected-pack installation retains intent in `granary.json`; retry with `granary install`.
+
+## Author a reusable pack
+
+```sh
+granary create ./reference/team-rules
+granary create ./reference/team-rules --yes --name team/rules --include 'README.md' 'docs/**'
+```
+
+`create` describes an explicit, existing directory of reference material. Unlike `init`, its name is a reusable pack identity, defaulting to the target directory name rather than npm metadata. The wizard asks for identity, optional description and version label, and include/exclude globs before confirmation. It writes only the target's `granary.json`: no consumer configuration changes, registration in a parent manifest, installation, lock, or agent links. See [create a context pack](../guides/create-pack.md).
+
+| Option                   | Behavior                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `--yes`                  | Skip prompts and create the definition from flags/defaults                           |
+| `--name <identity>`      | Pack identity; defaults to the target directory name                                 |
+| `--description <text>`   | Explain when the material is useful                                                  |
+| `--pack-version <label>` | Authored version label, initially `0.1.0`; `--version` still reports the CLI version |
+| `--include <globs...>`   | Positive source-relative globs; defaults to `**/*.md`                                |
+| `--exclude <globs...>`   | Positive source-relative exclusion globs; omitted by default                         |
+| `--cwd <directory>`      | Base for resolving the required pack-directory argument                              |
+
+The wizard accepts one include glob and one optional exclude glob. Supply `--include`/`--exclude` to use multiple globs instead, or edit the resulting manifest. Existing target manifests, locks, and symlink directories are rejected. No target directory, README, or content is generated. Validation checks the definition's syntax; review selected content and links before sharing. Creating a nested pack does not implicitly make it a selectable member of its parent.
 
 ## Add options
 

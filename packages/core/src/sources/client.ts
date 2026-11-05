@@ -6,6 +6,7 @@ import type { SourceError } from '#/sources/errors.ts'
 import { createGitClient } from '#/sources/git/client.ts'
 import { createLocalClient } from '#/sources/local/client.ts'
 import type { OpenedSource, Source } from '#/sources/source.ts'
+import { openBuiltinSource } from '#/builtin-packs.ts'
 
 export type SourceReadParams<CONTENT> = {
   readonly source: Source
@@ -32,6 +33,13 @@ async function readSource<CONTENT>({
   use,
 }: SourceReadParams<CONTENT>): Promise<Result<CONTENT, SourceError>> {
   return match(source)
+    .with({ provider: 'builtin' }, async (builtin) => {
+      const opened = await openBuiltinSource(builtin)
+      if (isErr(opened)) {
+        return opened
+      }
+      return use(opened.value)
+    })
     .with({ provider: 'local' }, async (local) => {
       const opened = await createLocalClient().open({ source: local, base })
       if (isErr(opened)) {

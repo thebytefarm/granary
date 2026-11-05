@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "paths": {
+      "#packs/*": ["../../packs/*"],
       "#/package.json": ["./package.json"],
       "#/*": ["./src/*"]
     }

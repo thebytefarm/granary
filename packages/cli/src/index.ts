@@ -1,8 +1,9 @@
 import { cli } from 'maltty'
 
-import about from '#/commands/about.ts'
 import { add } from '#/commands/add.ts'
+import { create } from '#/commands/create.ts'
 import { install } from '#/commands/install.ts'
+import { init } from '#/commands/init.ts'
 import { list } from '#/commands/list.ts'
 import { validate } from '#/commands/validate.ts'
 import { standards } from '#/commands/standards.ts'
@@ -24,6 +25,6 @@ export async function run({
     name: 'granary',
     version,
     description: 'Ship context. Give coding agents local docs and source.',
-    commands: { about, validate, add, install, list, standards, update },
+    commands: { init, create, validate, add, install, list, standards, update },
   })
 }

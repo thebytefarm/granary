@@ -13,6 +13,20 @@ Revisions belong in manifest values as shorthand strings or explicit `branch`, `
 
 ## Discovery
 
+`granary init` offers bundled `recommended-typescript`, `recommended-rust`, and `recommended-python` sets. See [CLI initialization](cli.md#initialize-a-project) for detection and selection.
+
+## Bundled sources
+
+Use `builtin:bytefarm@0.1.0#recommended-typescript` to select the exact snapshot shipped with Granary. Installation and restoration read packaged assets without network retrieval. The manifest and lock retain portable `builtin:` identities, never checkout or npm installation paths.
+
+Versions require three numeric components; ranges, `latest`, and Git revision selectors are invalid. Unavailable collections or versions fail instead of substituting another snapshot. Relative members stay inside the bundled source, and locked hashes verify definitions and selected bytes. Multiple language sets selected by `init` share `.granary/context/docs/bytefarm`, deduplicating common components.
+
+```sh
+granary add builtin:bytefarm@0.1.0#recommended-typescript
+```
+
+## Source discovery
+
 `granary add <source> --list` reads only the root manifest and its declared nested membership. It never scans undisclosed directories. A manifestless source returns no named packs but remains installable. Invalid root metadata fails rather than falling back to a different format.
 
 Granary's `packs/granary.json` declares the distributed language sets. Each component directory is also an independently installable source. The repository-root manifest describes only this repository's local adoption.

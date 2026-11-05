@@ -12,6 +12,32 @@ import packageJson from '#/package.json' with { type: 'json' }
 const execute = promisify(execFile)
 
 describe('installed granary-ai distribution', { timeout: 180_000 }, () => {
+  it('installs and restores bundled multi-language context outside the checkout', async () => {
+    const { project, run } = await installedCli()
+    expect((await run(['init', '--help'])).stdout).toContain('tanstack-query')
+    await expect(run(['init', '--preset', 'hono'])).rejects.toMatchObject({
+      code: 1,
+      stdout: expect.stringContaining('Guided setup requires an interactive terminal'),
+    })
+    await run([
+      'init',
+      '--yes',
+      '--preset',
+      'recommended-typescript',
+      'recommended-rust',
+      'recommended-python',
+    ])
+    const lock = await readFile(join(project, 'granary-lock.json'), 'utf8')
+    expect(lock).toContain('"provider": "builtin"')
+    expect(lock).not.toContain('node_modules')
+    const page = join(project, '.granary/context/docs/bytefarm/engineering/0.1.0/README.md')
+    const original = await readFile(page, 'utf8')
+    await rm(join(project, '.granary'), { recursive: true })
+    await run(['install'])
+    expect(await readFile(page, 'utf8')).toBe(original)
+    expect(await readFile(join(project, 'granary-lock.json'), 'utf8')).toBe(lock)
+  })
+
   it('installs the tarball and runs add, list, review, apply, and restore through its bin shim', async () => {
     const { project, run } = await installedCli()
     const packageDirectory = join(project, 'node_modules/granary-ai')

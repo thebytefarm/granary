@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/ai-sdk",
+  "description": "Official Vercel AI SDK guides, API reference, and provider documentation.",
+  "packs": {
+    "docs": {
+      "source": "github:vercel/ai",
+      "commit": "32acf432db0e42a96adb66c8ebcadcf509df7b9c",
+      "files": {
+        "include": ["content/docs/**/*.mdx", "content/providers/**/*.mdx", "LICENSE"],
+        "exclude": ["**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "bytefarm/tanstack-query",
+  "description": "Official TanStack Query documentation for React.",
+  "packs": {
+    "docs": {
+      "source": "github:TanStack/query",
+      "commit": "925168e015a85d6e044d0c2a2859916111ee0321",
+      "files": {
+        "include": ["docs/framework/react/**/*.md", "LICENSE"],
+        "exclude": ["**/AGENTS.md", "**/CLAUDE.md"]
+      },
+      "output": "docs"
+    }
+  }
+}

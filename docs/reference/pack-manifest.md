@@ -2,6 +2,8 @@
 
 An installable pack's `granary.json` describes files and included packs. Only `name` is required; the same contract configures consumer projects through the `granary-ai` CLI and SDK.
 
+The workflows are separate: `granary init` sets up context consumption at a project root; `granary create <directory>` authors a reusable definition around reference material. Pack creation does not install that material or register it in a consuming project. See [create a context pack](../guides/create-pack.md).
+
 ```json
 {
   "name": "engineering",
@@ -49,7 +51,7 @@ Optional `plugins` maps namespace names to JSON configuration. Core validates th
 
 ## Validation and errors
 
-`granary validate` checks manifest syntax and fields without downloading sources or installing content. Installation resolves selected sources and checks payload ownership. Help, version, and `about` do not require a manifest.
+`granary validate` checks manifest syntax and fields without downloading sources or installing content. Installation resolves selected sources and checks payload ownership. Help and version do not require a manifest.
 
 Unknown fields, absolute or escaping selection paths, negative include globs, conflicting revision selectors, invalid member references, cycles, and destination conflicts fail explicitly. No historical manifest filenames or alternate configuration formats are read.
 
