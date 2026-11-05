@@ -1,6 +1,6 @@
 {
   "name": "granary-ai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ship versioned docs and source as local context for coding agents.",
   "keywords": [
     "agents",
