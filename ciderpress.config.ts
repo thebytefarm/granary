@@ -6,7 +6,7 @@ import { createElement } from 'react'
 import { FarmHero } from './docs/components/farm-hero.tsx'
 
 const granaryTheme = createGranaryTheme()
-const base = process.env.CIDERPRESS_BASE ?? '/'
+const base = '/'
 
 export default defineConfig({
   title: 'Granary',
