@@ -23,17 +23,18 @@ The upstream repository does not need a manifest. Selected code, docs, examples,
 
 ## Unified fields
 
-| Field                               | Contract                                                                             |
-| ----------------------------------- | ------------------------------------------------------------------------------------ |
-| `name`                              | Required project/default pack name.                                                  |
-| `description`, `version`, `license` | Optional authored metadata. `version` does not resolve Git releases.                 |
-| `files.include`                     | Positive source-relative globs. An empty array selects no own files.                 |
-| `files.exclude`                     | Optional positive globs removed from the include selection.                          |
-| `documents`                         | Exact selected paths mapped to `context` or `standards`.                             |
-| `packs`                             | Named inline definitions or source-keyed installations, including recursive members. |
-| `source`                            | Optional source for a named definition; omit it when the key is a locator.           |
-| `output`                            | Consumer destination base. Defaults to `.granary/context`.                           |
-| `standards`                         | Optional consumer enforcement settings.                                              |
+| Field                               | Contract                                                                              |
+| ----------------------------------- | ------------------------------------------------------------------------------------- |
+| `name`                              | Required project/default pack name.                                                   |
+| `description`, `version`, `license` | Optional authored metadata. `version` does not resolve Git releases.                  |
+| `files.root`                        | Optional source-relative directory. Defaults to the source root.                      |
+| `files.include`                     | Positive globs relative to `files.root`. An empty array selects no own files.         |
+| `files.exclude`                     | Optional positive globs relative to `files.root`, removed from the include selection. |
+| `documents`                         | Exact source-relative selected paths mapped to `context` or `standards`.              |
+| `packs`                             | Named inline definitions or source-keyed installations, including recursive members.  |
+| `source`                            | Optional source for a named definition; omit it when the key is a locator.            |
+| `output`                            | Consumer destination base. Defaults to `.granary/context`.                            |
+| `standards`                         | Optional consumer enforcement settings.                                               |
 
 Source entry values accept a revision string, a configured object, or a nonempty mixed array. Configured Git objects accept at most one of `branch`, `tag`, or `commit`. Omission resolves the remote default branch. Strings are exact Git revisions, not semver ranges. Ambiguous branch/tag names require an explicit object.
 
@@ -44,6 +45,31 @@ GitHub keys use `github:<owner>/<repo>[/<pack-name>]`. Local sources use `./dire
 Installing a pack includes its declared members recursively. Selecting a named child excludes siblings. Physical nested manifests are not automatic members. A pack with `packs` and no `files` is composition-only; add `files` to include its own payload. A source with neither defaults to regular files, excluding Git metadata and effective consumer destinations. Local material can include untracked files; narrow the selection before sharing it.
 
 `source: "#engineering"` selects a named sibling in the same source snapshot. Same-repository relative sources stay pinned to their parent's Git commit. Granary's root manifest consumes only TypeScript; `packs/granary.json` declares the distributed language sets.
+
+## Re-rooted selections
+
+`files.root` installs a source subdirectory directly beneath the destination. Its globs match paths relative to that directory, and installed paths drop the root prefix.
+
+```json
+{
+  "name": "smithy",
+  "packs": {
+    "github:holly-revamp/holly": {
+      "branch": "main",
+      "files": { "root": "docs/standards", "include": ["**"] },
+      "output": "contributing/standards"
+    }
+  }
+}
+```
+
+`docs/standards/git-commits.md` installs at `contributing/standards/git-commits.md`. Without `root`, `"include": ["docs/standards/**"]` installs it at `contributing/standards/docs/standards/git-commits.md`.
+
+- `root` must be a relative directory without globs, `..` segments, or symlinks.
+- A missing root, or a root whose globs select nothing, fails before writes.
+- The lock records the root as the content group's `root`; accepted customizations, update reviews, and restoration use root-relative paths.
+- A consumer `files.root` overrides an authored one. Each `files` object's globs stay relative to its own root.
+- `documents` keys stay source-relative.
 
 ## Unified destinations
 

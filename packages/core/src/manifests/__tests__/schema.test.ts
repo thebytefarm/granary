@@ -22,6 +22,25 @@ describe('manifest schema', () => {
     }
   )
 
+  it('accepts a relative selection root beside its globs', () => {
+    const document = manifestSchema.parse({
+      name: 'app',
+      packs: { 'github:acme/docs': { files: { root: 'docs/standards', include: ['**'] } } },
+    })
+    expect(document.packs).toEqual({
+      'github:acme/docs': { files: { root: 'docs/standards', include: ['**'] } },
+    })
+  })
+
+  it.each(['/docs', '../docs', 'docs/../..', 'C:/docs', 'docs/**', '', 'docs\\standards'])(
+    'rejects unsafe or glob selection root %j',
+    (root) => {
+      expect(
+        manifestSchema.safeParse({ name: 'app', files: { root, include: ['**'] } }).success
+      ).toBe(false)
+    }
+  )
+
   it('supports intentionally empty selections', () => {
     expect(manifestSchema.safeParse({ name: 'app', files: { include: [] } }).success).toBe(true)
   })
