@@ -9,10 +9,13 @@ import {
 } from '#/sources/source.ts'
 
 /**
- * Select arbitrary files with positive include and exclude globs.
+ * Select arbitrary files with positive include and exclude globs, optionally beneath a re-rooted directory.
  */
 export const fileSelectionSchema = z
   .strictObject({
+    root: relativePathSchema
+      .refine((path) => !/[*?[\]{}!]/.test(path), 'Expected a directory path without glob patterns')
+      .optional(),
     include: z
       .array(
         relativePathSchema.refine((path) => !path.startsWith('!'), 'Use exclude for negative globs')

@@ -490,7 +490,7 @@ async function ownRequest({
       destination: context.destination ?? context.output,
       selection: {
         docs: {
-          path: context.prefix,
+          path: posix.join(context.prefix, files.value.root),
           entry: selected.find((path) => path === 'README.md') ?? selected[0] ?? '',
           files: selected,
           documents: files.value.documents,

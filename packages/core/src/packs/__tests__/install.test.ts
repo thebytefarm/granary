@@ -322,6 +322,134 @@ describe('pack installation', { timeout: 15_000 }, () => {
     expect(instructions).toContain('[second/README.md](second/README.md)')
   })
 
+  it('installs a re-rooted selection directly beneath its output and restores it', async () => {
+    const { project, source, client } = await workspace()
+    await writeStandards(source)
+    const lock = unwrap(
+      await client.packs.add({
+        source: { provider: 'local', path: '../source' },
+        files: { root: 'docs/standards/', include: ['**'], exclude: ['drafts/**'] },
+        output: 'standards',
+      })
+    )
+    const group = lock.packs[0]?.groups[0]
+    expect(group?.root).toBe('docs/standards')
+    expect(group?.files.map((file) => file.path)).toEqual(['README.md', 'typescript/naming.md'])
+    expect(lock.packs[0]?.request.selection.docs?.path).toBe('docs/standards')
+    expect(await readFile(join(project, 'standards/README.md'), 'utf8')).toBe('# Standards\n')
+    await expect(access(join(project, 'standards/docs'))).rejects.toMatchObject({
+      code: 'ENOENT',
+    })
+    await expect(access(join(project, 'standards/drafts'))).rejects.toMatchObject({
+      code: 'ENOENT',
+    })
+    expect(await readFile(join(project, 'AGENTS.md'), 'utf8')).toContain(
+      '[standards/README.md](standards/README.md)'
+    )
+    await rm(join(project, 'standards'), { recursive: true })
+    unwrap(await client.packs.install())
+    expect(await readFile(join(project, 'standards/typescript/naming.md'), 'utf8')).toBe(
+      '# Naming\n'
+    )
+  })
+
+  it('keeps source-relative paths when no root is set', async () => {
+    const { source, client } = await workspace()
+    await writeStandards(source)
+    const lock = unwrap(
+      await client.packs.add({
+        source: { provider: 'local', path: '../source' },
+        files: { include: ['docs/standards/*.md'] },
+        output: 'standards',
+      })
+    )
+    expect(lock.packs[0]?.groups[0]?.root).toBe('.')
+    expect(lock.packs[0]?.groups[0]?.files.map((file) => file.path)).toEqual([
+      'docs/standards/README.md',
+    ])
+  })
+
+  it.each([
+    { root: 'docs/missing', provider: 'local' },
+    { root: 'docs/missing', provider: 'git' },
+    { root: 'docs/standards/drafts', provider: 'local' },
+  ])(
+    'rejects a root that selects nothing without writing ($provider $root)',
+    async ({ root, provider }) => {
+      const { project, source, client } = await workspace()
+      await writeStandards(source)
+      await rm(join(source, 'docs/standards/drafts/wip.md'))
+      await mkdir(join(source, 'docs/standards/drafts'), { recursive: true })
+      if (provider === 'git') {
+        await execute('git', ['init', '--quiet', '--initial-branch=main', source])
+        await saveCommit(source)
+      }
+      const result = await client.packs.add({
+        source: sourceFor({ provider, source }),
+        files: { root, include: ['**'] },
+        output: 'standards',
+      })
+      expect(isErr(result) && result.error.kind).toBe('invalid')
+      await expect(access(join(project, 'granary-lock.json'))).rejects.toMatchObject({
+        code: 'ENOENT',
+      })
+    }
+  )
+
+  it('rejects escaping and symlinked roots', async () => {
+    const { root, source, client } = await workspace()
+    await mkdir(join(root, 'outside'))
+    await writeFile(join(root, 'outside/secret.md'), 'Outside\n')
+    await symlink(join(root, 'outside'), join(source, 'linked'))
+    const linked = await client.packs.add({
+      source: { provider: 'local', path: '../source' },
+      files: { root: 'linked', include: ['**'] },
+      output: 'standards',
+    })
+    expect(isErr(linked) && linked.error.kind).toBe('invalid')
+    const escape = await client.packs.add({
+      source: { provider: 'local', path: '../source' },
+      files: { root: '../outside', include: ['**'] },
+      output: 'standards',
+    })
+    expect(isErr(escape) && escape.error.kind).toBe('invalid')
+  })
+
+  it('reviews and applies Git updates using re-rooted paths', async () => {
+    const { project, source, client } = await workspace()
+    await writeStandards(source)
+    await execute('git', ['init', '--quiet', '--initial-branch=main', source])
+    await saveCommit(source)
+    unwrap(
+      await client.packs.add({
+        source: {
+          provider: 'git',
+          repository: pathToFileURL(source).href,
+          revision: { branch: 'main' },
+        },
+        files: { root: 'docs/standards', include: ['*.md'] },
+        output: 'standards',
+      })
+    )
+    await writeFile(join(source, 'docs/standards/README.md'), '# Revised\n')
+    await saveCommit(source)
+    const review = unwrap(await client.updates.prepare())
+    expect(review.packs[0]?.files.map((file) => file.path)).toEqual(['docs/README.md'])
+    const updated = unwrap(
+      await client.updates.apply({
+        review: {
+          ...review,
+          packs: review.packs.map((pack) => ({
+            ...pack,
+            files: pack.files.map((file) => ({ ...file, decision: 'incoming' as const })),
+          })),
+        },
+      })
+    )
+    expect(updated.packs[0]?.groups[0]?.root).toBe('docs/standards')
+    expect(await readFile(join(project, 'standards/README.md'), 'utf8')).toBe('# Revised\n')
+  })
+
   it('compares consumer configuration independently of object property order', async () => {
     const { project, client } = await workspace()
     unwrap(await adopt(client))
@@ -343,6 +471,21 @@ async function workspace() {
   await mkdir(source)
   await writeFile(join(source, 'README.md'), 'Original reference\n')
   return { root, project, source, client: createGranary({ project }) }
+}
+
+async function writeStandards(source: string): Promise<void> {
+  await mkdir(join(source, 'docs/standards/typescript'), { recursive: true })
+  await mkdir(join(source, 'docs/standards/drafts'), { recursive: true })
+  await writeFile(join(source, 'docs/standards/README.md'), '# Standards\n')
+  await writeFile(join(source, 'docs/standards/typescript/naming.md'), '# Naming\n')
+  await writeFile(join(source, 'docs/standards/drafts/wip.md'), '# Draft\n')
+}
+
+function sourceFor({ provider, source }: { readonly provider: string; readonly source: string }) {
+  if (provider === 'git') {
+    return { provider: 'git' as const, repository: pathToFileURL(source).href }
+  }
+  return { provider: 'local' as const, path: '../source' }
 }
 
 function adopt(client: BaseGranaryClient) {
